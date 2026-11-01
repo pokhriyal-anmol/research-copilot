@@ -1,0 +1,22 @@
+[project]
+name = "research-copilot"
+version = "0.1.0"
+description = "Answers questions about openly licensed CS papers, with checked citations."
+requires-python = ">=3.12,<3.13"
+dependencies = ["fastapi", "uvicorn", "httpx", "psycopg[binary]", "pgvector", "fastembed", "pypdf"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-cov", "ruff", "pip-audit"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/copilot"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100

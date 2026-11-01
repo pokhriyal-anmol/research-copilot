@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Copilot</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; }
+  textarea { width: 100%; box-sizing: border-box; font: inherit; padding: .5rem; }
+  button { font: inherit; padding: .4rem 1rem; margin-top: .5rem; }
+  #answer { white-space: pre-wrap; margin-top: 1.5rem; }
+  small { color: #555; }
+</style>
+</head>
+<body>
+<main>
+<h1>Research Copilot</h1>
+<p>Ask about openly licensed information retrieval papers from arXiv.</p>
+<p><small>Demo. Questions are logged and sent to free third-party model APIs, so don't enter private information.</small></p>
+<form id="form">
+  <label for="q">Your question</label>
+  <textarea id="q" rows="3" minlength="3" maxlength="500" required></textarea>
+  <button>Ask</button>
+</form>
+<div id="answer" aria-live="polite"></div>
+<ul id="sources"></ul>
+</main>
+<script>
+const out = document.getElementById("answer"), sources = document.getElementById("sources");
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  out.textContent = "Searching...";
+  sources.replaceChildren();
+  try {
+    const res = await fetch("/answer", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({question: document.getElementById("q").value}),
+    });
+    const data = await res.json();
+    if (!res.ok) { out.textContent = typeof data.detail === "string" ? data.detail : "Please check your question."; return; }
+    out.textContent = data.text;
+    for (const c of data.citations) {
+      const a = Object.assign(document.createElement("a"), {href: c.url, textContent: `[${c.number}] ${c.title}, page ${c.page}`});
+      const li = document.createElement("li");
+      li.append(a);
+      sources.append(li);
+    }
+  } catch { out.textContent = "The request failed. Please retry."; }
+});
+</script>
+</body>
+</html>
