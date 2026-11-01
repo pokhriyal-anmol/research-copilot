@@ -7,7 +7,7 @@ import httpx
 import psycopg
 from pypdf.errors import PyPdfError
 
-from copilot.arxiv import Paper, chunk_pdf, parse_records
+from copilot.arxiv import Paper, chunk_pdf, parse_records, resumption_token
 from copilot.db import connect, migrate
 from copilot.embed import embed_passages
 
@@ -33,22 +33,39 @@ def store(conn: psycopg.Connection, paper: Paper, chunks: list[tuple[int, str]])
             )
 
 
+def list_papers(client: httpx.Client, start: str, until: str) -> list[Paper]:
+    params = {"verb": "ListRecords", "metadataPrefix": "arXivRaw", "from": start,
+              "until": until, "set": "cs:cs:IR"}
+    papers: list[Paper] = []
+    while True:
+        records = client.get(OAI_URL, params=params)
+        records.raise_for_status()
+        papers += parse_records(records.content)
+        token = resumption_token(records.content)
+        if not token:
+            return papers
+        params = {"verb": "ListRecords", "resumptionToken": token}
+        time.sleep(REQUEST_GAP_SECONDS)
+
+
 def run(start: str, until: str, limit: int) -> None:
     conn = connect()
     migrate(conn)
-    params = {"verb": "ListRecords", "metadataPrefix": "arXivRaw", "from": start,
-              "until": until, "set": "cs:cs:IR"}
+    done = {row[0] for row in conn.execute("SELECT arxiv_id FROM papers")}
     with httpx.Client(headers=USER_AGENT, timeout=60, follow_redirects=True) as client:
-        records = client.get(OAI_URL, params=params)
-        records.raise_for_status()
-        for paper in parse_records(records.content)[:limit]:
+        papers = [p for p in list_papers(client, start, until) if p.arxiv_id not in done]
+        for paper in papers[:max(limit - len(done), 0)]:
             time.sleep(REQUEST_GAP_SECONDS)
             try:
                 pdf = client.get(PDF_URL.format(paper.arxiv_id))
                 pdf.raise_for_status()
-                store(conn, paper, chunk_pdf(pdf.content))
+                chunks = chunk_pdf(pdf.content)
+                if not chunks:  # scanned PDFs have no text layer
+                    log.warning("skipped %s: no text", paper.arxiv_id)
+                    continue
+                store(conn, paper, chunks)
                 log.info("stored %s", paper.arxiv_id)
-            except (httpx.HTTPError, PyPdfError) as exc:
+            except (httpx.HTTPError, PyPdfError, ValueError) as exc:
                 log.warning("skipped %s: %s", paper.arxiv_id, type(exc).__name__)
 
 

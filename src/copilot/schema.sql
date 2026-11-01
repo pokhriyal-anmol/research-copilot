@@ -14,6 +14,9 @@ CREATE TABLE IF NOT EXISTS chunks (
     text TEXT NOT NULL,
     embedding vector(384) NOT NULL
 );
+ALTER TABLE chunks ADD COLUMN IF NOT EXISTS tsv tsvector
+    GENERATED ALWAYS AS (to_tsvector('english', text)) STORED;
+CREATE INDEX IF NOT EXISTS chunks_tsv ON chunks USING gin (tsv);
 CREATE INDEX IF NOT EXISTS chunks_embedding ON chunks USING hnsw (embedding vector_cosine_ops);
 
 CREATE TABLE IF NOT EXISTS traces (

@@ -60,8 +60,7 @@ def index() -> FileResponse:
 
 @app.get("/health")
 def health() -> dict:
-    with connect() as conn:
-        conn.execute("SELECT 1")
+    # No database call: frequent checks would keep Neon awake and spend its free compute.
     return {"status": "ok"}
 
 
@@ -72,7 +71,7 @@ def post_answer(body: Question) -> dict:
         if over_daily_cap(conn):
             raise HTTPException(503, "Today's free model quota is used up. Please try tomorrow.")
         try:
-            result = answer(http_client, body.question, search(conn, embed_query(body.question)))
+            result = answer(http_client, body.question, search(conn, body.question, embed_query(body.question)))
         except AllProvidersFailed:
             write_trace(conn, body.question, None, started)
             raise HTTPException(503, "The model providers are unavailable. Please retry.") from None

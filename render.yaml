@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: research-copilot
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: DAILY_ANSWER_CAP
+        value: "200"

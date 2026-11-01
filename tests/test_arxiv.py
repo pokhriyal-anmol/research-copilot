@@ -1,4 +1,4 @@
-from copilot.arxiv import CHUNK_WORDS, chunk_words, parse_records
+from copilot.arxiv import CHUNK_WORDS, chunk_words, parse_records, resumption_token
 
 XML = b"""<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/"><ListRecords>
 <record><metadata><arXivRaw xmlns="http://arxiv.org/OAI/arXivRaw/">
@@ -34,3 +34,17 @@ def test_empty_page_has_no_chunks():
 
 def test_page_number_alone_is_not_a_chunk():
     assert chunk_words("15") == []
+
+
+def test_resumption_token_found_and_absent():
+    wrap = b'<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/">%s</OAI-PMH>'
+    assert resumption_token(wrap % b"<resumptionToken>abc</resumptionToken>") == "abc"
+    assert resumption_token(wrap % b"<resumptionToken/>") is None
+    assert resumption_token(XML) is None
+
+
+def test_unencodable_pdf_characters_are_removed():
+    text = " ".join(["word"] * 30) + " bad\ud835char nul\x00byte"
+    chunk = chunk_words(text)[0]
+    chunk.encode("utf-8")
+    assert "badchar" in chunk and "\x00" not in chunk

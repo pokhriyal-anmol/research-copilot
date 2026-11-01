@@ -37,8 +37,15 @@ def parse_records(xml: bytes) -> list[Paper]:
     return papers
 
 
+def resumption_token(xml: bytes) -> str | None:
+    token = ET.fromstring(xml).findtext(".//oai:resumptionToken", None, NS)
+    return token.strip() if token and token.strip() else None
+
+
 def chunk_words(text: str) -> list[str]:
-    words = text.replace("\x00", "").split()
+    # PDFs can yield NULs and lone surrogates, which Postgres and the tokenizer reject.
+    clean = text.replace("\x00", "").encode("utf-8", "ignore").decode("utf-8")
+    words = clean.split()
     step = CHUNK_WORDS - OVERLAP_WORDS
     chunks = [words[i:i + CHUNK_WORDS] for i in range(0, max(len(words) - OVERLAP_WORDS, 1), step)]
     return [" ".join(c) for c in chunks if len(c) >= MIN_CHUNK_WORDS]
