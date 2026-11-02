@@ -89,3 +89,10 @@ def test_dense_encodes_the_corpus_once_not_per_query():
 def test_dense_k_larger_than_corpus_returns_every_doc_once():
     hits = DenseIndex(DOCS, FakeEncoder()).search("a", k=50)
     assert sorted(hits) == sorted(DOCS)
+
+
+def test_scored_search_returns_the_same_order_with_cosine_scores():
+    index = DenseIndex(DOCS, FakeEncoder())
+    scored = index.search_scored("anything", k=2)
+    assert [d for d, _ in scored] == index.search("anything", k=2)
+    assert scored[0][1] >= scored[1][1] and all(-1.0 <= s <= 1.0 for _, s in scored)

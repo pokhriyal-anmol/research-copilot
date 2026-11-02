@@ -105,3 +105,58 @@ def test_reranking_adds_and_drops_nothing():
 def test_structural_reranking_uses_the_published_settings():
     assert inspect.signature(pagerank).parameters["damping"].default == 0.85
     assert inspect.signature(structural_rerank).parameters["rrf_k"].default == 60
+
+
+# Method 3: score regularisation (BENCHMARK.md)
+from copilot.litsearch.graph import regularise
+
+SCORED = [(1, 0.9), (2, 0.8), (3, 0.7), (4, 0.6)]
+
+
+def test_a_zero_weight_keeps_the_dense_order():
+    assert regularise(SCORED, {1: [3], 4: [2]}, alpha=0.0) == [1, 2, 3, 4]
+
+
+def test_with_no_links_among_candidates_the_dense_order_is_kept():
+    assert regularise(SCORED, {1: [99]}, alpha=0.5) == [1, 2, 3, 4]
+
+
+def test_a_low_paper_linked_to_high_ones_moves_up_and_they_move_down():
+    # 4 is cited by 1 and 2; 3 stands alone. Worked by hand at a=0.5: f4 = 0.743 > f3 = 0.7, f1 = 0.822 < 0.9.
+    from copilot.litsearch.graph import regularised_scores
+
+    scored = [(1, 0.9), (2, 0.8), (3, 0.7), (4, 0.69)]
+    links = {1: [4], 2: [4]}
+    assert regularise(scored, links, alpha=0.5) == [1, 2, 4, 3]
+    f = regularised_scores(scored, links, alpha=0.5)
+    assert f[4] == pytest.approx(0.7433, abs=1e-4) and f[3] == pytest.approx(0.7) and f[1] < 0.9
+
+
+def test_link_direction_does_not_matter():
+    a = regularise(SCORED, {1: [4]}, alpha=0.3)
+    b = regularise(SCORED, {4: [1]}, alpha=0.3)
+    assert a == b
+
+
+def test_scores_match_the_closed_form():
+    from copilot.litsearch.graph import regularised_scores
+
+    links, a = {1: [2, 3], 3: [4]}, 0.3
+    ids = [d for d, _ in SCORED]
+    adj = np.zeros((4, 4))
+    for p, qs in links.items():
+        for q in qs:
+            i, j = ids.index(p), ids.index(q)
+            adj[i, j] = adj[j, i] = 1
+    for i in range(4):
+        if not adj[i].any():
+            adj[i, i] = 1
+    w = adj / adj.sum(axis=1, keepdims=True)
+    expected = (1 - a) * np.linalg.solve(np.eye(4) - a * w, np.array([s for _, s in SCORED]))
+    got = regularised_scores(SCORED, links, alpha=a)
+    assert [got[d] for d in ids] == pytest.approx(list(expected))
+
+
+def test_regularising_adds_and_drops_nothing():
+    scored = [(i, 1 - i / 100) for i in range(1, 51)]
+    assert sorted(regularise(scored, {i: [i + 1, i + 7] for i in range(1, 51)}, alpha=0.5)) == list(range(1, 51))

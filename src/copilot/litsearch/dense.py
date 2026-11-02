@@ -13,7 +13,11 @@ class DenseIndex:
         self._encoder = encoder
         self._vecs = _unit(np.asarray(encoder.encode_docs(list(docs.values())), dtype=np.float32))
 
-    def search(self, query: str, k: int) -> list[int]:
+    def search_scored(self, query: str, k: int) -> list[tuple[int, float]]:
         q = _unit(np.asarray(self._encoder.encode_query(query), dtype=np.float32))
-        order = np.argsort(-(self._vecs @ q), kind="stable")[: max(k, 0)]
-        return [self._ids[i] for i in order]
+        scores = self._vecs @ q
+        order = np.argsort(-scores, kind="stable")[: max(k, 0)]
+        return [(self._ids[i], float(scores[i])) for i in order]
+
+    def search(self, query: str, k: int) -> list[int]:
+        return [d for d, _ in self.search_scored(query, k)]

@@ -94,6 +94,13 @@ Recorded before building it. Method 1 showed the dense top 200 already holds 98%
 
 No setting is tuned, so this is one configuration. It passes if it meets the three generalisation rules on Recall@20 and nDCG@10 against the dense 8B on dev.
 
+### Method 3: score regularisation over citations
+Recorded before building it. After Diaz, "Regularizing ad hoc retrieval scores", CIKM 2005. Method 2 failed because its graph signal ignored the question; this one smooths the dense scores themselves, so it starts from the question.
+- **Graph.** The dense top 200, with an undirected link wherever one paper cites the other. Each paper's links are weighted equally and sum to 1. A paper with no link to another candidate links only to itself, so it keeps its own score.
+- **Scores.** f0 is each candidate's dense cosine score. The result is the fixed point of f = (1 - a) f0 + a W f, that is f = (1 - a)(I - a W)^-1 f0, ranked by f with ties going to the better dense rank.
+- **Weight.** The paper gives no standard a, so three values, fixed now: 0.1, 0.3 and 0.5, which makes 3 configurations.
+- **Selection.** Each value is checked against the three generalisation rules on dev. If more than one passes, the highest dev nDCG@10 is chosen, and its test-split result is reported with the note that 3 values were tried. If none passes, the method is dropped.
+
 ## Change log
 - 2026-11-02: first version.
 - 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
@@ -106,3 +113,5 @@ No setting is tuned, so this is one configuration. It passes if it meets the thr
 - 2026-11-03, method 1 outcome: one-hop fails the screening step and is dropped. On dev, the dense 8B top 200 already holds 98.0% of gold papers. The one-hop pool holds 91.2%, and it is lower in every group: source not in corpus 97.6 to 90.6, author-written 98.8 to 91.5. As-is it also cuts Recall@20 from 85.2 to 72.0. Configurations tried: 1. Result in bench/results/ablations/graph/one-hop-m50-n200-dev.json.
 - 2026-11-03: pre-registered method 2, structural re-ranking over citations.
 - 2026-11-03, method 2 outcome: structural re-ranking fails and is dropped. On dev, nDCG@10 fell from 65.7 to 32.7 overall and from 67.5 to 16.6 on author-written questions, failing rules 1 and 3. Recall@20 fell from 85.2 to 81.7; its only rise was on source-not-in-corpus questions, 82.9 to 83.5. Cause, checked on dev: in 108 questions the dense rank-1 paper is gold, and after re-ranking it moves to a median rank of 7. Its place goes to papers widely cited within the pool. Equal-weight fusion with a query-blind centrality promotes popular papers over the specific answer. Configurations tried: 1, so 2 in total across graph methods.
+- 2026-11-03: pre-registered method 3, score regularisation, with its three weights.
+- 2026-11-03, method 3 outcome: no weight passes, so score regularisation is dropped. Dev overall, Recall@20 / nDCG@10 against 85.2 / 65.7: a=0.1 gives 85.2 / 66.0, a=0.3 gives 85.5 / 65.5, a=0.5 gives 84.3 / 61.8. No weight raises both metrics overall (rule 1), and every weight lowers nDCG@10 on source-not-in-corpus questions (rule 2): 64.4 to 64.0, 62.0 and 56.9. Author-written questions rose at every weight (nDCG@10 67.5 to 68.5, 70.2 and 68.6), the reverse of the expected artifact. With 82 questions that is within noise, and it is recorded here, not acted on. Configurations tried: 3, so 5 in total across graph methods. All three published families tried here failed on the 8B.

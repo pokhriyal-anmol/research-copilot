@@ -41,3 +41,28 @@ def structural_rerank(ranking: list[int], citations: dict[int, list[int]], rrf_k
     central = {p: r for r, p in enumerate(by_pagerank, 1)}
     fused = {p: 1 / (rrf_k + dense[p]) + 1 / (rrf_k + central[p]) for p in ranking}
     return sorted(ranking, key=lambda p: (-fused[p], dense[p]))
+
+
+def regularised_scores(scored: list[tuple[int, float]], citations: dict[int, list[int]],
+                       alpha: float) -> dict[int, float]:
+    """Diaz's score regularisation: f = (1 - a)(I - a W)^-1 f0 over undirected citation links among candidates."""
+    import numpy as np
+
+    ids = [d for d, _ in scored]
+    index = {d: i for i, d in enumerate(ids)}
+    adj = np.zeros((len(ids), len(ids)))
+    for d in ids:
+        for c in citations.get(d, ()):
+            if c in index and c != d:
+                adj[index[d], index[c]] = adj[index[c], index[d]] = 1
+    isolated = ~adj.any(axis=1)
+    adj[isolated, isolated] = 1  # a paper with no links keeps its own score
+    w = adj / adj.sum(axis=1, keepdims=True)
+    f = (1 - alpha) * np.linalg.solve(np.eye(len(ids)) - alpha * w, np.array([s for _, s in scored]))
+    return dict(zip(ids, f.tolist(), strict=True))
+
+
+def regularise(scored: list[tuple[int, float]], citations: dict[int, list[int]], alpha: float) -> list[int]:
+    f = regularised_scores(scored, citations, alpha)
+    dense = {d: r for r, (d, _) in enumerate(scored)}
+    return sorted(dense, key=lambda d: (-f[d], dense[d]))
