@@ -19,6 +19,8 @@ From `f43eddc` (security headers) back to `bf1dee4`, using Rollback in the Rende
 
 Click to live: about 26 seconds. Click to first verified answer: about 3 minutes 6 seconds.
 
+Render's deploy page agrees: rollback deploy at 10:56:07 UTC, duration 20.7 seconds, reusing the saved `bf1dee4` build. The roll-forward to `f43eddc` was a manual deploy at 11:00:14 UTC taking 54.6 seconds, which matches the 11:01:10 outside check.
+
 Result: **pass, under the 5-minute target** on the conservative measure. The click time is an estimate, not a log entry. The timing script that should have caught the first working answer failed with a tool error, so the verified answer came 2.5 minutes after Render reported live. That gap was the checker's, not the app's, so the real recovery time is probably closer to 26 seconds, but only the 3-minute figure is proven.
 
 A dashboard rollback turns off auto-deploy. It was turned back on afterwards, and the latest commit was deployed by hand.
