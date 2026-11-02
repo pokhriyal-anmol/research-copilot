@@ -1,5 +1,6 @@
 """Load LitSearch parquet files from bench/data into plain Python structures."""
 import hashlib
+import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -25,7 +26,7 @@ class Data:
 
 
 def _blank(abstract: object) -> bool:
-    return abstract is None or abstract != abstract or not str(abstract).strip()  # != itself: NaN
+    return abstract is None or (isinstance(abstract, float) and math.isnan(abstract)) or not str(abstract).strip()
 
 
 def doc_text(title: str, abstract: str | None) -> str:

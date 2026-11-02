@@ -1,6 +1,7 @@
 """Behaviour any first-stage retriever must have, whatever its internals."""
 import numpy as np
 import pytest
+
 from copilot.litsearch.dense import DenseIndex
 
 DOCS = {

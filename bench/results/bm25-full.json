@@ -1,0 +1,64 @@
+{
+  "name": "bm25-full",
+  "questions": 597,
+  "scores": {
+    "recall@20": 60.178671133445,
+    "recall@100": 71.90396426577331,
+    "ndcg@10": 39.35562597717599
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 43.72043010752688,
+      "recall@100": 59.204301075268816,
+      "ndcg@10": 27.173131705125485,
+      "questions": 155
+    },
+    "specificity=1": {
+      "recall@20": 65.9502262443439,
+      "recall@100": 76.35746606334841,
+      "ndcg@10": 43.62776763366429,
+      "questions": 442
+    },
+    "query_set=inline_acl": {
+      "recall@20": 52.823129251700685,
+      "recall@100": 66.08843537414967,
+      "ndcg@10": 29.18585781208449,
+      "questions": 98
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 50.790513833992094,
+      "recall@100": 64.2292490118577,
+      "ndcg@10": 30.54168968843778,
+      "questions": 253
+    },
+    "query_set=manual_acl": {
+      "recall@20": 69.6774193548387,
+      "recall@100": 77.41935483870968,
+      "ndcg@10": 48.96322048464978,
+      "questions": 155
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 78.02197802197803,
+      "recall@100": 90.10989010989012,
+      "ndcg@10": 58.447779961475966,
+      "questions": 91
+    },
+    "gold_without_abstract": {
+      "recall@20": 16.666666666666668,
+      "recall@100": 16.666666666666668,
+      "ndcg@10": 16.666666666666668,
+      "questions": 6
+    }
+  },
+  "settings": {
+    "retriever": "bm25",
+    "method": "lucene",
+    "k1": 1.5,
+    "b": 0.75,
+    "stopwords": "en",
+    "seed": 13,
+    "split": "full"
+  },
+  "date": "2026-11-02T13:44:20+00:00",
+  "missing_gold": 0
+}
