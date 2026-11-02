@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Pushes the Kaggle run for the current commit. Usage: bench/kaggle/push.sh
+# Pushes the Kaggle run for the current commit. Usage: bench/kaggle/push.sh [--with-vectors]
+# --with-vectors mounts our private 8B paper vectors, so the run encodes questions only.
 # Needs a signed-in Kaggle CLI and a phone-verified Kaggle account (GPU and internet need it).
 set -euo pipefail
 
@@ -21,6 +22,8 @@ if [ -z "$user" ]; then
   exit 1
 fi
 
+sources="[]"
+[ "${1:-}" = "--with-vectors" ] && sources="[\"$user/litsearch-qwen3-8b-doc-vectors\"]"
 out=$(mktemp -d)
 sed "s/__COMMIT__/$commit/" bench/kaggle/run_kaggle.py > "$out/run_kaggle.py"
 cat > "$out/kernel-metadata.json" <<JSON
@@ -33,7 +36,7 @@ cat > "$out/kernel-metadata.json" <<JSON
   "is_private": true,
   "enable_gpu": true,
   "enable_internet": true,
-  "dataset_sources": [],
+  "dataset_sources": $sources,
   "competition_sources": [],
   "kernel_sources": []
 }
