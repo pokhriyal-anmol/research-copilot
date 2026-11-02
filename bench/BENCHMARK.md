@@ -54,5 +54,9 @@ A test-split margin under 3 points is reported as "not clearly better", since 39
 - LLM query expansion, if tried, is reported apart from the headline, because the model may have read these papers.
 - Every run records model, settings, seed, date and cost.
 
+## Cross-hardware check (Kaggle)
+The 8B model doesn't fit this Mac, so it runs on Kaggle's two T4 GPUs at fp16, which T4s need because they have no bf16. Before any Kaggle 8B number counts, the same Kaggle run first scores Qwen3-Embedding-0.6B with the Mac's settings (1,024 tokens, batches of 8). Its Recall@20 must be within **1.0 point** of the Mac's 75.0 and its nDCG@10 within 1.0 of 53.1. A miss means the hardware or precision is changing scores, and the 8B result is reported as unverified.
+
 ## Change log
 - 2026-11-02: first version.
+- 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
