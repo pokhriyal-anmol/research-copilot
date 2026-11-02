@@ -41,12 +41,13 @@ app = FastAPI(title="Research Copilot", lifespan=lifespan)
 
 def write_trace(conn: psycopg.Connection, question: str, result: Answer | None, started: float) -> None:
     c = result.completion if result else None
+    withheld = result is not None and result.outcome == "citation_check_failed"
     conn.execute(
-        """INSERT INTO traces (question, prompt_version, outcome, provider, model,
-           input_tokens, output_tokens, latency_ms) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+        """INSERT INTO traces (question, prompt_version, outcome, provider, model, input_tokens,
+           output_tokens, latency_ms, model_output) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (question, PROMPT_VERSION, result.outcome if result else "provider_failure",
          c and c.provider, c and c.model, c and c.input_tokens, c and c.output_tokens,
-         int((time.monotonic() - started) * 1000)),
+         int((time.monotonic() - started) * 1000), c.text if withheld and c else None),
     )
 
 

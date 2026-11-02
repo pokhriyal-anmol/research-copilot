@@ -39,6 +39,11 @@ def traces():
         return conn.execute("SELECT outcome, provider, input_tokens FROM traces").fetchall()
 
 
+def model_outputs():
+    with connect() as conn:
+        return [r[0] for r in conn.execute("SELECT model_output FROM traces ORDER BY id")]
+
+
 def test_answer_returns_page_citation_and_writes_trace(client, monkeypatch):
     stub_llm(monkeypatch, "Claim [1].")
     body = client.post("/answer", json={"question": "what?"}).json()
@@ -50,6 +55,13 @@ def test_fabricated_citation_never_reaches_the_user(client, monkeypatch):
     stub_llm(monkeypatch, "Claim [7].")
     body = client.post("/answer", json={"question": "what?"}).json()
     assert body["outcome"] == "citation_check_failed" and "Claim" not in body["text"]
+    assert model_outputs() == ["Claim [7]."]
+
+
+def test_answered_trace_does_not_keep_model_output(client, monkeypatch):
+    stub_llm(monkeypatch, "Claim [1].")
+    client.post("/answer", json={"question": "what?"})
+    assert model_outputs() == [None]
 
 
 def test_provider_failure_is_503_and_traced(client, monkeypatch):

@@ -31,4 +31,6 @@ CREATE TABLE IF NOT EXISTS traces (
     output_tokens INT,
     latency_ms INT NOT NULL
 );
+-- Kept only for withheld answers, so failures can be diagnosed and turned into eval cases.
+ALTER TABLE traces ADD COLUMN IF NOT EXISTS model_output TEXT;
 CREATE INDEX IF NOT EXISTS traces_created_at ON traces (created_at);
