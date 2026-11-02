@@ -1,11 +1,13 @@
 """Qwen3-Embedding encoder with an on-disk document cache."""
 import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
 
 TASK = "Given a scientific literature search query, retrieve relevant papers"
 CACHE_DIR = Path("bench/data/cache")
+PROGRESS_FILE = Path("bench/data/progress.json")  # read by the run-tracker pane
 DTYPES = ("float32", "float16", "bfloat16")  # 4B and 8B only fit 16 GB at half precision
 
 
@@ -20,7 +22,8 @@ def result_name(retriever: str, model: str | None, split: str) -> str:
 class Qwen3Encoder:
     def __init__(
         self, model_name: str, model=None, cache_dir: Path | str | None = CACHE_DIR, dtype: str = "float32",
-        max_length: int = 512, batch_size: int = 8,
+        max_length: int = 512, batch_size: int = 8, chunk_size: int = 1024,
+        progress_path: Path | str | None = None,
     ) -> None:
         if dtype not in DTYPES:
             raise ValueError(f"dtype must be one of {DTYPES}")
@@ -29,6 +32,8 @@ class Qwen3Encoder:
         # The model allows 32,768 tokens; uncapped, the longest batch ran out of GPU memory.
         self.max_length = max_length
         self.batch_size = batch_size
+        self.chunk_size = chunk_size
+        self._progress = Path(progress_path) if progress_path is not None else None
         self._capped = False
         self._model = model
         self._cache = Path(cache_dir) if cache_dir is not None else None
@@ -52,6 +57,20 @@ class Qwen3Encoder:
     def encode_query(self, query: str) -> np.ndarray:
         return np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"], batch_size=self.batch_size))[0]
 
+    def _report(self, done: int, total: int) -> None:
+        if self._progress is not None:
+            self._progress.parent.mkdir(parents=True, exist_ok=True)
+            self._progress.write_text(json.dumps({"model": self.model_name, "done": done, "total": total}))
+
+    def _encode_in_chunks(self, texts: list[str]) -> np.ndarray:
+        parts = []
+        for start in range(0, len(texts), self.chunk_size):
+            self._report(start, len(texts))
+            chunk = texts[start:start + self.chunk_size]
+            parts.append(np.asarray(self._load().encode(chunk, batch_size=self.batch_size)))
+        self._report(len(texts), len(texts))
+        return np.concatenate(parts) if parts else np.empty((0, 0), dtype=np.float32)
+
     def encode_docs(self, texts: list[str]) -> np.ndarray:
         digest = hashlib.sha256(self.model_name.encode())
         digest.update(f"|{self.dtype}|{self.max_length}".encode())
@@ -61,7 +80,7 @@ class Qwen3Encoder:
         path = self._cache / f"{self.cache_key}.npy" if self._cache else None
         if path and path.exists():
             return np.load(path)
-        vectors = np.asarray(self._load().encode(texts, batch_size=self.batch_size))
+        vectors = self._encode_in_chunks(texts)
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
             np.save(path, vectors)

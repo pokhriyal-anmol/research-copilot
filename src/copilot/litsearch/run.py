@@ -59,6 +59,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--dtype", choices=["float32", "float16", "bfloat16"], default="float32")
     ap.add_argument("--max-length", type=int, default=512)
     ap.add_argument("--batch-size", type=int, default=8)
+    ap.add_argument("--progress-file", default="bench/data/progress.json")
     ap.add_argument("--split", choices=["dev", "test", "full"], required=True)
     ap.add_argument("--data-dir", default="bench/data")
     ap.add_argument("--out-dir", default="bench/results")
@@ -79,7 +80,9 @@ def main(argv: list[str] | None = None) -> None:
         from copilot.litsearch.dense import DenseIndex
         from copilot.litsearch.encoders import TASK, Qwen3Encoder
 
-        encoder = Qwen3Encoder(args.model, dtype=args.dtype, max_length=args.max_length, batch_size=args.batch_size)
+        encoder = Qwen3Encoder(args.model, dtype=args.dtype, max_length=args.max_length, batch_size=args.batch_size,
+            progress_path=args.progress_file,
+        )
         index = DenseIndex(data.docs, encoder)
         settings = {
             "retriever": "dense", "model": args.model, "dtype": args.dtype, "max_length": args.max_length,

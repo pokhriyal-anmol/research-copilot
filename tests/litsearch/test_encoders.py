@@ -1,4 +1,5 @@
 """The Qwen3 encoder, checked with a stub model so no test downloads weights."""
+import json
 from typing import ClassVar
 
 import numpy as np
@@ -143,3 +144,35 @@ def test_length_cap_is_part_of_the_cache_key(tmp_path):
     b = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, max_length=512)
     b.encode_docs(["x"])
     assert a.cache_key != b.cache_key
+
+
+def test_documents_are_encoded_in_chunks_and_keep_their_order(tmp_path):
+    model = StubModel()
+    model.encode = lambda texts, **_: (model.seen.append(list(texts)) or np.array([[float(t)] for t in texts]))
+    encoder = Qwen3Encoder("m", model=model, cache_dir=tmp_path, chunk_size=2)
+    vectors = encoder.encode_docs(["1", "2", "3", "4", "5"])
+    assert [len(batch) for batch in model.seen] == [2, 2, 1]
+    assert vectors[:, 0].tolist() == [1.0, 2.0, 3.0, 4.0, 5.0]
+
+
+def test_progress_file_reports_documents_done_out_of_total(tmp_path):
+    progress = tmp_path / "progress.json"
+    seen = []
+
+    class Watching(StubModel):
+        def encode(self, texts, **_):
+            if progress.exists():
+                seen.append(json.loads(progress.read_text())["done"])
+            return super().encode(texts)
+
+    Qwen3Encoder("Org/M", model=Watching(), cache_dir=tmp_path, chunk_size=2, progress_path=progress).encode_docs(
+        ["a", "b", "c", "d", "e"]
+    )
+    final = json.loads(progress.read_text())
+    assert (final["model"], final["done"], final["total"]) == ("Org/M", 5, 5)
+    assert seen == [0, 2, 4]  # written before each chunk, so a watcher sees it move
+
+
+def test_no_progress_file_unless_asked(tmp_path):
+    Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, chunk_size=2).encode_docs(["a", "b", "c"])
+    assert list(tmp_path.glob("*.json")) == []

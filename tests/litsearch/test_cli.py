@@ -70,3 +70,24 @@ def test_dense_run_records_model_and_precision(data_dir, tmp_path, monkeypatch):
     assert (settings["model"], settings["dtype"]) == ("Org/Some-Model", "float16")
     assert {"max_length", "batch_size"} <= set(settings)
     assert (set(repo_cache.glob("*")) if repo_cache.exists() else set()) == before
+
+
+def test_dense_run_writes_progress_where_the_tracker_reads_it(data_dir, tmp_path, monkeypatch):
+    from copilot.litsearch import encoders
+
+    class Stub:
+        def encode(self, texts, **_):
+            return np.ones((len(texts), 4))
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(encoders.Qwen3Encoder, "_load", lambda self: Stub())
+    progress = tmp_path / "progress.json"
+    main(["--retriever", "dense", "--model", "Org/M", "--split", "full", "--data-dir", str(data_dir),
+          "--out-dir", str(tmp_path / "results"), "--progress-file", str(progress)])
+    assert json.loads(progress.read_text())["done"] == 3
+
+
+def test_default_progress_file_is_the_one_the_tracker_watches():
+    from copilot.litsearch import encoders
+
+    assert str(encoders.PROGRESS_FILE) == "bench/data/progress.json"
