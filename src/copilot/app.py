@@ -6,8 +6,9 @@ from pathlib import Path
 
 import httpx
 import psycopg
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from copilot.answer import PROMPT_VERSION, Answer, answer
@@ -17,7 +18,15 @@ from copilot.llm import AllProvidersFailed
 from copilot.retrieve import MODES, search
 
 log = logging.getLogger(__name__)
-INDEX = Path(__file__).parent / "static" / "index.html"
+STATIC = Path(__file__).parent / "static"
+INDEX = STATIC / "index.html"
+SECURITY_HEADERS = {
+    "Strict-Transport-Security": "max-age=31536000",
+    "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+}
 http_client = httpx.Client()
 # Render's free instance runs out of memory with the reranker loaded, so it uses hybrid there.
 SEARCH_MODE = os.environ.get("SEARCH_MODE", "rerank")
@@ -37,6 +46,14 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="Research Copilot", lifespan=lifespan)
+app.mount("/static", StaticFiles(directory=STATIC), name="static")
+
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next) -> Response:
+    response = await call_next(request)
+    response.headers.update(SECURITY_HEADERS)
+    return response
 
 
 def write_trace(conn: psycopg.Connection, question: str, result: Answer | None, started: float) -> None:

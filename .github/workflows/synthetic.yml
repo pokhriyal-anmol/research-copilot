@@ -1,0 +1,32 @@
+name: Synthetic checks
+# Every 5 minutes: health, which also keeps Render's free instance awake.
+# Hourly: one full answer. A failed run emails the repo owner.
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+    - cron: "17 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  URL: https://research-copilot-au2k.onrender.com
+jobs:
+  health:
+    if: github.event.schedule != '17 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: curl -fsS --max-time 120 --retry 2 --retry-all-errors "$URL/health"
+  answer:
+    if: github.event.schedule == '17 * * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ask a question the corpus can answer
+        run: |
+          # The [synthetic] prefix lets SLO reports separate these from real users.
+          body=$(curl -fsS --max-time 150 -H 'content-type: application/json' \
+            -d '{"question":"[synthetic] What retrieval methods do the papers compare?"}' "$URL/answer")
+          outcome=$(echo "$body" | jq -r .outcome)
+          echo "outcome=$outcome"
+          test "$outcome" = answered

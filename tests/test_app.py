@@ -83,3 +83,11 @@ def test_daily_cap_stops_model_calls(client, monkeypatch):
 
 def test_oversized_question_is_rejected(client):
     assert client.post("/answer", json={"question": "x" * 501}).status_code == 422
+
+
+def test_page_sends_security_headers_and_loads_its_script(client):
+    page = client.get("/")
+    assert "default-src 'self'" in page.headers["content-security-policy"]
+    assert page.headers["x-frame-options"] == "DENY"
+    assert "<script>" not in page.text  # inline script would be blocked by the policy
+    assert client.get("/static/app.js").status_code == 200
