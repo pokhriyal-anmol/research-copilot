@@ -106,3 +106,22 @@ def test_dense_run_records_a_custom_instruction(data_dir, tmp_path, monkeypatch)
     main(["--retriever", "dense", "--model", "Org/M", "--split", "full", "--instruction", "Find papers",
           "--data-dir", str(data_dir), "--out-dir", str(out)])
     assert json.loads((out / "m-full.json").read_text())["settings"]["instruction"] == "Find papers"
+
+
+def test_instruction_none_runs_raw_queries_and_records_it(data_dir, tmp_path, monkeypatch):
+    from copilot.litsearch import encoders
+
+    seen = []
+
+    class Stub:
+        def encode(self, texts, **_):
+            seen.extend(texts)
+            return np.ones((len(texts), 4))
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(encoders.Qwen3Encoder, "_load", lambda self: Stub())
+    out = tmp_path / "results"
+    main(["--retriever", "dense", "--model", "Org/M", "--split", "full", "--instruction", "none",
+          "--data-dir", str(data_dir), "--out-dir", str(out)])
+    assert json.loads((out / "m-full.json").read_text())["settings"]["instruction"] == "none"
+    assert not any("Instruct:" in t for t in seen)

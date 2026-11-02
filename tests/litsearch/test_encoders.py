@@ -232,3 +232,10 @@ def test_the_task_does_not_change_the_document_cache(tmp_path):
     b = Qwen3Encoder("m", model=model, cache_dir=tmp_path, task="Something else")
     b.encode_docs(["x"])
     assert a.cache_key == b.cache_key and model.seen == []
+
+
+def test_an_empty_task_sends_the_raw_query():
+    # Some papers run Qwen3 with no instruction at all; this reproduces that setup.
+    model = StubModel()
+    Qwen3Encoder("m", model=model, cache_dir=None, task="").encode_query("dense retrieval")
+    assert model.seen == [["dense retrieval"]]

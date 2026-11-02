@@ -61,7 +61,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--progress-file", default="bench/data/progress.json")
     ap.add_argument("--device-map", default=None, help="auto splits the model across GPUs")
-    ap.add_argument("--instruction", default=None, help="query task; defaults to the protocol task")
+    ap.add_argument("--instruction", default=None, help="query task, or none for raw queries; defaults to the protocol task")
     ap.add_argument("--split", choices=["dev", "test", "full"], required=True)
     ap.add_argument("--data-dir", default="bench/data")
     ap.add_argument("--out-dir", default="bench/results")
@@ -84,7 +84,7 @@ def main(argv: list[str] | None = None) -> None:
 
         encoder = Qwen3Encoder(args.model, dtype=args.dtype, max_length=args.max_length, batch_size=args.batch_size,
             progress_path=args.progress_file, device_map=args.device_map,
-            task=args.instruction or TASK,
+            task="" if args.instruction == "none" else args.instruction or TASK,
         )
         index = DenseIndex(data.docs, encoder)
         settings = {

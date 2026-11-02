@@ -67,7 +67,7 @@ class Qwen3Encoder:
         return self._model
 
     def encode_query(self, query: str) -> np.ndarray:
-        vector = np.asarray(self._load().encode([f"Instruct: {self.task}\nQuery:{query}"], batch_size=self.batch_size))[0]
+        vector = np.asarray(self._load().encode([f"Instruct: {self.task}\nQuery:{query}" if self.task else query], batch_size=self.batch_size))[0]
         return _finite(vector)
 
     def _report(self, done: int, total: int) -> None:
