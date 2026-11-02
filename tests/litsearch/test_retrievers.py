@@ -1,0 +1,76 @@
+"""Behaviour any first-stage retriever must have, whatever its internals."""
+import numpy as np
+import pytest
+from copilot.litsearch.dense import DenseIndex
+
+DOCS = {
+    10: "Dense passage retrieval for open domain question answering",
+    11: "BM25 and the probabilistic relevance framework",
+    12: "Graph neural networks for molecule property prediction",
+    13: "Retrieval augmented generation for knowledge intensive tasks",
+}
+
+
+def bm25_index():
+    pytest.importorskip("bm25s")
+    from copilot.litsearch.bm25 import BM25Index
+
+    return BM25Index(DOCS)
+
+
+def test_bm25_ranks_the_doc_matching_a_distinctive_title_first():
+    assert bm25_index().search("graph neural networks molecule", k=4)[0] == 12
+
+
+def test_bm25_returns_at_most_k_unique_doc_ids():
+    hits = bm25_index().search("retrieval", k=2)
+    assert len(hits) <= 2 and len(hits) == len(set(hits)) and set(hits) <= set(DOCS)
+
+
+def test_bm25_is_deterministic():
+    index = bm25_index()
+    assert index.search("retrieval question answering", 4) == index.search("retrieval question answering", 4)
+
+
+def test_bm25_returns_nothing_for_words_absent_from_the_corpus():
+    assert bm25_index().search("zzzz qqqq", k=4) == []
+
+
+class FakeEncoder:
+    """Maps each doc to a one-hot vector so the nearest doc is known in advance."""
+
+    def __init__(self):
+        self.calls = 0
+
+    def encode_docs(self, texts):
+        self.calls += 1
+        return np.eye(len(texts), dtype=np.float32)
+
+    def encode_query(self, text):
+        # Halfway between docs 0 and 2, closer to 2.
+        return np.array([0.3, 0.0, 0.9, 0.0], dtype=np.float32)
+
+
+def test_dense_ranks_by_cosine_similarity():
+    index = DenseIndex(DOCS, FakeEncoder())
+    assert index.search("anything", k=2) == [12, 10]
+
+
+def test_dense_scale_of_query_vector_does_not_change_ranking():
+    encoder = FakeEncoder()
+    index = DenseIndex(DOCS, encoder)
+    encoder.encode_query = lambda text: np.array([3.0, 0.0, 9.0, 0.0], dtype=np.float32)
+    assert index.search("anything", k=2) == [12, 10]
+
+
+def test_dense_encodes_the_corpus_once_not_per_query():
+    encoder = FakeEncoder()
+    index = DenseIndex(DOCS, encoder)
+    index.search("a", 2)
+    index.search("b", 2)
+    assert encoder.calls == 1
+
+
+def test_dense_k_larger_than_corpus_returns_every_doc_once():
+    hits = DenseIndex(DOCS, FakeEncoder()).search("a", k=50)
+    assert sorted(hits) == sorted(DOCS)

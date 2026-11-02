@@ -6,6 +6,12 @@ requires-python = ">=3.12,<3.13"
 dependencies = ["fastapi", "uvicorn", "httpx", "psycopg[binary]", "pgvector", "fastembed", "pypdf"]
 
 [dependency-groups]
+bench = [
+    "bm25s>=0.3.16",
+    "pandas>=3.1.0",
+    "pyarrow>=26.0.0",
+    "sentence-transformers>=6.2.0",
+]
 dev = ["pytest", "pytest-cov", "ruff", "pip-audit"]
 
 [build-system]

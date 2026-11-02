@@ -1,0 +1,58 @@
+# LitSearch benchmark: pre-registered protocol
+
+Written 2026-11-02, before any benchmark code or run. Targets and tolerances below may change only with a dated note saying why, in the change log at the bottom.
+
+```mermaid
+flowchart LR
+  data[LitSearch: 597 questions, 64,183 papers] -->|fixed seed, stratified| split{Split}
+  split -->|200 questions| dev[Dev: all tuning and method choices]
+  split -->|397 questions| test[Test: scored once per finished method]
+  dev --> m[Metric code, unit tested]
+  test --> m
+  m -->|must match published baselines first| repro[Reproduction gate]
+  repro -->|only then| methods[New methods]
+  classDef gate fill:#fff4e0,stroke:#b8860b
+  class repro gate
+```
+
+## Data
+- Source: `princeton-nlp/LitSearch` on Hugging Face, configs `query` and `corpus_clean`. The dataset card states no licence, so it is used for offline benchmarking only and never served by the live app.
+- Document text: title, a blank line, then abstract. Papers with no abstract are scored on the title alone.
+- Gold: the `corpusids` list for each question. Questions whose gold papers are missing from the corpus are reported, not silently dropped.
+
+## Split
+- 200 dev questions, 397 test questions, fixed seed 13.
+- Stratified by `query_set` and `specificity`, so each stratum's share in dev is within one question of its share overall.
+- Methods are designed and tuned on dev only. Test is scored once a method is final. Full-set (597) numbers are reported only for comparison with papers that used all questions.
+
+## Metrics
+For one question with gold set G and ranked list R (duplicates removed, first occurrence kept):
+- Recall@k = |G ∩ R[:k]| / |G|
+- nDCG@k with binary relevance: DCG = Σ 1/log2(i+1) over positions i ≤ k holding a gold paper; ideal DCG uses min(|G|, k) hits. nDCG = DCG / ideal.
+- Reported as the mean over questions, as percentages with one decimal.
+- Headline: Recall@20 and nDCG@10. Diagnostic: Recall@100, the ceiling for any reranker.
+- Breakdowns: specificity (broad, specific), `query_set`, and questions whose gold paper has no abstract.
+
+## Reproduction gate (must pass before any new method counts)
+| Baseline | Metric, all 597 | Published | Tolerance | Source |
+|---|---|---|---|---|
+| BM25, title + abstract | nDCG@10 | 40.2 | ± 2.0 | CASPER, arXiv 2508.13394, Table 2 |
+| Qwen3-Embedding-8B | Recall@20 | 79.2 | ± 2.0 | PairSem, arXiv 2510.09897, Table 1 |
+| Qwen3-Embedding-8B | nDCG@10 | 58.0 | ± 2.0 | Same |
+
+The tolerance is wide because neither paper states its tokenizer, BM25 settings or query instruction. Missing a target means the metric or data code is wrong until shown otherwise. If an 8B model can't run on this machine, a smaller model runs instead and the reproduction row is marked not attempted rather than passed.
+
+## Win condition
+A method beats the published state of the art only if, on the **test split** and the **full 597**, both:
+- Recall@20 > 81.8 (PairSem with Qwen3-Embedding-8B, the best found on 2026-11-02)
+- nDCG@10 > 61.1 (same)
+
+A test-split margin under 3 points is reported as "not clearly better", since 397 questions give roughly ±4 points of sampling error at these rates.
+
+## Rules
+- Each new stage must beat the stage before it on dev, or it is switched off.
+- LLM query expansion, if tried, is reported apart from the headline, because the model may have read these papers.
+- Every run records model, settings, seed, date and cost.
+
+## Change log
+- 2026-11-02: first version.
