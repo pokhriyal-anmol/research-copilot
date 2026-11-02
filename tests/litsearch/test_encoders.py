@@ -176,3 +176,33 @@ def test_progress_file_reports_documents_done_out_of_total(tmp_path):
 def test_no_progress_file_unless_asked(tmp_path):
     Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, chunk_size=2).encode_docs(["a", "b", "c"])
     assert list(tmp_path.glob("*.json")) == []
+
+
+def test_device_map_is_passed_to_the_model_loader(fake_loader):
+    Qwen3Encoder("m", cache_dir=None, device_map="auto").encode_query("q")
+    assert fake_loader == [("m", {"model_kwargs": {"device_map": "auto"}})]
+
+
+def test_device_map_and_precision_combine(fake_loader):
+    torch = pytest.importorskip("torch")
+    Qwen3Encoder("m", cache_dir=None, dtype="float16", device_map="auto").encode_query("q")
+    assert fake_loader == [("m", {"model_kwargs": {"torch_dtype": torch.float16, "device_map": "auto"}})]
+
+
+class NanModel(StubModel):
+    def encode(self, texts, **_):
+        out = np.ones((len(texts), 4), dtype=np.float32)
+        out[0, 0] = np.nan
+        return out
+
+
+def test_documents_with_invalid_numbers_fail_loudly_and_are_not_cached(tmp_path):
+    # fp16 on a GPU without bf16 can overflow; a NaN vector must stop the run, never be scored.
+    with pytest.raises(ValueError, match="finite"):
+        Qwen3Encoder("m", model=NanModel(), cache_dir=tmp_path).encode_docs(["a", "b"])
+    assert list(tmp_path.glob("*.npy")) == []
+
+
+def test_query_with_invalid_numbers_fails_loudly():
+    with pytest.raises(ValueError, match="finite"):
+        Qwen3Encoder("m", model=NanModel(), cache_dir=None).encode_query("q")

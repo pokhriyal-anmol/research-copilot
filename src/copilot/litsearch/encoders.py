@@ -11,6 +11,13 @@ PROGRESS_FILE = Path("bench/data/progress.json")  # read by the run-tracker pane
 DTYPES = ("float32", "float16", "bfloat16")  # 4B and 8B only fit 16 GB at half precision
 
 
+def _finite(vectors: np.ndarray) -> np.ndarray:
+    # fp16 on GPUs without bf16 can overflow; a NaN vector would score silently as a miss.
+    if not np.isfinite(vectors).all():
+        raise ValueError("encoder returned values that are not finite (NaN or inf); try another dtype")
+    return vectors
+
+
 def result_name(retriever: str, model: str | None, split: str) -> str:
     if retriever != "dense":
         return f"{retriever}-{split}"
@@ -23,7 +30,7 @@ class Qwen3Encoder:
     def __init__(
         self, model_name: str, model=None, cache_dir: Path | str | None = CACHE_DIR, dtype: str = "float32",
         max_length: int = 512, batch_size: int = 8, chunk_size: int = 1024,
-        progress_path: Path | str | None = None,
+        progress_path: Path | str | None = None, device_map: str | None = None,
     ) -> None:
         if dtype not in DTYPES:
             raise ValueError(f"dtype must be one of {DTYPES}")
@@ -34,6 +41,7 @@ class Qwen3Encoder:
         self.batch_size = batch_size
         self.chunk_size = chunk_size
         self._progress = Path(progress_path) if progress_path is not None else None
+        self.device_map = device_map  # "auto" splits a model too big for one GPU across several
         self._capped = False
         self._model = model
         self._cache = Path(cache_dir) if cache_dir is not None else None
@@ -43,11 +51,14 @@ class Qwen3Encoder:
         if self._model is None:  # the only place weights are fetched
             from sentence_transformers import SentenceTransformer  # bench-only dependency
 
-            kwargs = {}
+            model_kwargs = {}
             if self.dtype != "float32":
                 import torch
 
-                kwargs["model_kwargs"] = {"torch_dtype": getattr(torch, self.dtype)}
+                model_kwargs["torch_dtype"] = getattr(torch, self.dtype)
+            if self.device_map is not None:
+                model_kwargs["device_map"] = self.device_map
+            kwargs = {"model_kwargs": model_kwargs} if model_kwargs else {}
             self._model = SentenceTransformer(self.model_name, **kwargs)
         if not self._capped:
             self._model.max_seq_length = self.max_length
@@ -55,7 +66,8 @@ class Qwen3Encoder:
         return self._model
 
     def encode_query(self, query: str) -> np.ndarray:
-        return np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"], batch_size=self.batch_size))[0]
+        vector = np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"], batch_size=self.batch_size))[0]
+        return _finite(vector)
 
     def _report(self, done: int, total: int) -> None:
         if self._progress is not None:
@@ -67,7 +79,7 @@ class Qwen3Encoder:
         for start in range(0, len(texts), self.chunk_size):
             self._report(start, len(texts))
             chunk = texts[start:start + self.chunk_size]
-            parts.append(np.asarray(self._load().encode(chunk, batch_size=self.batch_size)))
+            parts.append(_finite(np.asarray(self._load().encode(chunk, batch_size=self.batch_size))))
         self._report(len(texts), len(texts))
         return np.concatenate(parts) if parts else np.empty((0, 0), dtype=np.float32)
 
