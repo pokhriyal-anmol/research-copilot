@@ -7,7 +7,7 @@ pd = pytest.importorskip("pandas")
 pytest.importorskip("pyarrow")
 pytest.importorskip("bm25s")
 
-from copilot.litsearch.run import main  # noqa: E402
+from copilot.litsearch.run import main
 
 QUERIES = [
     {"query_set": "manual_acl", "query": "graph neural networks for molecules", "specificity": 1,

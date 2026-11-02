@@ -1,7 +1,6 @@
 """The Qwen3 encoder, checked with a stub model so no test downloads weights."""
 import numpy as np
 import pytest
-
 from copilot.litsearch.encoders import TASK, Qwen3Encoder, result_name
 
 
