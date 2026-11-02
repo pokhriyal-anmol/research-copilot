@@ -3,8 +3,6 @@ import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 
-import pandas as pd
-
 DATASET = "princeton-nlp/LitSearch"
 
 
@@ -27,14 +25,16 @@ class Data:
 
 
 def _blank(abstract: object) -> bool:
-    return abstract is None or bool(pd.isna(abstract)) or not str(abstract).strip()
+    return abstract is None or abstract != abstract or not str(abstract).strip()  # != itself: NaN
 
 
 def doc_text(title: str, abstract: str | None) -> str:
     return title if _blank(abstract) else f"{title}\n\n{abstract}"
 
 
-def _read(root: Path, config: str) -> pd.DataFrame:
+def _read(root: Path, config: str):
+    import pandas as pd  # bench-only; keeps Data/Question importable without it
+
     files = sorted((root / config).glob("*.parquet"))
     if not files:
         raise FileNotFoundError(
