@@ -20,9 +20,10 @@ RUNS = [  # (model, dtype, device_map, instruction, results folder); the 0.6B ro
     ("Qwen/Qwen3-Embedding-0.6B", "float16", None, None, "results"),
     ("Qwen/Qwen3-Embedding-8B", "float16", "auto", None, "results"),
 ]
-VECTOR_RUNS = [  # BENCHMARK.md, 2026-11-03: the protocol instruction must reproduce 81.6 / 62.8, then raw queries
+WEB = "Given a web search query, retrieve relevant passages that answer the query"  # Qwen's shipped query prompt
+VECTOR_RUNS = [  # BENCHMARK.md, 2026-11-03: the protocol instruction must reproduce 81.6 / 62.8, then Qwen's own
     ("Qwen/Qwen3-Embedding-8B", "float16", "auto", None, "results"),
-    ("Qwen/Qwen3-Embedding-8B", "float16", "auto", "none", "results/no-instruction"),
+    ("Qwen/Qwen3-Embedding-8B", "float16", "auto", WEB, "results/qwen-default"),
 ]
 DOWNLOAD = (
     "from huggingface_hub import snapshot_download as d; d('princeton-nlp/LitSearch', "

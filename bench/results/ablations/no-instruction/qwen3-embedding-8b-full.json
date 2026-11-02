@@ -1,0 +1,67 @@
+{
+  "name": "qwen3-embedding-8b-full",
+  "questions": 597,
+  "scores": {
+    "recall@20": 76.59966499162479,
+    "recall@100": 89.31602456728086,
+    "ndcg@10": 55.543121385465554
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 65.03225806451613,
+      "recall@100": 84.33333333333333,
+      "ndcg@10": 45.07069018574733,
+      "questions": 155
+    },
+    "specificity=1": {
+      "recall@20": 80.65610859728507,
+      "recall@100": 91.0633484162896,
+      "ndcg@10": 59.215580290344114,
+      "questions": 442
+    },
+    "query_set=inline_acl": {
+      "recall@20": 71.22448979591837,
+      "recall@100": 88.48639455782312,
+      "ndcg@10": 54.939615834523075,
+      "questions": 98
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 74.50592885375494,
+      "recall@100": 88.73517786561264,
+      "ndcg@10": 53.56652520491769,
+      "questions": 253
+    },
+    "query_set=manual_acl": {
+      "recall@20": 77.41935483870968,
+      "recall@100": 87.74193548387096,
+      "ndcg@10": 52.70301515314459,
+      "questions": 155
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 86.81318681318682,
+      "recall@100": 94.50549450549451,
+      "ndcg@10": 66.5259658215174,
+      "questions": 91
+    },
+    "gold_without_abstract": {
+      "recall@20": 16.666666666666668,
+      "recall@100": 25.0,
+      "ndcg@10": 16.666666666666668,
+      "questions": 6
+    }
+  },
+  "settings": {
+    "retriever": "dense",
+    "model": "Qwen/Qwen3-Embedding-8B",
+    "dtype": "float16",
+    "device_map": "auto",
+    "max_length": 1024,
+    "batch_size": 8,
+    "instruction": "none",
+    "cache_key": "9da283cc861ea56de565908b8943e3e9ce68af375bce069905078946eb25af81",
+    "seed": 13,
+    "split": "full"
+  },
+  "date": "2026-11-02T22:01:10+00:00",
+  "missing_gold": 0
+}

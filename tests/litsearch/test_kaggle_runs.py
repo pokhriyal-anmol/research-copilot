@@ -16,10 +16,13 @@ def test_without_vectors_the_cross_hardware_check_runs_before_the_8b():
     assert models == ["Qwen/Qwen3-Embedding-0.6B", "Qwen/Qwen3-Embedding-8B"]
 
 
-def test_with_vectors_only_the_8b_runs_first_with_the_protocol_instruction_then_raw():
+WEB = "Given a web search query, retrieve relevant passages that answer the query"  # Qwen's shipped query prompt
+
+
+def test_with_vectors_only_the_8b_runs_first_with_the_protocol_instruction_then_qwens_own():
     argvs = run_kaggle.commands(vectors=True)
     assert [flag(a, "--model") for a in argvs] == ["Qwen/Qwen3-Embedding-8B"] * 2
-    assert [flag(a, "--instruction") for a in argvs] == [None, "none"]
+    assert [flag(a, "--instruction") for a in argvs] == [None, WEB]
 
 
 def test_every_run_keeps_the_settings_the_vectors_were_made_with():
