@@ -101,6 +101,20 @@ Recorded before building it. After Diaz, "Regularizing ad hoc retrieval scores",
 - **Weight.** The paper gives no standard a, so three values, fixed now: 0.1, 0.3 and 0.5, which makes 3 configurations.
 - **Selection.** Each value is checked against the three generalisation rules on dev. If more than one passes, the highest dev nDCG@10 is chosen, and its test-split result is reported with the note that 3 values were tried. If none passes, the method is dropped.
 
+## Reranker stage
+Recorded 2026-11-03, before any reranker call. On dev, the dense 8B top 200 holds 98.0% of gold papers but its top 20 only 85.2%, so the remaining gap is ordering.
+
+Configuration 1, LitSearch's "vanilla" reranker (arXiv 2407.18940, section 4), adapted from RankGPT (Sun et al., 2023):
+- **Candidates.** The dense 8B's top 100, with protocol instruction, shown as "[i] title and abstract" in dense order. Anything past 100 keeps its place.
+- **Calls.** One listwise call per question, asking for "[a] > [b] > ..." with no explanation, temperature 0.
+- **Model.** gemini-3.5-flash, pinned with no fallback provider; LitSearch used GPT-4o, which is paid. It was chosen on 2026-11-03 as the strongest model the free tier answered: gemini-3.8-flash timed out.
+- **Parsing.** Out-of-range and repeated ids are dropped, and any ids the model left out follow in dense order. A reply with no ids keeps the dense order and is counted as a failure. More than 2% failures makes the run invalid, since that would be a broken setup rather than a result.
+- **Cache.** Every prompt and reply is cached on disk, so a rerun repeats the same replies and each one can be audited.
+
+Pass rule: the same three generalisation rules as the citation-graph stage, on Recall@20 and nDCG@10 against the dense 8B on dev. If it fails, the reranker is dropped, or a second configuration is pre-registered here before it runs.
+
+Caveat recorded in advance: LitSearch was published in July 2024, and its papers are public. The model may have seen both, which would make any gain partly memory. This can't be ruled out, and the result will be reported with the caveat.
+
 ## Change log
 - 2026-11-02: first version.
 - 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
@@ -115,3 +129,4 @@ Recorded before building it. After Diaz, "Regularizing ad hoc retrieval scores",
 - 2026-11-03, method 2 outcome: structural re-ranking fails and is dropped. On dev, nDCG@10 fell from 65.7 to 32.7 overall and from 67.5 to 16.6 on author-written questions, failing rules 1 and 3. Recall@20 fell from 85.2 to 81.7; its only rise was on source-not-in-corpus questions, 82.9 to 83.5. Cause, checked on dev: in 108 questions the dense rank-1 paper is gold, and after re-ranking it moves to a median rank of 7. Its place goes to papers widely cited within the pool. Equal-weight fusion with a query-blind centrality promotes popular papers over the specific answer. Configurations tried: 1, so 2 in total across graph methods.
 - 2026-11-03: pre-registered method 3, score regularisation, with its three weights.
 - 2026-11-03, method 3 outcome: no weight passes, so score regularisation is dropped. Dev overall, Recall@20 / nDCG@10 against 85.2 / 65.7: a=0.1 gives 85.2 / 66.0, a=0.3 gives 85.5 / 65.5, a=0.5 gives 84.3 / 61.8. No weight raises both metrics overall (rule 1), and every weight lowers nDCG@10 on source-not-in-corpus questions (rule 2): 64.4 to 64.0, 62.0 and 56.9. Author-written questions rose at every weight (nDCG@10 67.5 to 68.5, 70.2 and 68.6), the reverse of the expected artifact. With 82 questions that is within noise, and it is recorded here, not acted on. Configurations tried: 3, so 5 in total across graph methods. All three published families tried here failed on the 8B.
+- 2026-11-03: pre-registered reranker configuration 1, LitSearch's vanilla listwise rerank with gemini-3.5-flash.
