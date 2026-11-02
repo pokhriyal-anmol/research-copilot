@@ -77,6 +77,15 @@ Search limits:
 - The chosen method is scored on the test split once, with the same three rules applied there. Missing any of them there is reported as a failure, not retuned.
 - A benchmark whose relevance labels come from citations, such as ScifullBench, cannot test this stage, since any graph method wins by construction.
 
+### Method 1: one-hop expansion (LitSearch, arXiv 2407.18940, section 4)
+Recorded before building it. Published settings, none tuned:
+- The 8B with the protocol instruction gives the dense ranking.
+- Seeds are its top m = 50.
+- The list is interleaved: seed 1, then the papers it cites (references only, not citing papers), then seed 2 and its references, and so on, skipping duplicates and keeping the first copy.
+- The list is cut at n = 200.
+
+Screening step, no LLM: a reranker can only order what is in the pool, so the one-hop pool is compared with the dense top 200, a pool of equal size, by Recall@200 on dev. One-hop goes on to the LLM rerank only if its pool passes the same three rules as above, with Recall@200 in place of both metrics. Otherwise it is dropped and the LLM calls are not spent. Recall@20 and nDCG@10 of the interleaved list as it stands are reported too, as a diagnostic.
+
 ## Change log
 - 2026-11-02: first version.
 - 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
@@ -85,3 +94,5 @@ Search limits:
 - 2026-11-03, last reproduction attempt, recorded before running it: the instruction Qwen ships in config_sentence_transformers.json, "Given a web search query, retrieve relevant passages that answer the query", which sentence-transformers adds with prompt_name="query". Same reused vectors, same (a) check. It explains PairSem's baseline if both scores are within ±2.0 of 79.2 / 58.0. This is the final setup tried: whatever it shows, the 8B gate is then reported as passed or failed under that setup, and no further setups are searched, since trying setups until one matches would make any match meaningless.
 - 2026-11-03, outcome of the last attempt: check (a) reproduced 81.6 / 62.8 exactly. Qwen's shipped web-search prompt scored Recall@20 79.25 (PairSem 79.2, within 0.1) and nDCG@10 60.4 (PairSem 58.0, 2.4 above, outside ±2.0). By the rule it does not explain PairSem's baseline, so the 8B reproduction gate is reported as failed: Recall@20 reproduced under Qwen's default prompt, nDCG@10 did not, and PairSem's setup is not stated. No further setups will be tried. Our baseline stays the protocol instruction at 81.6 / 62.8, which beats Qwen's default prompt by 2.3 Recall@20 and 2.4 nDCG@10.
 - 2026-11-03: added the citation-graph generalisation rules, before any graph method was built or run.
+- 2026-11-03: pre-registered method 1, one-hop expansion, with its no-LLM screening step.
+- 2026-11-03, method 1 outcome: one-hop fails the screening step and is dropped. On dev, the dense 8B top 200 already holds 98.0% of gold papers. The one-hop pool holds 91.2%, and it is lower in every group: source not in corpus 97.6 to 90.6, author-written 98.8 to 91.5. As-is it also cuts Recall@20 from 85.2 to 72.0. Configurations tried: 1. Result in bench/results/ablations/graph/one-hop-m50-n200-dev.json.
