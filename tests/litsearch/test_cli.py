@@ -1,6 +1,7 @@
 """The command line, end to end on a tiny LitSearch-shaped corpus."""
 import json
 
+import numpy as np
 import pytest
 
 pd = pytest.importorskip("pandas")
@@ -47,3 +48,18 @@ def test_dense_run_without_a_model_exits_with_an_error(data_dir, tmp_path):
         main(["--retriever", "dense", "--split", "full", "--data-dir", str(data_dir),
               "--out-dir", str(tmp_path)])
     assert exit_info.value.code != 0
+
+
+def test_dense_run_records_model_and_precision(data_dir, tmp_path, monkeypatch):
+    from copilot.litsearch import encoders
+
+    class Stub:
+        def encode(self, texts, **_):
+            return np.ones((len(texts), 4))
+
+    monkeypatch.setattr(encoders.Qwen3Encoder, "_load", lambda self: Stub())
+    out = tmp_path / "results"
+    main(["--retriever", "dense", "--model", "Org/Some-Model", "--dtype", "float16", "--split", "full",
+          "--data-dir", str(data_dir), "--out-dir", str(out)])
+    settings = json.loads((out / "some-model-full.json").read_text())["settings"]
+    assert (settings["model"], settings["dtype"]) == ("Org/Some-Model", "float16")

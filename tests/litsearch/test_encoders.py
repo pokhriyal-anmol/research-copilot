@@ -1,6 +1,9 @@
 """The Qwen3 encoder, checked with a stub model so no test downloads weights."""
+from typing import ClassVar
+
 import numpy as np
 import pytest
+
 from copilot.litsearch.encoders import TASK, Qwen3Encoder, result_name
 
 
@@ -70,3 +73,48 @@ def test_result_names_match_what_the_reproduction_gate_reads(retriever, model, s
 def test_dense_without_a_model_is_an_error():
     with pytest.raises(ValueError):
         result_name("dense", None, "full")
+
+
+class FakeSentenceTransformer:
+    """Records how the real loader would be called, without downloading anything."""
+
+    calls: ClassVar[list] = []
+
+    def __init__(self, name, **kwargs):
+        FakeSentenceTransformer.calls.append((name, kwargs))
+
+    def encode(self, texts, **_):
+        return np.ones((len(texts), 4), dtype=np.float32)
+
+
+@pytest.fixture
+def fake_loader(monkeypatch):
+    st = pytest.importorskip("sentence_transformers")
+    FakeSentenceTransformer.calls = []
+    monkeypatch.setattr(st, "SentenceTransformer", FakeSentenceTransformer)
+    return FakeSentenceTransformer.calls
+
+
+def test_default_precision_loads_the_model_unchanged(fake_loader):
+    Qwen3Encoder("m", cache_dir=None).encode_query("q")
+    assert fake_loader == [("m", {})]
+
+
+def test_half_precision_is_passed_to_the_model_loader(fake_loader):
+    torch = pytest.importorskip("torch")
+    encoder = Qwen3Encoder("m", cache_dir=None, dtype="float16")
+    encoder.encode_query("q")
+    assert fake_loader == [("m", {"model_kwargs": {"torch_dtype": torch.float16}})]
+
+
+def test_unknown_precision_is_rejected_before_loading():
+    with pytest.raises(ValueError):
+        Qwen3Encoder("m", cache_dir=None, dtype="float8")
+
+
+def test_precision_is_part_of_the_cache_key(tmp_path):
+    a = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path)
+    a.encode_docs(["x"])
+    b = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, dtype="float16")
+    b.encode_docs(["x"])
+    assert a.cache_key != b.cache_key
