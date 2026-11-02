@@ -18,6 +18,10 @@ RUNS = [  # (model, dtype, device_map); the 0.6B row is the cross-hardware check
     ("Qwen/Qwen3-Embedding-0.6B", "float16", None),
     ("Qwen/Qwen3-Embedding-8B", "float16", "auto"),
 ]
+DOWNLOAD = (
+    "from huggingface_hub import snapshot_download as d; d('princeton-nlp/LitSearch', "
+    "repo_type='dataset', local_dir='bench/data', allow_patterns=['query/*', 'corpus_clean/*'])"
+)
 
 
 def step(name: str, argv: list[str], cwd: Path | None = None) -> None:
@@ -38,10 +42,7 @@ def main() -> None:
     step("checkout", ["git", "checkout", "--quiet", COMMIT], cwd=SRC)
     step("install uv", [sys.executable, "-m", "pip", "install", "--quiet", "uv"])
     step("install deps", ["uv", "sync", "--frozen", "--group", "bench", "--quiet"], cwd=SRC)
-    step("download data", ["uv", "run", "--group", "bench", "python", "-c",
-                           "from huggingface_hub import snapshot_download as d; d('princeton-nlp/LitSearch', "
-                           "repo_type='dataset', local_dir='bench/data', allow_patterns=['query/*', 'corpus_clean/*'])"],
-         cwd=SRC)
+    step("download data", ["uv", "run", "--group", "bench", "python", "-c", DOWNLOAD], cwd=SRC)
     step("tests", ["uv", "run", "--group", "bench", "pytest", "-q", "tests/litsearch"], cwd=SRC)
     for model, dtype, device_map in RUNS:
         argv = ["uv", "run", "--group", "bench", "python", "-m", "copilot.litsearch.run", "--retriever", "dense",
