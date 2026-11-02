@@ -2,10 +2,11 @@
 import argparse
 import json
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from copilot.litsearch.data import Data, Question, load
+from copilot.litsearch.encoders import result_name
 from copilot.litsearch.metrics import mean_scores
 from copilot.litsearch.split import split_questions
 
@@ -38,7 +39,7 @@ def evaluate(
         "scores": mean_scores(runs, {q.id: q.gold for q in questions}, RECALL_KS, NDCG_KS),
         "breakdowns": {g: _score(qs, runs) for g, qs in groups.items() if qs},
         "settings": settings or {},
-        "date": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "date": datetime.now(UTC).isoformat(timespec="seconds"),
         "missing_gold": sum(1 for q in questions if q.gold & data.missing_gold),
     }
 
@@ -59,8 +60,10 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--data-dir", default="bench/data")
     ap.add_argument("--out-dir", default="bench/results")
     args = ap.parse_args(argv)
-    if args.retriever == "dense":
-        ap.exit(2, "error: --retriever dense is not available yet (ticket 7)\n")
+    try:
+        name = result_name(args.retriever, args.model, args.split)
+    except ValueError as e:
+        ap.exit(2, f"error: {e}\n")
     data = load(args.data_dir)
     ids = [q.id for q in data.questions]
     if args.split != "full":  # full needs no split, and a tiny corpus cannot supply 200 dev seats
@@ -69,14 +72,25 @@ def main(argv: list[str] | None = None) -> None:
             dev_size=DEV_SIZE, seed=SEED,
         )
         ids = dev if args.split == "dev" else test
-    from copilot.litsearch.bm25 import BM25Index  # bench-only dependency
+    if args.retriever == "dense":
+        from copilot.litsearch.dense import DenseIndex
+        from copilot.litsearch.encoders import TASK, Qwen3Encoder
 
-    index = BM25Index(data.docs)
-    settings = {
-        "retriever": "bm25", "method": index.method, "k1": index.k1, "b": index.b,
-        "stopwords": index.stopwords, "seed": SEED, "split": args.split,
-    }
-    save(evaluate(data, index.search, ids, f"bm25-{args.split}", settings), args.out_dir)
+        encoder = Qwen3Encoder(args.model)
+        index = DenseIndex(data.docs, encoder)
+        settings = {
+            "retriever": "dense", "model": args.model, "instruction": TASK,
+            "cache_key": encoder.cache_key, "seed": SEED, "split": args.split,
+        }
+    else:
+        from copilot.litsearch.bm25 import BM25Index  # bench-only dependency
+
+        index = BM25Index(data.docs)
+        settings = {
+            "retriever": "bm25", "method": index.method, "k1": index.k1, "b": index.b,
+            "stopwords": index.stopwords, "seed": SEED, "split": args.split,
+        }
+    save(evaluate(data, index.search, ids, name, settings), args.out_dir)
 
 
 if __name__ == "__main__":
