@@ -206,3 +206,12 @@ def test_documents_with_invalid_numbers_fail_loudly_and_are_not_cached(tmp_path)
 def test_query_with_invalid_numbers_fails_loudly():
     with pytest.raises(ValueError, match="finite"):
         Qwen3Encoder("m", model=NanModel(), cache_dir=None).encode_query("q")
+
+
+def test_the_bench_group_installs_what_device_map_needs():
+    # The loader tests fake SentenceTransformer, so they cannot catch a missing package.
+    # A Kaggle 8B run failed this way: device_map needs accelerate.
+    import importlib.util
+
+    pytest.importorskip("sentence_transformers")
+    assert importlib.util.find_spec("accelerate") is not None
