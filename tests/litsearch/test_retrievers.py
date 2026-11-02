@@ -36,6 +36,11 @@ def test_bm25_returns_nothing_for_words_absent_from_the_corpus():
     assert bm25_index().search("zzzz qqqq", k=4) == []
 
 
+def test_bm25_returns_only_docs_sharing_a_query_word():
+    # Only docs 10 and 13 contain "retrieval"; zero-score docs must not pad the list.
+    assert set(bm25_index().search("retrieval", k=4)) == {10, 13}
+
+
 class FakeEncoder:
     """Maps each doc to a one-hot vector so the nearest doc is known in advance."""
 
@@ -56,11 +61,20 @@ def test_dense_ranks_by_cosine_similarity():
     assert index.search("anything", k=2) == [12, 10]
 
 
-def test_dense_scale_of_query_vector_does_not_change_ranking():
-    encoder = FakeEncoder()
-    index = DenseIndex(DOCS, encoder)
-    encoder.encode_query = lambda text: np.array([3.0, 0.0, 9.0, 0.0], dtype=np.float32)
-    assert index.search("anything", k=2) == [12, 10]
+class UnequalLengthEncoder:
+    """Doc 10 points the wrong way but is long; doc 11 points the right way but is short."""
+
+    def encode_docs(self, texts):
+        return np.array([[10.0, 0.0], [1.0, 1.0], [0.0, 0.1]], dtype=np.float32)
+
+    def encode_query(self, text):
+        return np.array([1.0, 1.2], dtype=np.float32)
+
+
+def test_dense_normalises_documents_so_length_does_not_win():
+    # A raw dot product ranks doc 10 first (10.0 vs 2.2); cosine ranks doc 11 first.
+    docs = {10: "a", 11: "b", 12: "c"}
+    assert DenseIndex(docs, UnequalLengthEncoder()).search("q", k=1) == [11]
 
 
 def test_dense_encodes_the_corpus_once_not_per_query():
