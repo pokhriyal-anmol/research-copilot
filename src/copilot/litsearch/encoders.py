@@ -30,7 +30,7 @@ class Qwen3Encoder:
     def __init__(
         self, model_name: str, model=None, cache_dir: Path | str | None = CACHE_DIR, dtype: str = "float32",
         max_length: int = 512, batch_size: int = 8, chunk_size: int = 1024,
-        progress_path: Path | str | None = None, device_map: str | None = None,
+        progress_path: Path | str | None = None, device_map: str | None = None, task: str = TASK,
     ) -> None:
         if dtype not in DTYPES:
             raise ValueError(f"dtype must be one of {DTYPES}")
@@ -41,6 +41,7 @@ class Qwen3Encoder:
         self.batch_size = batch_size
         self.chunk_size = chunk_size
         self._progress = Path(progress_path) if progress_path is not None else None
+        self.task = task
         self.device_map = device_map  # "auto" splits a model too big for one GPU across several
         self._capped = False
         self._model = model
@@ -66,7 +67,7 @@ class Qwen3Encoder:
         return self._model
 
     def encode_query(self, query: str) -> np.ndarray:
-        vector = np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"], batch_size=self.batch_size))[0]
+        vector = np.asarray(self._load().encode([f"Instruct: {self.task}\nQuery:{query}"], batch_size=self.batch_size))[0]
         return _finite(vector)
 
     def _report(self, done: int, total: int) -> None:

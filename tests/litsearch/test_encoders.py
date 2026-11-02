@@ -215,3 +215,20 @@ def test_the_bench_group_installs_what_device_map_needs():
 
     pytest.importorskip("sentence_transformers")
     assert importlib.util.find_spec("accelerate") is not None
+
+
+def test_a_custom_task_replaces_the_default_instruction():
+    model = StubModel()
+    task = "Given a web search query, retrieve relevant passages that answer the query"
+    Qwen3Encoder("m", model=model, cache_dir=None, task=task).encode_query("dense retrieval")
+    assert model.seen == [[f"Instruct: {task}\nQuery:dense retrieval"]]
+
+
+def test_the_task_does_not_change_the_document_cache(tmp_path):
+    # Documents get no instruction, so a different task must reuse the same document vectors.
+    a = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path)
+    a.encode_docs(["x"])
+    model = StubModel()
+    b = Qwen3Encoder("m", model=model, cache_dir=tmp_path, task="Something else")
+    b.encode_docs(["x"])
+    assert a.cache_key == b.cache_key and model.seen == []

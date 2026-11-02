@@ -1,0 +1,67 @@
+{
+  "name": "yuan-embedding-2.0-en-dev",
+  "questions": 200,
+  "scores": {
+    "recall@20": 70.78333333333333,
+    "recall@100": 86.15,
+    "ndcg@10": 50.06912741306062
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 56.85897435897436,
+      "recall@100": 79.42307692307692,
+      "ndcg@10": 37.291444488648054,
+      "questions": 52
+    },
+    "specificity=1": {
+      "recall@20": 75.67567567567568,
+      "recall@100": 88.51351351351352,
+      "ndcg@10": 54.55858357569207,
+      "questions": 148
+    },
+    "query_set=inline_acl": {
+      "recall@20": 66.86868686868686,
+      "recall@100": 84.24242424242425,
+      "ndcg@10": 42.609982759174024,
+      "questions": 33
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 73.52941176470588,
+      "recall@100": 85.29411764705883,
+      "ndcg@10": 52.02530411923589,
+      "questions": 85
+    },
+    "query_set=manual_acl": {
+      "recall@20": 63.46153846153846,
+      "recall@100": 82.6923076923077,
+      "ndcg@10": 49.16886346979303,
+      "questions": 52
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 80.0,
+      "recall@100": 96.66666666666667,
+      "ndcg@10": 54.29214336650317,
+      "questions": 30
+    },
+    "gold_without_abstract": {
+      "recall@20": 0.0,
+      "recall@100": 0.0,
+      "ndcg@10": 0.0,
+      "questions": 1
+    }
+  },
+  "settings": {
+    "retriever": "dense",
+    "model": "IEITYuan/Yuan-embedding-2.0-en",
+    "dtype": "float32",
+    "device_map": null,
+    "max_length": 1024,
+    "batch_size": 8,
+    "instruction": "Given a web search query, retrieve relevant passages that answer the query",
+    "cache_key": "4a792a79ea1e556279e54579b505213d69d4f55156ebfe48104862d433b5a72f",
+    "seed": 13,
+    "split": "dev"
+  },
+  "date": "2026-11-02T15:40:10+00:00",
+  "missing_gold": 0
+}

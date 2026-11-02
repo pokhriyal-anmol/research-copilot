@@ -91,3 +91,18 @@ def test_default_progress_file_is_the_one_the_tracker_watches():
     from copilot.litsearch import encoders
 
     assert str(encoders.PROGRESS_FILE) == "bench/data/progress.json"
+
+
+def test_dense_run_records_a_custom_instruction(data_dir, tmp_path, monkeypatch):
+    from copilot.litsearch import encoders
+
+    class Stub:
+        def encode(self, texts, **_):
+            return np.ones((len(texts), 4))
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(encoders.Qwen3Encoder, "_load", lambda self: Stub())
+    out = tmp_path / "results"
+    main(["--retriever", "dense", "--model", "Org/M", "--split", "full", "--instruction", "Find papers",
+          "--data-dir", str(data_dir), "--out-dir", str(out)])
+    assert json.loads((out / "m-full.json").read_text())["settings"]["instruction"] == "Find papers"
