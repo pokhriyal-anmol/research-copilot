@@ -86,6 +86,14 @@ Recorded before building it. Published settings, none tuned:
 
 Screening step, no LLM: a reranker can only order what is in the pool, so the one-hop pool is compared with the dense top 200, a pool of equal size, by Recall@200 on dev. One-hop goes on to the LLM rerank only if its pool passes the same three rules as above, with Recall@200 in place of both metrics. Otherwise it is dropped and the LLM calls are not spent. Recall@20 and nDCG@10 of the interleaved list as it stands are reported too, as a diagnostic.
 
+### Method 2: structural re-ranking over citations
+Recorded before building it. Method 1 showed the dense top 200 already holds 98% of dev gold papers, so this method adds no candidates and only reorders them.
+- **Graph.** The citation links among the dense top 200, directed from citing paper to cited paper. Links to papers outside the 200 are ignored.
+- **Centrality.** PageRank over that graph, after Kurland and Lee, SIGIR 2005 ("PageRank without hyperlinks"), with damping 0.85 (Brin and Page) and a uniform teleport. Papers with no outgoing links spread their score uniformly.
+- **Fusion.** Reciprocal-rank fusion of the dense order and the PageRank order, 1/(60 + rank) each, with k = 60 from Cormack, Clarke and Buettcher, SIGIR 2009, and equal weights. Ties in either order, and in the fused score, go to the better dense rank.
+
+No setting is tuned, so this is one configuration. It passes if it meets the three generalisation rules on Recall@20 and nDCG@10 against the dense 8B on dev.
+
 ## Change log
 - 2026-11-02: first version.
 - 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
@@ -96,3 +104,5 @@ Screening step, no LLM: a reranker can only order what is in the pool, so the on
 - 2026-11-03: added the citation-graph generalisation rules, before any graph method was built or run.
 - 2026-11-03: pre-registered method 1, one-hop expansion, with its no-LLM screening step.
 - 2026-11-03, method 1 outcome: one-hop fails the screening step and is dropped. On dev, the dense 8B top 200 already holds 98.0% of gold papers. The one-hop pool holds 91.2%, and it is lower in every group: source not in corpus 97.6 to 90.6, author-written 98.8 to 91.5. As-is it also cuts Recall@20 from 85.2 to 72.0. Configurations tried: 1. Result in bench/results/ablations/graph/one-hop-m50-n200-dev.json.
+- 2026-11-03: pre-registered method 2, structural re-ranking over citations.
+- 2026-11-03, method 2 outcome: structural re-ranking fails and is dropped. On dev, nDCG@10 fell from 65.7 to 32.7 overall and from 67.5 to 16.6 on author-written questions, failing rules 1 and 3. Recall@20 fell from 85.2 to 81.7; its only rise was on source-not-in-corpus questions, 82.9 to 83.5. Cause, checked on dev: in 108 questions the dense rank-1 paper is gold, and after re-ranking it moves to a median rank of 7. Its place goes to papers widely cited within the pool. Equal-weight fusion with a query-blind centrality promotes popular papers over the specific answer. Configurations tried: 1, so 2 in total across graph methods.

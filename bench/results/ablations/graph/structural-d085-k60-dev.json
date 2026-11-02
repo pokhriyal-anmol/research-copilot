@@ -1,0 +1,61 @@
+{
+  "method": "structural re-ranking: PageRank d=0.85 over citations in the top 200, RRF k=60",
+  "base": "Qwen3-Embedding-8B, protocol instruction",
+  "split": "dev",
+  "date": "2026-11-02T23:05:36+00:00",
+  "mean_pool_size": 200.0,
+  "groups": {
+    "all": {
+      "questions": 200,
+      "dense": {
+        "recall@20": 85.15,
+        "recall@200": 98.0,
+        "ndcg@10": 65.73509054912779
+      },
+      "structural": {
+        "recall@20": 81.73333333333333,
+        "recall@200": 98.0,
+        "ndcg@10": 32.686560870289696
+      }
+    },
+    "source not in corpus (inline_nonacl)": {
+      "questions": 85,
+      "dense": {
+        "recall@20": 82.94117647058823,
+        "recall@200": 97.6470588235294,
+        "ndcg@10": 64.3939585643991
+      },
+      "structural": {
+        "recall@20": 83.52941176470588,
+        "recall@200": 97.6470588235294,
+        "ndcg@10": 40.227410206393174
+      }
+    },
+    "author-written (manual_acl, manual_iclr)": {
+      "questions": 82,
+      "dense": {
+        "recall@20": 85.36585365853658,
+        "recall@200": 98.78048780487805,
+        "ndcg@10": 67.51487342175116
+      },
+      "structural": {
+        "recall@20": 79.26829268292683,
+        "recall@200": 98.78048780487805,
+        "ndcg@10": 16.586915700704456
+      }
+    },
+    "source may be in corpus (inline_acl, not counted)": {
+      "questions": 33,
+      "dense": {
+        "recall@20": 90.3030303030303,
+        "recall@200": 96.96969696969697,
+        "ndcg@10": 64.76703064448606
+      },
+      "structural": {
+        "recall@20": 83.23232323232322,
+        "recall@200": 96.96969696969697,
+        "ndcg@10": 53.268339971416765
+      }
+    }
+  }
+}
