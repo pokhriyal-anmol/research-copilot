@@ -34,3 +34,10 @@ def test_every_run_keeps_the_settings_the_vectors_were_made_with():
 def test_the_two_8b_results_do_not_overwrite_each_other():
     outs = [flag(a, "--out-dir") for a in run_kaggle.commands(vectors=True)]
     assert len(set(outs)) == 2
+
+
+def test_a_vector_run_keeps_question_vectors_but_not_the_paper_vectors_it_was_given(tmp_path):
+    (tmp_path / "queries").mkdir()
+    (tmp_path / "paper.npy").write_bytes(b"")
+    assert run_kaggle.kept(tmp_path, vectors=True) == [tmp_path / "queries"]
+    assert sorted(run_kaggle.kept(tmp_path, vectors=False)) == [tmp_path / "paper.npy", tmp_path / "queries"]

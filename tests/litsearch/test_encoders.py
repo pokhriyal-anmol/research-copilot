@@ -239,3 +239,26 @@ def test_an_empty_task_sends_the_raw_query():
     model = StubModel()
     Qwen3Encoder("m", model=model, cache_dir=None, task="").encode_query("dense retrieval")
     assert model.seen == [["dense retrieval"]]
+
+
+def test_a_repeated_query_reads_the_query_cache(tmp_path):
+    # Lets the Mac score the 8B from question vectors made on Kaggle, without loading the model.
+    first = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path).encode_query("dense retrieval")
+    model = StubModel()
+    again = Qwen3Encoder("m", model=model, cache_dir=tmp_path).encode_query("dense retrieval")
+    assert model.seen == [] and np.array_equal(first, again)
+
+
+def test_a_different_instruction_misses_the_query_cache(tmp_path):
+    Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path).encode_query("dense retrieval")
+    model = StubModel()
+    Qwen3Encoder("m", model=model, cache_dir=tmp_path, task="Something else").encode_query("dense retrieval")
+    assert model.seen
+
+
+def test_a_different_model_or_dtype_misses_the_query_cache(tmp_path):
+    Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path).encode_query("q")
+    for other in (Qwen3Encoder("m2", model=StubModel(), cache_dir=tmp_path),
+                  Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, dtype="float16")):
+        other.encode_query("q")
+        assert other._model.seen

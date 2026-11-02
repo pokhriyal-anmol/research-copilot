@@ -53,6 +53,12 @@ def commands(vectors: bool) -> list[list[str]]:
     return argvs
 
 
+def kept(cache: Path, vectors: bool) -> list[Path]:
+    # Question vectors always; paper vectors only when this run made them, not when it was given them.
+    queries = [cache / "queries"] if (cache / "queries").is_dir() else []
+    return queries if vectors else sorted(cache.glob("*.npy")) + queries
+
+
 def main() -> None:
     WORK.mkdir(parents=True, exist_ok=True)
     step("gpus", ["nvidia-smi"])
@@ -72,9 +78,8 @@ def main() -> None:
             step(f"reuse {npy.name}", ["cp", str(npy), str(SRC / "bench/data/cache" / npy.name)])
     for argv in commands(vectors):
         step(f"embed {argv[argv.index('--model') + 1]}", argv, cwd=SRC)
-    if not vectors:
-        for cached in (SRC / "bench/data/cache").glob("*.npy"):  # 8B document vectors, for later experiments
-            step(f"keep {cached.name}", ["cp", str(cached), str(WORK / cached.name)])
+    for cached in kept(SRC / "bench/data/cache", vectors):  # vectors for experiments on the Mac
+        step(f"keep {cached.name}", ["cp", "-r", str(cached), str(WORK / cached.name)])
     (WORK / "done.json").write_text(json.dumps({"commit": COMMIT, "finished": time.time()}))
 
 

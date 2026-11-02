@@ -1,4 +1,4 @@
-"""Qwen3-Embedding encoder with an on-disk document cache."""
+"""Qwen3-Embedding encoder with on-disk document and query caches."""
 import hashlib
 import json
 from pathlib import Path
@@ -67,8 +67,16 @@ class Qwen3Encoder:
         return self._model
 
     def encode_query(self, query: str) -> np.ndarray:
-        vector = np.asarray(self._load().encode([f"Instruct: {self.task}\nQuery:{query}" if self.task else query], batch_size=self.batch_size))[0]
-        return _finite(vector)
+        text = f"Instruct: {self.task}\nQuery:{query}" if self.task else query
+        key = hashlib.sha256(f"{self.model_name}|{self.dtype}|{self.max_length}\0{text}".encode()).hexdigest()
+        path = self._cache / "queries" / f"{key}.npy" if self._cache else None
+        if path and path.exists():
+            return np.load(path)
+        vector = _finite(np.asarray(self._load().encode([text], batch_size=self.batch_size))[0])
+        if path:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            np.save(path, vector)
+        return vector
 
     def _report(self, done: int, total: int) -> None:
         if self._progress is not None:
