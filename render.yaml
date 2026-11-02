@@ -3,6 +3,7 @@ services:
     name: research-copilot
     runtime: docker
     plan: free
+    region: singapore  # same region as the Neon database, ap-southeast-1
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
