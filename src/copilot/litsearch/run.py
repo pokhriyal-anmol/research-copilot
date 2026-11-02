@@ -57,6 +57,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--retriever", choices=["bm25", "dense"], required=True)
     ap.add_argument("--model")
     ap.add_argument("--dtype", choices=["float32", "float16", "bfloat16"], default="float32")
+    ap.add_argument("--max-length", type=int, default=512)
+    ap.add_argument("--batch-size", type=int, default=8)
     ap.add_argument("--split", choices=["dev", "test", "full"], required=True)
     ap.add_argument("--data-dir", default="bench/data")
     ap.add_argument("--out-dir", default="bench/results")
@@ -77,10 +79,11 @@ def main(argv: list[str] | None = None) -> None:
         from copilot.litsearch.dense import DenseIndex
         from copilot.litsearch.encoders import TASK, Qwen3Encoder
 
-        encoder = Qwen3Encoder(args.model, dtype=args.dtype)
+        encoder = Qwen3Encoder(args.model, dtype=args.dtype, max_length=args.max_length, batch_size=args.batch_size)
         index = DenseIndex(data.docs, encoder)
         settings = {
-            "retriever": "dense", "model": args.model, "dtype": args.dtype, "instruction": TASK,
+            "retriever": "dense", "model": args.model, "dtype": args.dtype, "max_length": args.max_length,
+            "batch_size": args.batch_size, "instruction": TASK,
             "cache_key": encoder.cache_key, "seed": SEED, "split": args.split,
         }
     else:

@@ -1,5 +1,6 @@
 """The command line, end to end on a tiny LitSearch-shaped corpus."""
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -53,6 +54,10 @@ def test_dense_run_without_a_model_exits_with_an_error(data_dir, tmp_path):
 def test_dense_run_records_model_and_precision(data_dir, tmp_path, monkeypatch):
     from copilot.litsearch import encoders
 
+    repo_cache = Path(encoders.CACHE_DIR).resolve()
+    before = set(repo_cache.glob("*")) if repo_cache.exists() else set()
+    monkeypatch.chdir(tmp_path)  # a test must never write into the real embedding cache
+
     class Stub:
         def encode(self, texts, **_):
             return np.ones((len(texts), 4))
@@ -63,3 +68,5 @@ def test_dense_run_records_model_and_precision(data_dir, tmp_path, monkeypatch):
           "--data-dir", str(data_dir), "--out-dir", str(out)])
     settings = json.loads((out / "some-model-full.json").read_text())["settings"]
     assert (settings["model"], settings["dtype"]) == ("Org/Some-Model", "float16")
+    assert {"max_length", "batch_size"} <= set(settings)
+    assert (set(repo_cache.glob("*")) if repo_cache.exists() else set()) == before

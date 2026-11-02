@@ -118,3 +118,28 @@ def test_precision_is_part_of_the_cache_key(tmp_path):
     b = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, dtype="float16")
     b.encode_docs(["x"])
     assert a.cache_key != b.cache_key
+
+
+class RecordingModel:
+    def __init__(self):
+        self.max_seq_length = 32768
+        self.encode_kwargs = []
+
+    def encode(self, texts, **kwargs):
+        self.encode_kwargs.append(kwargs)
+        return np.ones((len(texts), 4), dtype=np.float32)
+
+
+def test_length_cap_and_batch_size_reach_the_model(tmp_path):
+    model = RecordingModel()
+    Qwen3Encoder("m", model=model, cache_dir=tmp_path, max_length=256, batch_size=4).encode_docs(["a"])
+    assert model.max_seq_length == 256
+    assert model.encode_kwargs[-1]["batch_size"] == 4
+
+
+def test_length_cap_is_part_of_the_cache_key(tmp_path):
+    a = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, max_length=256)
+    a.encode_docs(["x"])
+    b = Qwen3Encoder("m", model=StubModel(), cache_dir=tmp_path, max_length=512)
+    b.encode_docs(["x"])
+    assert a.cache_key != b.cache_key

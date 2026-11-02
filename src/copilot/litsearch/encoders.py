@@ -19,12 +19,17 @@ def result_name(retriever: str, model: str | None, split: str) -> str:
 
 class Qwen3Encoder:
     def __init__(
-        self, model_name: str, model=None, cache_dir: Path | str | None = CACHE_DIR, dtype: str = "float32"
+        self, model_name: str, model=None, cache_dir: Path | str | None = CACHE_DIR, dtype: str = "float32",
+        max_length: int = 512, batch_size: int = 8,
     ) -> None:
         if dtype not in DTYPES:
             raise ValueError(f"dtype must be one of {DTYPES}")
         self.model_name = model_name
         self.dtype = dtype
+        # The model allows 32,768 tokens; uncapped, the longest batch ran out of GPU memory.
+        self.max_length = max_length
+        self.batch_size = batch_size
+        self._capped = False
         self._model = model
         self._cache = Path(cache_dir) if cache_dir is not None else None
         self.cache_key = ""
@@ -39,22 +44,24 @@ class Qwen3Encoder:
 
                 kwargs["model_kwargs"] = {"torch_dtype": getattr(torch, self.dtype)}
             self._model = SentenceTransformer(self.model_name, **kwargs)
+        if not self._capped:
+            self._model.max_seq_length = self.max_length
+            self._capped = True
         return self._model
 
     def encode_query(self, query: str) -> np.ndarray:
-        return np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"]))[0]
+        return np.asarray(self._load().encode([f"Instruct: {TASK}\nQuery:{query}"], batch_size=self.batch_size))[0]
 
     def encode_docs(self, texts: list[str]) -> np.ndarray:
         digest = hashlib.sha256(self.model_name.encode())
-        if self.dtype != "float32":  # keeps existing float32 cache files valid
-            digest.update(self.dtype.encode())
+        digest.update(f"|{self.dtype}|{self.max_length}".encode())
         for t in texts:
             digest.update(b"\0" + t.encode())
         self.cache_key = digest.hexdigest()
         path = self._cache / f"{self.cache_key}.npy" if self._cache else None
         if path and path.exists():
             return np.load(path)
-        vectors = np.asarray(self._load().encode(texts))
+        vectors = np.asarray(self._load().encode(texts, batch_size=self.batch_size))
         if path:
             path.parent.mkdir(parents=True, exist_ok=True)
             np.save(path, vectors)
