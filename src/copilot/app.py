@@ -14,11 +14,15 @@ from copilot.answer import PROMPT_VERSION, Answer, answer
 from copilot.db import connect, migrate
 from copilot.embed import embed_query
 from copilot.llm import AllProvidersFailed
-from copilot.retrieve import search
+from copilot.retrieve import MODES, search
 
 log = logging.getLogger(__name__)
 INDEX = Path(__file__).parent / "static" / "index.html"
 http_client = httpx.Client()
+# Render's free instance runs out of memory with the reranker loaded, so it uses hybrid there.
+SEARCH_MODE = os.environ.get("SEARCH_MODE", "rerank")
+if SEARCH_MODE not in MODES:
+    raise ValueError(f"SEARCH_MODE must be one of {MODES}")
 
 
 class Question(BaseModel):
@@ -71,7 +75,7 @@ def post_answer(body: Question) -> dict:
         if over_daily_cap(conn):
             raise HTTPException(503, "Today's free model quota is used up. Please try tomorrow.")
         try:
-            result = answer(http_client, body.question, search(conn, body.question, embed_query(body.question)))
+            result = answer(http_client, body.question, search(conn, body.question, embed_query(body.question), mode=SEARCH_MODE))
         except AllProvidersFailed:
             write_trace(conn, body.question, None, started)
             raise HTTPException(503, "The model providers are unavailable. Please retry.") from None
