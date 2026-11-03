@@ -1,0 +1,67 @@
+{
+  "name": "qwen3-embedding-0.6b-dev",
+  "questions": 200,
+  "scores": {
+    "recall@20": 81.05,
+    "recall@100": 89.9,
+    "ndcg@10": 57.96931234999668
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 65.57692307692308,
+      "recall@100": 81.34615384615384,
+      "ndcg@10": 43.07625703102352,
+      "questions": 52
+    },
+    "specificity=1": {
+      "recall@20": 86.48648648648648,
+      "recall@100": 92.9054054054054,
+      "ndcg@10": 63.202007462068345,
+      "questions": 148
+    },
+    "query_set=inline_acl": {
+      "recall@20": 79.0909090909091,
+      "recall@100": 88.78787878787878,
+      "ndcg@10": 53.38052921584406,
+      "questions": 33
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 83.52941176470588,
+      "recall@100": 90.0,
+      "ndcg@10": 60.277381943091946,
+      "questions": 85
+    },
+    "query_set=manual_acl": {
+      "recall@20": 76.92307692307692,
+      "recall@100": 86.53846153846153,
+      "ndcg@10": 54.210705086416965,
+      "questions": 52
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 83.33333333333333,
+      "recall@100": 96.66666666666667,
+      "ndcg@10": 62.99236254066617,
+      "questions": 30
+    },
+    "gold_without_abstract": {
+      "recall@20": 0.0,
+      "recall@100": 0.0,
+      "ndcg@10": 0.0,
+      "questions": 1
+    }
+  },
+  "settings": {
+    "retriever": "dense",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "dtype": "float32",
+    "device_map": null,
+    "max_length": 1024,
+    "batch_size": 8,
+    "instruction": "Given a scientific literature search query, retrieve relevant papers",
+    "cache_key": "f53b566175b307dddc4ee9e270584ff00e86089a4f4fa40c08c48c7a4498e072",
+    "seed": 13,
+    "split": "dev"
+  },
+  "date": "2026-11-02T15:40:36+00:00",
+  "missing_gold": 0
+}

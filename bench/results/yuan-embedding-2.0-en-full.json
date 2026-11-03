@@ -1,0 +1,67 @@
+{
+  "name": "yuan-embedding-2.0-en-full",
+  "questions": 597,
+  "scores": {
+    "recall@20": 69.2462311557789,
+    "recall@100": 81.26186487995534,
+    "ndcg@10": 47.005902180847386
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 57.67741935483871,
+      "recall@100": 72.34408602150538,
+      "ndcg@10": 35.57739706489146,
+      "questions": 155
+    },
+    "specificity=1": {
+      "recall@20": 73.30316742081448,
+      "recall@100": 84.38914027149322,
+      "ndcg@10": 51.013635875356826,
+      "questions": 442
+    },
+    "query_set=inline_acl": {
+      "recall@20": 65.71428571428572,
+      "recall@100": 82.27891156462586,
+      "ndcg@10": 41.60461797665491,
+      "questions": 98
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 67.58893280632411,
+      "recall@100": 76.08695652173913,
+      "ndcg@10": 45.65249241297837,
+      "questions": 253
+    },
+    "query_set=manual_acl": {
+      "recall@20": 67.74193548387096,
+      "recall@100": 85.16129032258064,
+      "ndcg@10": 45.80188140821095,
+      "questions": 155
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 80.21978021978022,
+      "recall@100": 87.91208791208791,
+      "ndcg@10": 58.636251005466924,
+      "questions": 91
+    },
+    "gold_without_abstract": {
+      "recall@20": 16.666666666666668,
+      "recall@100": 16.666666666666668,
+      "ndcg@10": 16.666666666666668,
+      "questions": 6
+    }
+  },
+  "settings": {
+    "retriever": "dense",
+    "model": "IEITYuan/Yuan-embedding-2.0-en",
+    "dtype": "float32",
+    "device_map": null,
+    "max_length": 1024,
+    "batch_size": 8,
+    "instruction": "Given a scientific literature search query, retrieve relevant papers",
+    "cache_key": "4a792a79ea1e556279e54579b505213d69d4f55156ebfe48104862d433b5a72f",
+    "seed": 13,
+    "split": "full"
+  },
+  "date": "2026-11-02T15:37:43+00:00",
+  "missing_gold": 0
+}

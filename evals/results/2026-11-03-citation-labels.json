@@ -1,0 +1,410 @@
+{
+  "date": "2026-11-03",
+  "sheet": "evals/results/2026-11-03-citations-to-label.csv",
+  "labellers": "two independent Claude Sonnet subagents with the same rubric, neither seeing the other; a third (A) was discarded for giving one generic reason to all 44 rows it marked supported",
+  "caveat": "labeller C reports judging some long passages from their first ~1000 characters plus keyword search",
+  "B": {
+    "1": {
+      "label": "supported",
+      "reason": "Passage gives the same softmax weight formula and temperature role."
+    },
+    "2": {
+      "label": "supported",
+      "reason": "Passage says SAE uses the MS-MARCO training setup."
+    },
+    "3": {
+      "label": "supported",
+      "reason": "Passage tests pool sizes K in 20, 40, 80, 160."
+    },
+    "4": {
+      "label": "supported",
+      "reason": "Table 5 shows 8192 pairs except Exchange H=720 at 6384."
+    },
+    "5": {
+      "label": "supported",
+      "reason": "Passage selects BGE-base FULL with MRR@5 0.5842 as strongest retrieval."
+    },
+    "6": {
+      "label": "partly",
+      "reason": "Open() read interception is stated, but file creation is found via directory snapshots, not runtime monitoring."
+    },
+    "7": {
+      "label": "supported",
+      "reason": "Rule to cite only evidence nodes in the pack and never invent citations is stated."
+    },
+    "8": {
+      "label": "partly",
+      "reason": "Passage says UltraGCN approximates infinite-layer message passing beyond iterative passing; single hop and proxy wording are not stated."
+    },
+    "9": {
+      "label": "supported",
+      "reason": "Passage says only claim what bears directly on primary issues; mere presence is no reason."
+    },
+    "10": {
+      "label": "supported",
+      "reason": "Passage gives 0.50 to 0.75 as moderate per Koo and Li."
+    },
+    "11": {
+      "label": "partly",
+      "reason": "Randomised carousel order is stated, but popularity ordering within carousels is not in the passage."
+    },
+    "12": {
+      "label": "supported",
+      "reason": "Passage says B is initialised to zero, equal to Context-only scoring."
+    },
+    "13": {
+      "label": "supported",
+      "reason": "Passage says content-only criterion injects substantial noise as similar items differ across markets."
+    },
+    "14": {
+      "label": "partly",
+      "reason": "Passage says sequential models predict from ordered histories but does not mention long-term preference dynamics."
+    },
+    "15": {
+      "label": "supported",
+      "reason": "Passage says seventh edition was 2015 and she was on the 2015 team."
+    },
+    "16": {
+      "label": "supported",
+      "reason": "Passage says the LLM first picks the more relevant passage as a baseline preference."
+    },
+    "17": {
+      "label": "supported",
+      "reason": "Passage reports pooled median about 0.79 and median 0.792."
+    },
+    "18": {
+      "label": "supported",
+      "reason": "Passage shows significantly higher click probability in Row 1 than Row 6, refuting the examination hypothesis."
+    },
+    "19": {
+      "label": "supported",
+      "reason": "Passage states ASIRF LLM calls cost more at inference than OPF single forward pass."
+    },
+    "20": {
+      "label": "supported",
+      "reason": "Passage states WP-DE uses 50 comparisons, 59%-98% fewer than SW variants."
+    },
+    "21": {
+      "label": "supported",
+      "reason": "Passage gives the same SLURM, Xeon 8490H, 2 TB RAM, Ubuntu 22.04 details."
+    },
+    "22": {
+      "label": "supported",
+      "reason": "Passage says mirrored F-pattern with d_RPD gives best rho, r and MSE."
+    },
+    "23": {
+      "label": "supported",
+      "reason": "Passage says seventh edition was 2015 and she was part of that team."
+    },
+    "24": {
+      "label": "supported",
+      "reason": "Passage says session-based suits cases where persistent identities are unavailable or anonymous."
+    },
+    "25": {
+      "label": "supported",
+      "reason": "Passage says isolated owners make up 20.6% of all owners."
+    },
+    "26": {
+      "label": "supported",
+      "reason": "Passage describes TensorRT-LLM worker-loop and a production A/B of SnapLGR against legacy T5."
+    },
+    "27": {
+      "label": "supported",
+      "reason": "Passage says a single seed explains much of the DoorKey static-vocab variance."
+    },
+    "28": {
+      "label": "supported",
+      "reason": "Passage says 40%-60% interval shows a smooth transition with rising error."
+    },
+    "29": {
+      "label": "supported",
+      "reason": "Passage says multi-attribute view gives substantially stronger prediction than single metrics."
+    },
+    "30": {
+      "label": "supported",
+      "reason": "Passage says weight is multiplied by B to remove beam-size effect and favours high-confidence sequences."
+    },
+    "31": {
+      "label": "supported",
+      "reason": "Passage reports +4.3/+16.2/+42.2 points at f=0.5/0.7/0.9 over faiss real soft-delete."
+    },
+    "32": {
+      "label": "supported",
+      "reason": "Passage lists RQ2.2 with that wording."
+    },
+    "33": {
+      "label": "not",
+      "reason": "Passage is a retrieval ablation and never mentions LRPPRC."
+    },
+    "34": {
+      "label": "supported",
+      "reason": "Passage says a sequence weighting mechanism is introduced to reshape supervision intensity."
+    },
+    "35": {
+      "label": "supported",
+      "reason": "Passage frames retrieval as scoring individual passages and introduces query-set compatibility."
+    },
+    "36": {
+      "label": "partly",
+      "reason": "Passage mentions temporal dependencies and preference changes but not long-term preference dynamics explicitly."
+    },
+    "37": {
+      "label": "supported",
+      "reason": "Passage says the overwhelming majority pointed to data, backend or infrastructure."
+    },
+    "38": {
+      "label": "supported",
+      "reason": "Passage says a less relevant document may supply facts contributing to the answer."
+    },
+    "39": {
+      "label": "supported",
+      "reason": "Passage says five variants of the extraction prompt were tested."
+    },
+    "40": {
+      "label": "partly",
+      "reason": "Passage gives a 1.2 point DIGER gap and a figure; the 2%-4% ambiguous share is not stated."
+    },
+    "41": {
+      "label": "supported",
+      "reason": "Passage says edit spec has anchor, suggestion and necessity score."
+    },
+    "42": {
+      "label": "partly",
+      "reason": "Passage shows N=200 and detectable ICC above 0.06 but 80% power and k=5 are not stated."
+    },
+    "43": {
+      "label": "supported",
+      "reason": "Passage says RL teaches the model to drop redundant reasoning that does not help rank the target."
+    },
+    "44": {
+      "label": "supported",
+      "reason": "Table 4 gives 69,470.3 s and about 19.3 h for the entire pipeline."
+    },
+    "45": {
+      "label": "supported",
+      "reason": "Passage says knowledge is spread across subfields so cross-document aggregation is needed."
+    },
+    "46": {
+      "label": "supported",
+      "reason": "Passage states every claim must reference an evidence node and verbatim span."
+    },
+    "47": {
+      "label": "supported",
+      "reason": "Passage says path-based F1 reaches 0.864."
+    },
+    "48": {
+      "label": "supported",
+      "reason": "Passage states 47,654 query-dataset positive pairs."
+    },
+    "49": {
+      "label": "supported",
+      "reason": "Passage says knowledge is organised per OKF with a Skill-compatible SKILL.md at the root."
+    },
+    "50": {
+      "label": "supported",
+      "reason": "Passage gives expected NDCG@10 of 0.1466 for 31 tied items versus 1 and says it is not evidence of identification."
+    }
+  },
+  "C": {
+    "1": {
+      "label": "supported",
+      "reason": "Passage gives the same normalized-weight formula and says the temperature 'controls the sharpness of the distribution'."
+    },
+    "2": {
+      "label": "supported",
+      "reason": "Passage says the SAE uses 'the same MS-MARCO training setup and sparsity constraint (K=32)'."
+    },
+    "3": {
+      "label": "supported",
+      "reason": "Passage states 'candidate pools of K in {20,40,80,160}'; the top-10 clause is for another citation and this passage does not cover it."
+    },
+    "4": {
+      "label": "supported",
+      "reason": "Table 5 shows 8192 everywhere except Exchange at H=720 with 6384, and text says Exchange H=720 'is the only test condition with fewer than 8,192 pairs'."
+    },
+    "5": {
+      "label": "supported",
+      "reason": "Passage: BGE-base 'with the FULL metadata configuration achieved the strongest first-stage retrieval performance (MRR@5 = 0.5842)'."
+    },
+    "6": {
+      "label": "supported",
+      "reason": "Passage: when a script reads a file 'e.g. using Python's built-in open() function' the library 'intercepts the operation' without changing the user's script; file creation via work-directory snapshots."
+    },
+    "7": {
+      "label": "supported",
+      "reason": "Rules say 'Cite ONLY evidence nodes that appear in the provided pack - never invent a citation or rely on outside knowledge of the law'."
+    },
+    "8": {
+      "label": "supported",
+      "reason": "Passage: UltraGCN goes 'beyond explicit message-passing' to 'approximate the infinite-layer message-passing' and 'the procedure is not repeated for layers l>1'."
+    },
+    "9": {
+      "label": "supported",
+      "reason": "Passage: 'Only claim what bears directly on the primary issues; a retrieved node's mere presence is not a reason to claim about it.'"
+    },
+    "10": {
+      "label": "supported",
+      "reason": "Passage: following Koo and Li, 'between 0.50 and 0.75 moderate' for reliability coefficients."
+    },
+    "11": {
+      "label": "partly",
+      "reason": "Passage says the vertical carousel order is 'completely randomized', but nothing about items within carousels being ordered by popularity."
+    },
+    "12": {
+      "label": "supported",
+      "reason": "Passage: 'We initialize B to zero, making the initial retrieval function equivalent to Context-only scoring.'"
+    },
+    "13": {
+      "label": "supported",
+      "reason": "Passage: 'Two items that look similar can play very different roles across markets, so a content-only criterion injects substantial noise.'"
+    },
+    "14": {
+      "label": "partly",
+      "reason": "Passage says sequential recommendation 'predicts future items from ordered user histories' but never mentions long-term preference dynamics."
+    },
+    "15": {
+      "label": "supported",
+      "reason": "Passage: 'the 2015 FIFA Women's World Cup was the seventh edition'; supports the edition/year part."
+    },
+    "16": {
+      "label": "supported",
+      "reason": "Passage: 'Passage A is preferred before date injection' and 'we record the new preference', so a baseline pairwise relevance choice precedes injection."
+    },
+    "17": {
+      "label": "supported",
+      "reason": "Figure caption: 'Pooled median ~0.79' and 'median = 0.792' over 11,273 documents."
+    },
+    "18": {
+      "label": "supported",
+      "reason": "Passage: conditional click probability 'significantly higher in Row 1 than in Row 6 with p<0.05... sufficient to refute Assumption 3 and thus the examination hypothesis'."
+    },
+    "19": {
+      "label": "supported",
+      "reason": "Conclusion: 'ASIRF's LLM calls cost more at inference than OPF's single lightweight forward pass'."
+    },
+    "20": {
+      "label": "supported",
+      "reason": "Passage: 'WP-DE produces a full ranking with 50 comparisons, 59%-98% fewer than the SW variants'."
+    },
+    "21": {
+      "label": "supported",
+      "reason": "Hardware paragraph matches verbatim: two Xeon Platinum 8490H, 60 cores per socket, 112.5 MiB L3, 1.90 GHz, 2 TB RAM, Ubuntu 22.04."
+    },
+    "22": {
+      "label": "supported",
+      "reason": "Passage: 'combining the mirrored F-pattern with the row-page discount d_RPD, which yields the highest Spearman rho and Pearson r correlations and the lowest MSE after max normalization'."
+    },
+    "23": {
+      "label": "supported",
+      "reason": "Passage says Sukanya was on Thailand's team 'at the 2015 FIFA Women's World Cup' and 'the seventh FIFA Women's World Cup occurred in 2015'."
+    },
+    "24": {
+      "label": "supported",
+      "reason": "Passage: session-based approaches 'are particularly suitable when persistent user identities are unavailable, anonymous, or unreliable'; sequential models contrasted via user histories."
+    },
+    "25": {
+      "label": "supported",
+      "reason": "Passage: 'isolated owners, who make up 20.6% of all owners'; the d_obs=0 definition is not shown but the figure is."
+    },
+    "26": {
+      "label": "partly",
+      "reason": "Passage has A/B results 'SnapLGR vs. legacy T5 baseline' and worker-loop/TensorRT-LLM speedups, but does not say it is deployed in production for Snapchat content recommendation."
+    },
+    "27": {
+      "label": "supported",
+      "reason": "Passage: 'on DoorKey-8x8 seed 789, static-vocab-only reaches only 1% final-100 success, whereas the full diagnostic run reaches 100%. This single catastrophic static-vocab seed explains much of the DoorKey static-vocab variance'."
+    },
+    "28": {
+      "label": "partly",
+      "reason": "Passage confirms a smooth 40%-60% transition and 'gradual rather than abrupt' degradation around 50%, but contradicts a 'sharp decline after the transition region' (and it is GCN-S, not GNNs in general)."
+    },
+    "29": {
+      "label": "supported",
+      "reason": "Passage: 'Our multi-attribute perspective, by contrast, captures more complex structural patterns, translating into substantially stronger predictive power'."
+    },
+    "30": {
+      "label": "supported",
+      "reason": "Passage: 'we multiply w_l by B to eliminate the influence of beam size on the loss magnitude... gradient updates are predominantly driven by high-confidence sequences'."
+    },
+    "31": {
+      "label": "supported",
+      "reason": "Passage: traversal-safe+repair beats soft-delete 'by a margin that grows with the deletion fraction (+4.3/+16.2/+42.2 points at f=0.5/0.7/0.9)'."
+    },
+    "32": {
+      "label": "supported",
+      "reason": "Passage lists 'RQ2.2: How can off-policy evaluation be performed for carousel recommendation policies?' verbatim."
+    },
+    "33": {
+      "label": "not",
+      "reason": "Passage is a retrieval-method ablation table (BM25, MedCPT, hybrid); LRPPRC or any mammalian counterpart name never appears."
+    },
+    "34": {
+      "label": "supported",
+      "reason": "Passage: 'To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T_syn'."
+    },
+    "35": {
+      "label": "supported",
+      "reason": "Passage: passage-level retrievers score single query-passage pairs, and multi-hop needs 'query-set compatibility: whether a collection of passages jointly forms useful evidence'."
+    },
+    "36": {
+      "label": "supported",
+      "reason": "Passage: user histories as sequences let models 'capture temporal dependencies in behaviour, including short-term intent and changes in preferences over time'."
+    },
+    "37": {
+      "label": "supported",
+      "reason": "Passage: 'the overwhelming majority pointed to data, backend or infrastructure as a key concern'."
+    },
+    "38": {
+      "label": "supported",
+      "reason": "Passage: 'a less directly relevant document may supply facts or premises that make a substantive contribution to answer construction'."
+    },
+    "39": {
+      "label": "supported",
+      "reason": "Passage: 'Five variants for the extraction prompt were tested.'"
+    },
+    "40": {
+      "label": "not",
+      "reason": "Passage gives a 1.2-point path-minus-singleton gap for DIGER sensitivity, not a 2%-4% share of ambiguously resolving targets; no such figure in the text."
+    },
+    "41": {
+      "label": "supported",
+      "reason": "Passage: 'edit specification consisting of three components: an anchor, a suggestion, and a necessity score'."
+    },
+    "42": {
+      "label": "partly",
+      "reason": "Passage shows 'Study Size (N=200)', 'Detectable ICC > 0.06' and 5-8 ratings per dialogue (avg 5.27), but not the 80% power or a fixed k=5."
+    },
+    "43": {
+      "label": "supported",
+      "reason": "Passage: average reasoning length 'decreases substantially' with no length penalty while performance improves, giving 'shorter and more targeted reasoning trajectories'."
+    },
+    "44": {
+      "label": "supported",
+      "reason": "Table 4: 'Entire recorded pipeline 69,470.3 About 19.3 h' for Llama-2-70B."
+    },
+    "45": {
+      "label": "supported",
+      "reason": "Passage: 'relevant knowledge is distributed across accelerator design, beam-induced background studies, detector performance, and physics analyses, making it difficult to answer focused questions without cross-document evidence aggregation'."
+    },
+    "46": {
+      "label": "supported",
+      "reason": "Passage rule: 'Every claim must reference at least one evidence node and a short verbatim span relied on.'"
+    },
+    "47": {
+      "label": "supported",
+      "reason": "Passage: 'bringing the path-based F1 to 0.864'."
+    },
+    "48": {
+      "label": "supported",
+      "reason": "Passage: 'NASA-EO-Bench benchmark. 47,654 query-dataset positive pairs'."
+    },
+    "49": {
+      "label": "supported",
+      "reason": "Passage: documents and indexes organized 'according to the Open Knowledge Format (OKF)' with 'a Skill-compatible SKILL.md at the root', and self-descriptive metadata lets the agent estimate value before reading full text instead of 'a single keyword-to-chunk interface'."
+    },
+    "50": {
+      "label": "supported",
+      "reason": "Passage: with 'one relevant item and 30 negatives all tied', expected NDCG@10 under random tie-breaking is 0.1466 versus 1, and 'it is not evidence that the score identified the relevant item'."
+    }
+  }
+}

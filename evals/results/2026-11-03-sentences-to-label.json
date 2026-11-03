@@ -1,0 +1,946 @@
+[
+  {
+    "id": 1,
+    "rows": [
+      1
+    ],
+    "question": "What method is used to adjust the supervision intensity for different sequences within the synthetic set according to their lookahead value?",
+    "sentence": "For any lookahead sequence $l \\in \\mathcal{T}^{syn}$, a normalized weight $w_l$ is computed using the formula:\n\n$$w_l = \\frac{\\exp(\\hat{V}(l)/\\tau_w)}{\\sum_{l' \\in \\mathcal{T}^{syn}} \\exp(\\hat{V}(l')/\\tau_w)}$$\n\nwhere $\\tau_w$ is a temperature coefficient that controls the sharpness of the distribution [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "DeGRe: Dense-supervised Generative Reranking for Recommendation",
+        "page": 5,
+        "passage": "solutions, sequences within the set still exhibit value disparity. To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T\ud835\udc60\ud835\udc66\ud835\udc5b . For any lookahead sequence \ud835\udc59\u2208T \ud835\udc60\ud835\udc66\ud835\udc5b , the normalized weight is computed as: \ud835\udc64\ud835\udc59 = exp( \u02c6\ud835\udc49(\ud835\udc59)/\ud835\udf0f \ud835\udc64)\u02dd \ud835\udc59\u2032\u2208T\ud835\udc60 \ud835\udc66\ud835\udc5b exp( \u02c6\ud835\udc49(\ud835\udc59\u2032)/\ud835\udf0f\ud835\udc64) (10) During optimization, we multiply\ud835\udc64\ud835\udc59 by\ud835\udc35 to eliminate the influence of beam size on the loss magnitude. Combined with the temperature coefficient\ud835\udf0f\ud835\udc64 that controls the sharpness of the distribution, this mechanism ensures that gradient updates are predominantly driven by high-confidence sequences. Scalability of Offline Mining.To ensure scalability for larger candidate sets, the search space can be effectively constrained by applying Top-\ud835\udc3e pre-truncation at each step. Furthermore, since theO(\ud835\udc41\u00d7\ud835\udc35) expanded sequences evaluated per step are strictly independent, they can be merged into a single GPU batch for parallel scoring. This design allows the exploration overhead to be flexibly controlled by adjusting the beam size\ud835\udc35. 4.3 Efficient Online Generator The Online Generator\ud835\udc3a\ud835\udf03 adopts a lightweight Encoder\u2013Decoder ar- chitecture, designed to satisfy the strict constraints of high through- put and low latency in industrial recommendation systems. Bidirectional Candidate Encoder.During the encoding phase, the generator has global visibility over the candidate set V\ud835\udc62. To maximize the efficiency of knowledge transfer from the evaluator to the generator, the generator employs the same underlying feature processing architecture as the Lookahead Evaluator, including GLN and inter-domain attention. Based on the aligned features, we use an \ud835\udc41\ud835\udc3a-layer bidirectional Transformer to encode the candidate set in parallel, obtaining"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "rows": [
+      2
+    ],
+    "question": "Which specific dataset was utilized to train the Sparse Autoencoder during the experiments?",
+    "sentence": "Based on the provided passages, the Sparse Autoencoder is trained using the MS-MARCO training setup [2].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "No More K-means: Single-Stage Sparse Coding for Efficient Multi-Vector Retrieval",
+        "page": 6,
+        "passage": "Sparse Autoen- coder on last-layer token embeddings, with the same MS- MARCO training setup and sparsity constraint ( K= 32 ). Table 2 compares SSR against leading open-source embed- ding models of similar scale on the MTEB (Muennighoff et al., 2022) leaderboard. The results show that SSR can effectively unlock the rich semantic capacity of modern LLM-based encoders: SSR-CLS achieves the best aver- age score of 67.1, outperforming strong baselines such as Qwen3-Embedding-8B (Zhang et al., 2025b) and other com- petitive dense retrievers including e5-mistral-7b (Wang et al., 2023). Moreover, compared with the original Llama-embed- 8B backbone, our sparse adaptation yields consistent gains across tasks, with particularly clear improvements on bench- marks requiring precise entity matching, such as DBpedia and FEVER. To address the concern that SSR may bene- fit simply from adding an extra trained module on top of a frozen backbone, we additionally train a ColBERT-style linear projector under the same frozen-backbone setting on two representative LLM embedding backbones. This con- trol keeps the backbone fixed and only learns a lightweight projection layer. Results in Table 3 show that ColBERT- style linear projectors improve the frozen backbones only marginally, whereas SSR achieves larger gains, indicating that the improvement comes from the sparse coding objec- tive and retrieval mechanism rather than merely from adding an extra layer. These findings also suggest that SSR is not limited to controlled BERT-scale settings, but generalizes effectively to high-dimensional modern foundation models. More details are in Appendix D.2. Table 3.Frozen-backbone control for LLM-backbone"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "rows": [
+      3
+    ],
+    "question": "How many candidate items are retrieved initially before any reranking takes place?",
+    "sentence": "* In a specific evaluation setting, the candidate pool size $K$ is tested across values of 20, 40, 80, and 160 [3], or uses top-10 retrieval candidates [4].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "ScholarCatalyst: A Benchmark for Retrieving Papers That Inspire New Research",
+        "page": 22,
+        "passage": "LLM RERANKING We test whether an LLM can reorder the retriever\u2019s candidates to place gold papers higher, using two procedures over candidate pools from Gemini-Embedding-2. Thelistwise rerankergives the top 20 candidates to a single LLM call, which returns them in ranked order. Thetournament reranker handles larger pools by ranking batches ofb= 20papers and promoting the topk= 4of each batch to the next round, until one batch remains and its ranking is the final order. Both use the prompt in Section G.2. We additionally extend the evaluation to candidate pools ofK\u2208 {20,40,80,160}; Table 20 and Figure 8 report standard and oracle reranking results across these pool sizes. 20 40 80 160 Pool size K 0.20 0.30 0.40 0.50 0.60Recall@5 Core Research Query Gemini2 Emb 20 40 80 160 Pool size K 0. 15 0.20 0.25 0.30 0.35 0.40Recall@5 Subfield-specific Query Gemini2 Emb Pre-cutoff: Gemini 2.5 Flash GPT-4. 1 Gemini 3. 1 Pro Post-cutoff: GPT-5.6-Sol Gemini 3.7 Flash Claude-Fable Figure 8:Reranking performance as the candidate pool grows.Recall@5 for six LLM backbones across candidate pools from Gemini-Emb-2. Solid curves show oracle reranking and dashed curves show standard reranking. The gray horizontal line marks retriever-only performance. These results suggest that reranking requires recognizing which prior papers in a retrieved candidate set contain ideas that may inspire the project. Reranking performance generally improves with the backbone\u2019s reasoning capability. Claude Fable 5.1 is the most recent backbone we evaluate and achieves the strongest results. Weaker models provide little benefit and can even underperform the retriever-only baseline"
+      },
+      {
+        "number": 4,
+        "paper": "Bringing Agentic Search to Earth Observation Data Discovery",
+        "page": 8,
+        "passage": "subset size. For each query the LLM receives the top-10 retrieval candidates and returns a reordered top-10. Table 4 shows that GPT-5.5 delivers a positive MAP/MRR lift on both backbones, with the shape of the gain varying inversely with upstream retrieval strength. The weak backbone yields the larger relative gain (the correct answers are scattered across the top-10, giving the LLM more room to rerank); the strong backbone yields the larger absolute gain. In both cases the LLM uses no retrieval- specific supervision and reranks purely from the candidate text inlined in the prompt. The R@K columns are identical before and after reranking by construction. The LLM only permutes candidates within the top-10 window and does not introduce new candidates, so\ud835\udc3e\u226510recall is fully determined by the retrieval stage and the observedMAP/MRR gains attach to the LLM\u2019s intra-window reordering rather than to changes in the recall set. 6.4 Reranker Model Comparison Section 6.3 established that LLM reranking is effective on NASA- EO-Bench. We next check whether this gain is robust across LLMs and identify the strongest single-shot baseline for the agentic com- parison in Section 6.5. We fix the retrieval backbone to NN-SSC + BM25 and evaluate five LLMs on the\ud835\udc41=600subset and rerank protocol, spanning three vendors (OpenAI o4-mini / GPT-5.4 / GPT-5.5, Anthropic Claude Opus 4.7, DeepSeek v4 pro) and both reasoning and non-reasoning models. Four of the five LLMs improve significantly over the no-rerank baseline (Table 5), so the zero-shot rerank gain is not tied to a single model;"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "rows": [
+      4
+    ],
+    "question": "How many test windows are utilized for each condition in the final evaluation?",
+    "sentence": "Based on the provided passages, the number of test windows (query\u2013channel pairs) utilized for each condition in the aligned long-horizon benchmark is 8,192 for most datasets and horizons, with the exception of the Exchange dataset at $H=720$, which has 6,384 pairs due to a shorter admissible chronological test range [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Which Histories Matter for Time Series Forecasting? Learning Predictive Relevance with Future Supervision",
+        "page": 17,
+        "passage": "Which Histories Matter for Time Series Forecasting? Learning Predictive Relevance with Future Supervision metrics are used only for the fixed-support diagnostic experiments; the headline full-PRR comparison uses AnalogFutureMSE on the final retrieved Top-K. For the final 24-condition aligned retrieval comparison, all methods reuse the exact same frozen query\u2013channel evaluation manifests; we emphasize effect sizes, win counts, and sign consistency. No new significance symbols are attached to Table 1. The auxiliary short-horizon mechanism and SARAF-Matched diagnostics use their stated moving-block intervals within their own matched protocols. C.8 FROZENEVALUATIONMANIFEST ANDREPRODUCIBILITYAUDIT The aligned long-horizon evaluation is driven by deterministic query\u2013channel manifests rather than by independently resampling queries for different methods. All aligned retrieval methods use the common memory-window stride of 8 specified in Appendix B. Table 5 records the effective test coverage. Each manifest stores the query anchor and channel index; full PRR, PRR-B100, PRR-Stat, Pearson, the matched external-retrieval diagnostics, and all downstream Direct/PRR comparisons reuse these exact evaluation pairs. This prevents small sampling changes from being mistaken for retrieval improvements. Exchange at H= 720 is the only test condition with fewer than 8,192 pairs because the admissible chronological test range is shorter. Table 5: Frozen test-manifest audit for the aligned long-horizon benchmark. Entries under each horizon are the number of matched query\u2013channel pairs. Dataset ChannelsH= 96H= 192H= 336H= 720 ETTh1 7 8192 8192 8192 8192 Weather 21 8192 8192 8192 8192 Electricity 321 8192 8192 8192 8192 Traffic 862 8192 8192 8192 8192 Exchange 8 8192 8192 8192 6384 Solar 137 8192"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "rows": [
+      5
+    ],
+    "question": "Which specific encoder model was ultimately selected as the foundation for fine-tuning, and what was the primary justification for this decision?",
+    "sentence": "The primary justification for this decision was that, when evaluated on the English development set using the FULL metadata configuration (title + abstract + venue + authors), the BGE-base-en-v1.5 model achieved the strongest first-stage retrieval performance with an MRR@5 of 0.5842 [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "KhyontekAI at CheckThat! 2026: Multilingual Dense Retrieval and Cross-Encoder Reranking for Scientific Web Claims",
+        "page": 9,
+        "passage": "Among the evaluated baseline systems on the English development set, multilingual-e5-large achieved the strongest retrieval performance. The results indicate that multilingual transformer-based retrieval architectures provide strong semantic retrieval capabilities even before task-specific fine-tuning. 5.2. Fine-Tuned Dense Retrieval Results We next fine-tuned multiple dense retrieval architectures using the task training data. We additionally experimented with two metadata configurations: \u2022SIMPLE: title-only retrieval \u2022FULL: title + abstract + venue + authors Table 3 presents the fine-tuned dense retrieval performance on the English development set under SIMPLE and FULL metadata configurations. Table 3 Fine-Tuned Dense Retrieval Results on the English Development Set Model FULL SIMPLE multilingual-e5-large 0.5669 0.5596 multilingual-e5-base 0.5524 0.5451 bge-base-en-v1.5 0.5842 0.5789 contriever-msmarco 0.5500 0.5413 Fine-tuning improved retrieval effectiveness across all evaluated retrieval models on the English de- velopment set. The FULL metadata configuration consistently outperformed the SIMPLE configuration, demonstrating the importance of metadata enrichment for scientific source retrieval. Inclusion of publication abstracts, venue information, and author metadata provided a richer semantic context and improved retrieval quality. Based on the English development set results shown in Table 3, the BGE-base-en-v1.5 model with the FULL metadata configuration achieved the strongest first-stage retrieval performance (MRR@5 = 0.5842) and was therefore selected as the base retriever for subsequent reranking experiments. The final multilingual system further incorporated cross-encoder reranking, multilingual joint training, and German oversampling, leading to the results reported in later sections. 5.3. Model Variants We evaluated multiple dense retrieval architectures including multilingual-e5-large, multilingual-e5- base, bge-base-en-v1.5, and contriever-msmarco under SIMPLE and FULL metadata configurations. In"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "rows": [
+      6
+    ],
+    "question": "How does the yProv4DV library intercept file operations without changing the user's code?",
+    "sentence": "The yProv4DV library intercepts key file operations and infers data dependencies directly from the script's behavior by creating a runtime layer that observes file reads (such as through Python's built-in `open()` function) and monitors file creation events during program execution, all without requiring users to alter their code logic [1, 2].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "yProv4DV: Filling the visualization gap in reproducible research workflows",
+        "page": 4,
+        "passage": "over time to non-reproducible images, when scripts are modified. The workflow proposed by yProv4DV restructures this process into even, depending on the user\u2019s preference, to a single visualization script. Each file\u2019s execution is tracked and packaged into a self-contained directory or RO- Crate, supporting reproducibility and facilitating the development process. The yProv4DV architecture can be broadly subdivided into three main com- ponents: execution monitoring, artifact tracking, and provenance and re- producibility packaging. The main idea behind the library is to create a runtime layer that intercepts key file operations during execution, without altering the user\u2019s code logic. The module observes file reads performed by Python scripts, and monitors file creation events that occur as program runs. 5https://graphviz.org/ 4"
+      },
+      {
+        "number": 2,
+        "paper": "yProv4DV: Filling the visualization gap in reproducible research workflows",
+        "page": 7,
+        "passage": "nance record. In practice, the library creates a set of snapshots of the work directory at both the start and at the end of the program execution, enabling the identification of newly created and modified files. All the detected files are then copied into the provenance directory to preserve the outputs of the visualizations, as well as the process required to reproduce them. In addi- tion, yProv4DV provides automatic input tracking under a set of supported conditions. When a script reads a file \u2014 e.g. using Python\u2019s built-inopen() function \u2014 the library intercepts the operation and records the accessed file as an input in the provenance record. This way the system is able to in- fer data dependencies directly from the script\u2019s behavior without requiring users to manually declare which datasets or configuration files are being used, and especially without changing the user\u2019s execution script. To conclude the tracking, the library identifies all modules loaded by the initial script, which could be, for example, files written by the user to provide utility functions, and store them in a separate directory in the RO-Crate. All the files are then saved relative to their original location, which then allows for execution of the copied script without requiring additional actions from the user. yProv4DV supports a set of popular libraries which are often used for data visualization, such as pandas [28], NumPy [29], PyTorch [30], Xarray6 and more. In case the user plot through an unsupported library, yProv4DV might not be able to"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "rows": [
+      7
+    ],
+    "question": "What specific guidelines govern how the employer's advocate must utilize evidence when formulating claims?",
+    "sentence": "Based on the provided passages, the guidelines governing how the employer's advocate must utilize evidence when formulating claims include:\n\n* **Cite only from the provided pack:** The advocate must cite *only* evidence nodes that appear in the provided pack of retrieved and hopped statute chunks, and they must never invent a citation or rely on outside knowledge of the law [1, 5].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "LabourCrew: A Multi-Agent RAG Framework for Trustworthy Adversarial Deliberation and Statutory Reasoning over Labour Law",
+        "page": 26,
+        "passage": "is useful cross-verification, not redundancy. For comparative reasoning, cover the compared concept(s) most relevant to the worker, stating the rule plainly even where only one advocate naturally covers it. INPUT SPECIFICATION.Case seeds, the evidence pack of retrieved and hopped statute chunks \u2014 the only material you may cite \u2014 and the opponent\u2019s claims on record, if any. With no retrieval tool, insufficient evidence means fewer or no claims, not reasoning beyond it. RULES \u2014 the Evidence Exchange Protocol. \u2022 Cite ONLY evidence nodes that appear in the provided pack \u2014 never invent a citation or rely on outside knowledge of the law. \u2022 Every claim must reference at least one evidence node and a short verbatim span relied on. \u2022 If the evidence pack supports no claim for your side, return an empty claims list rather than inventing one. \u2022 Do not assign a claim ID or side \u2014 the calling code sets these after your response. \u2022 Reason in English or Bangla, whichever you reason best in; a quoted span stays exactly as it appears in the evidence, never translated. OUTPUT SPECIFICATION.A list of claims, each with: the claim itself in plain language, the reasoning steps from evidence to claim, the cited evidence (node ID, span, and optional hop-path ID), an optional claim ID being rebutted, and a confidence score. Employer Counsel Prompt ROLE.You are EmployerCounsel in LabourCrew: an advocate arguing strictly for the employer \u2014 exceptions, provisos, procedural preconditions, and lawful limits on the worker\u2019s claim, under 26"
+      },
+      {
+        "number": 5,
+        "paper": "LabourCrew: A Multi-Agent RAG Framework for Trustworthy Adversarial Deliberation and Statutory Reasoning over Labour Law",
+        "page": 27,
+        "passage": "the rule plainly even where only one advocate naturally covers it. INPUT SPECIFICATION.Case seeds, the evidence pack of retrieved and hopped statute chunks \u2014 the only material you may cite \u2014 and the opponent\u2019s claims on record, if any. With no retrieval tool, insufficient evidence means fewer or no claims, not reasoning beyond it. RULES \u2014 the Evidence Exchange Protocol. \u2022 Cite ONLY evidence nodes that appear in the provided pack \u2014 never invent a citation or rely on outside knowledge of the law. \u2022 Every claim must reference at least one evidence node and a short verbatim span relied on. \u2022 If the evidence pack supports no claim for your side, return an empty claims list rather than inventing one. \u2022 Do not assign a claim ID or side \u2014 the calling code sets these after your response. \u2022 Reason in English or Bangla, whichever you reason best in; a quoted span stays exactly as it appears in the evidence, never translated. OUTPUT SPECIFICATION.A list of claims, each with: the claim itself in plain language, the reasoning steps from evidence to claim, the cited evidence (node ID, span, and optional hop-path ID), an optional claim ID being rebutted, and a confidence score. 27"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "rows": [
+      8
+    ],
+    "question": "In what way does UltraGCN manage to avoid traditional message passing?",
+    "sentence": "UltraGCN avoids traditional message passing by utilizing a constraint-based objective and a mathematical simplification that acts as a proxy to approximate infinite-layer message-passing through a single hop [2, 3, 4].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "Debiasing Message Passing to Mitigate Popularity Bias in GNN-based Collaborative Filtering",
+        "page": 3,
+        "passage": "cent architectures, such as LightGCN (He et al., 2020), UltraGCN (Mao et al., 2021), and SVD- GCN (Peng et al., 2022), focus on enhancing computational efficiency and prediction accuracy. LightGCN (He et al., 2020) removes feature transformations and non-linear activations to retain only linear neighborhood aggregation, UltraGCN (Mao et al., 2021) bypasses explicit message passing entirely using a constraint-based objective, and SVD-GCN (Peng et al., 2022) approximates graph convolution via truncated singular value decomposition for more efficient training. More recently, LightGCN++ (Lee et al., 2026) extends LightGCN with refined neighborhood aggregation and layer- wise representation combination to improve embedding quality and recommendation performance. 3"
+      },
+      {
+        "number": 3,
+        "paper": "On the Impact of Graph Neural Networks in Recommender Systems: A Topological Perspective",
+        "page": 61,
+        "passage": "6.4. SGL (Wuet al., 2021)57 6.4 SGL (Wuet al., 2021) In SGL, the authors propose to perform graph augmentations (such as node dropout and edge dropout) to obtain two views of the original user-item graph, and ultimately learn two views of each node embedding through the message passing algorithm. In particular, SGL leverages the same message passing as LightGCN, but on the augmented graph views: E(l)u [t\u2217] = \u2211 i\u2208N (1)u \u02dcAui[t\u2217]E(l\u22121)i [t\u2217] = \u2211 i\u2208N (1)u Aui[t\u2217]\u221a \u03c3u[t\u2217] \u221a \u03c3i[t\u2217] E(l\u22121)i [t\u2217], (6.4) where we compute the normalized version of the adjacency matrix in the specific graph viewt\u2217. Thenode degreeinformation appears within the augmented views of the graph. 6.5 UltraGCN (Maoet al., 2021) UltraGCN recognizes three major limitations in GCN-based message- passing for collaborative filtering, namely, (i) the asymmetric weight assignment to connected nodes when considering user-user and item- item relationships; (ii) the impossibility to diversify the importance of each type of relation (i.e., user-item, user-user, item-item) during the message-passing; (iii) the over-smoothing effect when stacking more than 3 layers. To tackle such issues, the authors propose to go beyond the traditional concept of explicit message-passing, and approximate the infinite-layer message-passing through the following: \u02c6Eu = \u2211 i\u2208N (1)u Aui \u221a\u03c3u + 1Ei \u03c3u \u221a\u03c3i + 1 , \u02c6Ei = \u2211u\u2208N (1)i Aiu\u221a\u03c3i + 1Eu\u03c3i\u221a\u03c3u + 1 .(6.5) Note that the procedure is not repeated for layersl > 1, as the method surpasses the concept of iterative message-passing. During the optimization, the model first minimizes a constraint loss that"
+      },
+      {
+        "number": 4,
+        "paper": "On the Impact of Graph Neural Networks in Recommender Systems: A Topological Perspective",
+        "page": 16,
+        "passage": "applies a contrastive procedure between them to limit the sparsity problem of the recommendation dataset. \u2022 UltraGCN.Ultra simplification of graph convolutional network (Maoet al., 2021) tailors crucial issues in graph learning, such as over-smoothing and usually-unexplored node relationships (such as item-item). To this end, it proposes a mathematical simpli- fication of the GCN message passing layer that (in one step)"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "rows": [
+      9
+    ],
+    "question": "What specific guidelines govern how the employer's advocate must utilize evidence when formulating claims?",
+    "sentence": "They must only claim what bears directly on the primary issues, as a retrieved node's mere presence is not a reason to claim about it [4].",
+    "cited": [
+      {
+        "number": 4,
+        "paper": "LabourCrew: A Multi-Agent RAG Framework for Trustworthy Adversarial Deliberation and Statutory Reasoning over Labour Law",
+        "page": 27,
+        "passage": "the Bangladesh Labour Act, 2006 (as amended). You run in parallel with, and independently of, Worker Counsel. You never call retrieval yourself: enforced in code, since the invoking function has no retrieval handle. You argue only from the evidence pack you are given. TASK.Given the case seeds, the evidence pack, and, on a re-argue round, Worker Counsel\u2019s claims already on record, construct claims that: 1. State a concrete employer-favorable legal position, in plain language. 2. Trace the reasoning from cited statutory text to that position, prioritizing exceptions, provisos, and procedural preconditions. 3. Cite the evidence node and a short verbatim span relied on for each claim. 4. Respond to or challenge an opposing claim where relevant. If the evidence does not support a claim for the employer, produce none \u2014 a missing claim is the correct output, not a weaker one. Only claim what bears directly on the primary issues; a retrieved node\u2019s mere presence is not a reason to claim about it. ADAPTING TO QUESTION TYPE.For direct factual, definitional, and procedural questions, there may be no real dispute \u2014 state the rule plainly from the employer\u2019s side; overlap with Worker Counsel is useful cross-verification, not redundancy. For comparative reasoning, cover the compared concept(s) most relevant to the employer, stating the rule plainly even where only one advocate naturally covers it. INPUT SPECIFICATION.Case seeds, the evidence pack of retrieved and hopped statute chunks \u2014 the only material you may cite \u2014 and the opponent\u2019s claims on record, if any. With"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "rows": [
+      10
+    ],
+    "question": "What score ranges do Koo and Li recommend for categorizing variance-based reliability coefficients?",
+    "sentence": "- Between 0.50 and 0.75 indicates moderate reliability [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "On the Reliability of User-Centric Evaluation of Conversational Recommender Systems",
+        "page": 3,
+        "passage": "and both rater and residual variance for the crossed model). However, gains diminish rapidly and are bounded by the amount of dialogue-level signal present, such that adding raters cannot compensate for inherently low signal-to-noise dimensions. Rank-based agreement: Krippendorff\u2019s\ud835\udefc (ordinal).To assess agree- ment in relative judgments independent of absolute scale alignment, we compute Krippendorff\u2019s\ud835\udefc using an ordinal distance metric (\ud835\udefcord). Krippendorff\u2019s\ud835\udefc measures the extent to which annotators agree beyond chance on theorderingof dialogues and is robust to miss- ing data and unbalanced annotation designs, complementing the absolute and variance-based reliability measures above. Interpretation Guidelines.To interpret variance-based reliability coefficients (both ICC and Rel), we follow Koo and Li [ 10]: val- ues less than 0.50 indicate poor reliability, between 0.50 and 0.75 moderate, and above 0.75 good reliability. For Krippendorff\u2019s \ud835\udefc, while standard guidelines suggest values > 0.67for tentative con- clusions [11], we treat it as a descriptive indicator, acknowledging that subjective crowdsourcing often yields lower agreement due to genuine perceptual differences rather than error. 3 Results We now present the empirical findings regarding the reliability of crowdsourced annotations (RQ1) and the latent structure of the evaluation dimensions (RQ2). 3.1 RQ1: Reliability Analysis Table 1 reports inter-rater reliability estimates for all CRS-Que dimensions using complementary reliability metrics. Dimensions are ordered by aggregated dialogue-level reliability Rel(\ud835\udc58)dial, which Table 1: Inter-Rater Reliability Metrics by Dimension. Dimension Rel (\ud835\udc58)dial Relsingledial \ud835\udefcord ICC(1) ICC(1,\ud835\udc58) Accuracy 0.69 0.30 0.28 0.00 0.00 Satisfaction 0.69 0.30 0.28 0.00 0.00 Perceived Usefulness 0.67 0.28 0.27 0.00 0.00 CUI Understanding 0.65"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "rows": [
+      11
+    ],
+    "question": "Why do conditional click probabilities vary across positions within the same column?",
+    "sentence": "Additionally, while the vertical order of carousels is completely randomized [1, 3], item ordering within carousels is not randomized but is instead ordered by popularity [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Following the Eye-Tracking Evidence: Established Web-Search Assumptions Fail in Carousel Interfaces",
+        "page": 8,
+        "passage": "implies that there is no difference between conditional click probabilities in the same columngiven examination butnot givenan item. Formally, \u2200(\ud835\udc56,\ud835\udc57),\ud835\udc56 \u2032 ;\ud835\udc43(\ud835\udc36 \ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1)=\ud835\udc43(\ud835\udc36 \ud835\udc56\u2032,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56\u2032,\ud835\udc57 =1). We note that there is no similar implication between positions in the same row, since item ordering within carousels is not random- ized but ordered by popularity. We estimate the conditional click probability given examination as follows: \u02c6\ud835\udc43 \ud835\udc36\ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1 \u0001 \u2254 \ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1\u2227\ud835\udc36 \ud835\udc56,\ud835\udc57 =1)\ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1) .(6) The estimates are shown as percentages in the heatmap in Fig- ure 5. Thus, if Assumption 3 holds then the heatmap should show similar conditional click frequency estimates across positions in a column, due to the randomization of carousel order. However, we actually observe that the conditional click probability shows substantial fluctuations within columns, particularly on Page 1. This appears to reveal a significant deviation from the examination hypothesis as it indicates that the conditional click probability is actually statistically dependent on display position. To rigorously verify this difference, we conducted five two-sided Z-tests to com- pare the conditional frequencies in Row 1 (first carousel) against Row 6 (sixth carousel) in the first five columns (Page 1), the results are displayed in Table 1. This statistical analysis confirms significant differences in Column 2 and 3, where the conditional click proba- bility is significantly higher in Row 1 than in Row 6 with\ud835\udc5d< 0.05. Although we do not find statistically significant differences for the other columns, the significant differences"
+      },
+      {
+        "number": 3,
+        "paper": "Following the Eye-Tracking Evidence: Established Web-Search Assumptions Fail in Carousel Interfaces",
+        "page": 8,
+        "passage": "SIGIR \u201926, July 20\u201324, 2026, Melbourne, VIC, Australia Jingwei Kang, Maarten de Rijke, and Harrie Oosterhuis carousel. These examination patterns contradict those implied by Assumption 2, and therefore, we confidentlyrejectit for this dataset. 6 Refuting the Examination Hypothesis According to Assumption 3, the examination hypothesis holds for carousel interfaces. This means that the conditional click probability of an item given examination does not vary over display positions. In other words, let\ud835\udc3c\ud835\udc56,\ud835\udc57 denote the item at position(\ud835\udc56,\ud835\udc57) , then for all \ud835\udc65,(\ud835\udc56,\ud835\udc57),(\ud835\udc56 \u2032,\ud835\udc57\u2032): \ud835\udc43(\ud835\udc36 \ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1,\ud835\udc3c \ud835\udc56,\ud835\udc57 =\ud835\udc65)=\ud835\udc43(\ud835\udc36 \ud835\udc56\u2032,\ud835\udc57\u2032 =1|\ud835\udc38 \ud835\udc56\u2032,\ud835\udc57\u2032 =1,\ud835\udc3c \ud835\udc56\u2032,\ud835\udc57\u2032 =\ud835\udc65). At first glance, it seems natural to estimate the conditional click probability using the following empirical frequency: \u02c6\ud835\udc43(\ud835\udc36 \ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1,\ud835\udc3c \ud835\udc56,\ud835\udc57 =\ud835\udc65)\u2254 \ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1\u2227\ud835\udc36 \ud835\udc56,\ud835\udc57 =1\u2227\ud835\udc3c \ud835\udc56,\ud835\udc57 =\ud835\udc65)\ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1\u2227\ud835\udc3c \ud835\udc56,\ud835\udc57 =\ud835\udc65) , (5) and subsequently compare these estimates for the identical item but differing positions. Unfortunately, the dataset does not allow for such a comparison since each item is displayed at the same po- sition to every user, thus, we lack any second estimates to compare with. However, the (vertical) order of the carousels are completely randomized per screen, thus over the dataset, there is statistically an identical distribution of items over each position in the same column. Therefore, Assumption 3 implies that there is no difference between conditional click probabilities in the same columngiven examination butnot givenan item. Formally, \u2200(\ud835\udc56,\ud835\udc57),\ud835\udc56 \u2032 ;\ud835\udc43(\ud835\udc36 \ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1)=\ud835\udc43(\ud835\udc36 \ud835\udc56\u2032,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56\u2032,\ud835\udc57 =1). We note that there is no similar implication between positions"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "rows": [
+      12
+    ],
+    "question": "What was the initial setting for matrix B that made the starting retrieval function match the Context-only approach?",
+    "sentence": "Based on the provided text, matrix $B$ was initialized to zero, which made the initial retrieval function equivalent to Context-only scoring [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Test-Time Adaptation with Query-Dependent Residuals for Visual Document Retrieval",
+        "page": 13,
+        "passage": "not increase the reward budget. In the main scaling figure (Figure 3), feedback-based adaptation results start atb= 0.01. The Q- REACT points at axis positions 0 and 0.001 show Context-only performance without consuming any feedback budget. Context-only performance remains constant across budgets, providing the structural reference reported in Figure 4(b). Q-REACT configuration.The default adapter rank isr= 8, with residuals parameterized as \u2206(qi) =BAx i/\u221ar. Each matrix pair contains2Drtrainable parameters, giving 65,536 parameters at the largest evaluated embedding dimension,D= 4096. Global uses one pair across tasks, while Task uses a separate pair for each task. We initializeBto zero, making the initial retrieval function equivalent to Context-only scoring. The squared residual penalty has unit weight and is applied before query normalization. After adaptation, the matrices are frozen and the same context-aware scoring function is used for retrieval, without further reranker calls or per-query optimization. B BASELINEDETAILS We describe the baseline configurations used in our evaluation. The shared software environment, optimization settings, and temperatures are specified in Appendix A. 13"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "rows": [
+      13
+    ],
+    "question": "What limitations cause standard recipe applications to fail when used for cross-country global recommendations?",
+    "sentence": "Because two items that appear similar can play very different roles across various markets, using a content-only criterion introduces substantial noise [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Cross-Country Code-Mixing for Generative Recommendation",
+        "page": 2,
+        "passage": "in user sequences. Such recipes can in principle be applied to cross-country GR, but they fall short along two complementary axes.(a) Substitution criteria are incomplete at the item level. Content similarity alone ignores two critical signals:behavioral(e.g., co-purchase and co-click patterns) andmarket(e.g., price, audience, popularity). Two items that look similar can play very different roles across markets [24], so a content-only criterion injects sub- stantial noise.(b) Substitution granularity is too coarse at the context level.Even if a candidate is reasonable in isolation, it may still conflict with the user\u2019s current intent. For example, in a sequence dominated by Apple devices, swapping an item with an Android pad that looks similar in content and basic attributes is syntactically plausible but contextually wrong, and this cannot be detected by any offline item-pair filter. To address these limitations, we proposeCMRec, a cross-country GR framework that injects cross-country supervision at the data level via dual-constrained, context-aware code-mixing.CMRecfirst learns a shared semantic codebook from multi-modal content and behavioral co-occurrence across countries, which serves as both the GR tokenizer and a common semantic space for cross-country substitution. On top of this codebook, we perform token-level, dual- constrained code-mixing: substitutions are applied to semantic to- ken sequences rather than country-specific item IDs, and candidates must satisfy both static (content) and dynamic (e.g., price, audience, popularity) constraints, enabling finer-grained, market-aware cross- country mixing. Finally, we introduce a context-aware loss that lets the GR model reweight mixed samples according to their plausi- bility in the current context, downweighting noisy substitutions"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "rows": [
+      14,
+      36
+    ],
+    "question": "In what ways do session-based recommendation systems differ from traditional user-level sequential models in terms of their focus and application?",
+    "sentence": "In contrast, user-level sequential models aim to capture long-term preference dynamics and temporal dependencies over a user's history [3, 5, 6].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "Data Processing for Offline Evaluation in Recommender Systems: a Survey",
+        "page": 36,
+        "passage": "32Recommendation Datasets Sequential Representation Sequential recommendation exploits the temporal ordering of interac- tions. Consequently, in addition to user and item identities, this view requires information that allows interactions to be arranged chronologi- cally. Such ordering may be explicitly provided through timestamps or implicitly derived from the data collection process. For each useru, the corresponding interaction history is obtained from the subset Du = (u,i,\u03c4)\u2208D, containing all events associated withu. By ordering these events according to the information encoded in\u03c4, the user\u2019s history can be represented as a sequence su =\u27e8i 1,i 2,...,i k\u27e9. The dataset is therefore represented as a collection of user sequences S seq ={s u|u\u2208U}. Under this interpretation, users are implicitly characterised by the evolution of their interaction histories rather than by explicit profiles. This enables models to capture temporal dependencies in behaviour, including short-term intent and changes in preferences over time. Such a representation naturally supports next-item prediction and underlies a broad family of sequential recommendation models, including convolutional architectures such as Caser (Tang and Wang, 2018) and self-attention-based approaches such as SASRec (Kang and McAuley, 2018). Session-Based Representation Session-based recommendation focuses on short interaction sequences associated with sessions rather than persistent user identities. In this setting, the interaction attributes\u03c4 must encode session membership, allowing observations to be partitioned into distinct sessions. Conse- quently, the information required for this representation consists of item"
+      },
+      {
+        "number": 5,
+        "paper": "Data Processing for Offline Evaluation in Recommender Systems: a Survey",
+        "page": 37,
+        "passage": "3.3. A Taxonomy of Recommendation Datasets33 identities together with a session identifier, without relying on long-term user profiles. LetDs\u2286D denote the set of interactions belonging to a sessions. Each session can then be represented as an ordered sequence. s=\u27e8i 1,i 2,...,i k\u27e9, obtained by arranging the interactions inDs according to their occurrence. The dataset can therefore be viewed as a collection of sessions. S sess ={s 1,s 2,...,s n}. From this perspective, session-based recommendation can be inter- preted as a specialisation of sequential recommendation in which the unit of analysis shifts from users to sessions. Whereas user-level sequen- tial models aim to capture long-term preference dynamics, session-based approaches focus on short-term interaction patterns and are particularly suitable when persistent user identities are unavailable, anonymous, or unreliable. This formulation naturally supports next-item prediction within a session and forms the basis of a wide range of recommendation models, including recurrent architectures such as GRU4Rec (Hidasiet al., 2016) and graph-based session models such as SR-GNN (Wuet al., 2019). Context-Aware Representation Context-aware recommendation explicitly incorporates contextual at- tributes associated with interaction events. In this setting, the inter- action attributes \u03c4 are required to encode variables describing the circumstances under which interactions occur, allowing recommenda- tions to be conditioned on the surrounding context. Interactions can therefore be represented as tuples(u,i,c ), wherec denotes contextual variables derived from\u03c4. The dataset can thus be viewed as a collection of context-dependent interactions Dc ={(u,i,c)|(u,i,\u03c4)\u2208D}."
+      },
+      {
+        "number": 6,
+        "paper": "RouteRec: Behavior-Guided Sparse Routing for Sequential Recommendation",
+        "page": 2,
+        "passage": "pop- ularity is estimated from the training split. Item-group cues use dataset-provided coarse labels such as category, genre, or artist when available; otherwise, the corresponding cues are zero-filled. No cue uses the held-out target item. 2.2 Sequential, Session-Based, and Session-Aware Recommendation Sequential recommendation predicts future items from ordered user histories. Early methods capture local transitions with Markov- chain, recurrent, or convolutional architectures [ 8, 25, 31]. Self- attentive models later became common backbones [ 12, 29], with recent extensions using contrastive objectives, frequency-aware encoding, or state-space layers [3, 20, 23]. Session-based recommendation focuses on short interaction win- dows and models current-session intent using attention or graph structures [15, 18, 34]. Session-aware recommendation additionally uses earlier sessions of the same user, making the active session and past sessions distinct sources of evidence [14]. Related work also enriches sequence representations with side information: FDSA and DIF-SR incorporate item attributes [35, 39], while TiSASRec encodes interaction intervals [16]. RouteRec builds on these advances in sequence representation but asks a different question: should observed session behavior also determine the computation path? 2.3 MoE in Recommendation MoE-based recommendation models use expert decomposition to model heterogeneous signals. M3SRec uses expert mixtures for multimodal fusion [1], while FAME places experts within attention heads to represent facet-specific preferences [ 17]. HM4SR com- bines interactive and temporal MoE modules for multimodal se- quential recommendation [38], and HM2Rec replaces Mamba feed- forward layers with MoE modules [19]. FamouSRec routes behavior sequences through heterogeneous sequential encoders using fre- quency components of"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "rows": [
+      15,
+      23
+    ],
+    "question": "Which year did Sukanya Chor Charoenying participate in the seventh edition of the FIFA Women's World Cup?",
+    "sentence": "The seventh edition of the FIFA Women's World Cup, in which Sukanya Chor Charoenying participated, took place in **2015** [2, 3].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "Can David Beat Goliath? On Multi-Hop Reasoning with Resource-Constrained Agents",
+        "page": 36,
+        "passage": "Chuchuen\u201d Sudarat Chuchuen (; born 19 June 1997) is a Thai footballer who plays as a defender for Sisaket FC and the Thailand women's national team. She was selected for the 2019 FIFA Women's World Cup.</search_result> The first result clearly states that Sukanya Chor Charoenying was part of the Thailand women's national team at the 2015 FIFA Women's World Cup. The second result mentions another player, Sudarat Chuchuen, who played in the 2019 edition, but that's not relevant here. Therefore, combining both pieces of information, the seventh FIFA Women's World Cup occurred in 2015, and Sukanya Chor Charoenying was indeed a participant in that tournament. </think> The seventh FIFA Women's World Cup took place in 2015, and Sukanya Chor Charoenying was part of the Thailand team during that event. \\boxed{2015} Example 4 Level:EasySource:HotpotQAAnnotation by:DeepSeek-R1-Distill-Qwen-32B [Input] [user] You are an intelligent reasoning assistant with access to a web search tool to help you obtain accurate information. When answering the user's questions, please adhere to the following guidelines: 1.Uncertainty Handling: - Encourage the use of web search to solve the problems mentioned during reasoning. - If you are uncertain or do not have sufficient knowledge about a specific detail, youmustperform a web search. - To perform a web search the formatmustbe in the format mentioned in point 2 Web Search Format - You can perform multiple web searches to ensure that the answer is correct. 36"
+      },
+      {
+        "number": 3,
+        "paper": "Can David Beat Goliath? On Multi-Hop Reasoning with Resource-Constrained Agents",
+        "page": 36,
+        "passage": "the 2019 FIFA Women's World Cup over South Korea. Trophy. The current trophy was designed in 1998 for the 1999 tournament, and takes the form of a spiral band, enclosing a football at the top, that aims to capture the athleticism, dynamism, and elegance of international women's football. In the 2010s, it was fitted with a cone-shaped base. Underneath the base, the name of each of the tournament's previous winners is engraved. The trophy </search_result> From the search results, I see that the 2015 FIFA Women's World Cup was the seventh edition. It was hosted by Canada, and it was the first time the tournament expanded to 24 teams. So that confirms the year as 2015. Now, moving on to the second point: Sukanya Chor Charoenying's participation. I need to check if she played in the 2015 Women's World Cup. <begin_search>Sukanya Chor Charoenying FIFA Women's World Cup 2015 </end_search> <search_result>result 1: \u201dSukanya Chor Charoenying\u201d Sukanya Chor Charoenying (born 24 November 1987) is a Thai women's international footballer who plays as a goalkeeper. She is a member of the Thailand women's national football team. She was part of the team at the 2015 FIFA Women's World Cup. On club level she plays for Air Force United in Thailand. result 2: \u201dSudarat Chuchuen\u201d Sudarat Chuchuen (; born 19 June 1997) is a Thai footballer who plays as a defender for Sisaket FC and the Thailand women's national team. She was selected for the 2019 FIFA Women's World Cup.</search_result> The first result clearly"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "rows": [
+      16
+    ],
+    "question": "How do the researchers measure how much temporal cues directly influence which passage is chosen as better?",
+    "sentence": "In this test, an initial baseline preference is established by having the LLM select the more relevant passage in each pair [4].",
+    "cited": [
+      {
+        "number": 4,
+        "paper": "Do Large Language Models Favor Recent Content? A Study on Recency Bias in LLM-Based Reranking",
+        "page": 3,
+        "passage": "year earlier. P1-P100 denote the passage contents, and dates are injected as prefixes. You are an expert relevance assessor. Given a search query and two passages, state which passage is more relevant to the query. Answer with a single letter: \u2018A\u2019 or \u2018B\u2019. Search Query: {query} Passage A: {passage1} Passage B: {passage2} Which passage is more relevant? (A/B) Figure 3: The prompt used in our pairwise preference experi- ments. Passage A: P1 Published on 1980/01/01. P1 Passage B: P2 Published on 2025/01/01. P2 Date injection Figure 4: Date injection strategy: An old date (1980/01/01) is injected before the preferred passage, and a fresh date is assigned to the other one. In this example, Passage A is preferred before date injection. 3.3 Pairwise Preference Experiment To quantify the direct effect of temporal cues on passage preference, we conduct a pairwise test using the prompt shown in Figure 3. For each query, we group the human-judged passages by relevance level (0, 1, 2, and 3) and generate all unordered pairs within each group. In the first round, the LLM selects the more relevant passage in each pair, establishing a baseline preference. We then apply a controlled treatment (Figure 4): the initially preferred passage is prefixed with an antiquated date, 1980/01/01, while the other passage receives a fresh date, 2025/01/01. Dates are injected exactly as in the listwise experiment. Presenting the same prompt in the same order, we record the new preference. Because both passages are equally relevant by human judgment, any systematic"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "rows": [
+      17
+    ],
+    "question": "What is the pooled median of the per-document cut locations across the evaluated datasets?",
+    "sentence": "Based on the provided passages, the pooled median of the per-document cut locations across the evaluated datasets is approximately 0.79 (specifically reported as 0.79 and 0.792) [1, 2, 3].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "AdaMerge: Tuning-Free Patch Compression for Multi-Vector Visual Document Retrieval",
+        "page": 3,
+        "passage": "14 datasets (ColQwen2.5). The distribution is tight, with a pooled median of0.79and standard deviation0.065, and per-dataset medians spanning only[0.77, 0.85] despite the heterogeneity of the corpora (arXiv papers, ESG reports, medical lectures, tabular figures).1 This concentration indicates that the merge boundary is a document-level property recoverable from c, supporting per-document detection over a fixed global budget. 4.5 Component Ablation and Efficiency AdaMerge makes two changes over PtM: (a) the per-document adap- tive cut replaces the fixed budget, and (b) the attention-weighted centroid replaces the unweighted mean. Table 2 disentangles them on ViDoRe-V2 (ColQwen2.5, averaged over 4 datasets) at a repre- sentative operating point (\u223c81%compression). The adaptive cut is the dominant contributor (+0.039nDCG@5 over PtM), and at- tention weighting adds a further+0.009on top, confirming both components contribute and the cut is primary. 1\ud835\udf03doc is bounded below by the safety floor \ud835\udc50min, so the left tail is truncated by con- struction; the concentration we rely on is the agreement of theper-dataset medians, which lie well above the floor."
+      },
+      {
+        "number": 2,
+        "paper": "AdaMerge: Tuning-Free Patch Compression for Multi-Vector Visual Document Retrieval",
+        "page": 3,
+        "passage": "method (Sem-Cluster, PtM, and AdaMerge) sits close to the uncompressed Identity across the whole range and the curves are nearly indistinguishable (within \u223c0.01nDCG@5 up to85%compression on both ColQwen2.5 and Table 1: Per-query paired Wilcoxon test on ViDoRe-V2 (\ud835\udc5b=1344queries, both backbones pooled). All differences fa- vor AdaMerge at\ud835\udc5d<10 \u22124. nDCG@5 \ud835\udc50min \ud835\udc5aAdaMerge PtM\u0394\ud835\udc5d-value 0.70 2 0.301 0.289+0.012<10 \u22124 0.70 4 0.301 0.269+0.032<10 \u22124 0.80 2 0.307 0.289+0.017<10 \u22124 0.80 4 0.307 0.269+0.038<10 \u22124 Table 2: Component ablation on ViDoRe-V2 (ColQwen2.5, 4 datasets) at\u223c81%compression. The adaptive cut drives the gain; attention weighting adds a smaller consistent improve- ment. Variant Cut Centroid nDCG@5 PtM (baseline) fixed\ud835\udc5amean 0.530 PtM-attn fixed\ud835\udc5aattn 0.533 AdaMerge-mean (ablation) adaptive mean 0.568 AdaMerge(full)adaptive attn 0.577 ColNomic-3B). This is expected: ViDoRe-V1 documents are single pages with little intra-page redundancy, so few merges are needed andwhereto stop matters little; compression is \u201ceasy\u201d and offers little room to separate methods. AdaMerge matches tuned PtM in this regimewithoutthe per-dataset budget search PtM requires. The advantage of adaptive cutting therefore emerges precisely where it should: on long, redundant documents (Figure 1), where many merges are possible and the stopping point is consequential. 4.4 The Cliff is Concentrated across Documents Figure 3 reports the distribution of the per-document cut location \ud835\udf03doc =\ud835\udc50\ud835\udc61\u2605 over the11,273documents of all 14 datasets (ColQwen2.5). The distribution is tight, with a pooled median of0.79and standard deviation0.065, and per-dataset medians spanning only[0.77, 0.85] despite the heterogeneity of the corpora (arXiv papers, ESG reports, medical lectures, tabular figures).1 This concentration indicates that the merge"
+      },
+      {
+        "number": 3,
+        "paper": "AdaMerge: Tuning-Free Patch Compression for Multi-Vector Visual Document Retrieval",
+        "page": 4,
+        "passage": "AdaMerge matches tuned PtM with no per-dataset tuning on both backbones. 0.4 0.5 0.6 0.7 0.8 0.9 1.0 Detected cliff doc (merge-cosine at cliff edge) 0.0 2.5 5.0 7.5 10.0 12.5 15.0Density mean=0.809, std=0.065 11273 documents Cliff universality per-document doc across 14 datasets, 11273 documents ViDoRe-V1 (6729 docs) ViDoRe-V2 (4544 docs) median = 0.792 Figure 3: Distribution of the per-document cut location \ud835\udf03doc over11,273documents (14 datasets, ColQwen2.5). Pooled me- dian\u22480.79; per-dataset medians span[0.77,0.85]. Efficiency.On ViDoRe-V2 with ColQwen2.5, AdaMerge com- presses a document in\u22489\u201310ms on a single CPU thread, versus \u22488ms for PtM; DocPruner is faster ( \u223c0.3ms) but cannot reach the same operating points. The gap is inherent: PtM can halt the agglomeration once\u2308\ud835\udc41\u2032/\ud835\udc5a\u2309 clusters remain, whereas AdaMerge computes the full linkage to locate the cliff, adding\u22481\u20132ms per document. This one-time indexing cost is offset at deployment by eliminating PtM\u2019s per-dataset grid search over\ud835\udc5a. 5 Conclusion We revisited where patch merging should stop in multi-vector VDR compression and identified a sharp, consistently located cliff in each document\u2019s merge-cosine sequence. Building on it, AdaMerge detects the cliff per document and forms attention-weighted cen- troids, replacing PtM\u2019s per-dataset cluster budget with a single global constant. AdaMerge significantly outperforms tuned PtM on long-document ViDoRe-V2 (\ud835\udc5d< 10\u22124) and matches it on short- document ViDoRe-V1 with no per-dataset tuning, at\u224810ms per doc- ument. Future work includes characterizing the cliff theoretically and extending per-document adaptive compression to non-ColPali multi-vector encoders. GenAI Usage Disclosure The core research contributions of this paper, namely the observa- tion of the"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "rows": [
+      18
+    ],
+    "question": "Why do conditional click probabilities vary across positions within the same column?",
+    "sentence": "Based on the provided passages, conditional click probabilities vary across positions within the same column because the conditional click probability is statistically dependent on the display position, revealing a significant deviation from (and refuting) the examination hypothesis [1, 2, 5].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Following the Eye-Tracking Evidence: Established Web-Search Assumptions Fail in Carousel Interfaces",
+        "page": 8,
+        "passage": "implies that there is no difference between conditional click probabilities in the same columngiven examination butnot givenan item. Formally, \u2200(\ud835\udc56,\ud835\udc57),\ud835\udc56 \u2032 ;\ud835\udc43(\ud835\udc36 \ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1)=\ud835\udc43(\ud835\udc36 \ud835\udc56\u2032,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56\u2032,\ud835\udc57 =1). We note that there is no similar implication between positions in the same row, since item ordering within carousels is not random- ized but ordered by popularity. We estimate the conditional click probability given examination as follows: \u02c6\ud835\udc43 \ud835\udc36\ud835\udc56,\ud835\udc57 =1|\ud835\udc38 \ud835\udc56,\ud835\udc57 =1 \u0001 \u2254 \ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1\u2227\ud835\udc36 \ud835\udc56,\ud835\udc57 =1)\ud835\udc41(\ud835\udc38 \ud835\udc56,\ud835\udc57 =1) .(6) The estimates are shown as percentages in the heatmap in Fig- ure 5. Thus, if Assumption 3 holds then the heatmap should show similar conditional click frequency estimates across positions in a column, due to the randomization of carousel order. However, we actually observe that the conditional click probability shows substantial fluctuations within columns, particularly on Page 1. This appears to reveal a significant deviation from the examination hypothesis as it indicates that the conditional click probability is actually statistically dependent on display position. To rigorously verify this difference, we conducted five two-sided Z-tests to com- pare the conditional frequencies in Row 1 (first carousel) against Row 6 (sixth carousel) in the first five columns (Page 1), the results are displayed in Table 1. This statistical analysis confirms significant differences in Column 2 and 3, where the conditional click proba- bility is significantly higher in Row 1 than in Row 6 with\ud835\udc5d< 0.05. Although we do not find statistically significant differences for the other columns, the significant differences"
+      },
+      {
+        "number": 2,
+        "paper": "Following the Eye-Tracking Evidence: Established Web-Search Assumptions Fail in Carousel Interfaces",
+        "page": 8,
+        "passage": "significant differences in Column 2 and 3, where the conditional click proba- bility is significantly higher in Row 1 than in Row 6 with\ud835\udc5d< 0.05. Although we do not find statistically significant differences for the other columns, the significant differences found are sufficient to refute Assumption 3 and thus the examination hypothesis as well. To summarize, we have analyzed the conditional click frequency per position given examination, due to the randomization of carousel orderings these frequencies should be equal within columns when the examination hypothesis is true. However, we found statistically Table 1: Clicks and estimation frequencies for Row 1 vs. Row 6 and percentage differences between the click frequencies conditioned on examination, along with p-values computed for these differences. The absolute conditional click frequen- cies are reported in Figure 5. Differences are only measured within columns. Statistical significance is assessed using two- sided Z-tests, with significance at \ud835\udc5d< 0.05(\ud835\udc5d< 0.01after Bonferroni correction) indicated in bold. Col. Row 1 Row 6 Diff.p-value Click Examination Click Examination 1 101 2157 47 1363+1.23% 0.076 274 1880 16 1226+2.63%<0.001 362 1895 18 1183+1.75% 0.003 4 47 1952 23 1141+0.39% 0.479 5 39 1995 24 1097\u22120.24% 0.661 significant differences within columns, meaning that we canreject Assumption 3, and by extension, we canrefutethe examination hypothesis on this dataset as well. 7 Most Users Ignore Carousel Headers Lastly, we turn to the Assumption 4 which states that users examine the title of the carousel before examining any individual items within it. This assumption stems from the"
+      },
+      {
+        "number": 5,
+        "paper": "From Click Modeling to Offline and Off-Policy Evaluation in Carousel Recommendation",
+        "page": 4,
+        "passage": "33.33 33.33 20.00 20.00 13.33 13.33 13.33 13.33 13.33 6.67 13.33 13.33 13.33 6.67 20.00 33.33 33.33 33.33 33.33 33.33 6.67 13.33 6.67 6.67 6.67 6.67 6.67 6.67 13.33 13.33 26.67 33.33 33.33 26.67 26.67 33.33 33.33 33.33 26.67 33.33 33.33 20.00 20.00 26.67 26.67 26.67 Title Page 1 Page 2 Page 3 0 20 40 60 80 100 Examination frequency (%) Figure 5: Examination frequency given a click at position (3, 7) (marked by a blue point). Items above the clicked carousel on the first page and items preceding the click within the same carousel are examined with high probability, forming the L-pattern of carousel interfaces. tests four behavioral assumptions that underlie existing carousel click models and evaluation metrics. In fact, the data refutes all four. First, the classical F-pattern does not hold even on the first page, which instead exhibits a dual-focus structure with attention peaks in both top corners; after a horizontal swipe, the second and third pages exhibit a mirrored F-pattern rather than a continua- tion, so no global F-pattern spans the interface (Figure 4). Second, examination conditioned on a click does not follow the assumed hierarchical, cascade-like pattern but instead forms a distinctive L-shape (Figure 5). Third, conditional click probability given ex- amination vary significantly across rows within the same column, despite the random vertical ordering of carousels in the study, refut- ing the examination hypothesis itself (Figure 6). Fourth, contrary to the assumption that users navigate carousels through their titles, the data shows that"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "rows": [
+      19
+    ],
+    "question": "How do the operational expenses during runtime compare between ASIRF and OPF?",
+    "sentence": "ASIRF's LLM calls cost more at inference time compared to OPF's single lightweight forward pass [3].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "ASIRF: An Agentic Framework for Context-Dependent Sensitive Information Redaction",
+        "page": 4,
+        "passage": "the knowledge base on a scoped grid (three models, Archive of Forgotten Futures custom dataset), confirming that retrieval contributes to better detection of sensitive values and improves recall across all three models (Table 3). 5 Conclusion ASIRF, an agentic framework that determines sensitivity via an inference-time knowledge base instead of a taxonomy fixed at training time, was evaluated across ten open-weight models and two architectures. Using a small fraction of a trained detector\u2019s preparation cost, its recall exceeds OPF\u2019s in 85% of model\u2013domain combinations, including domains outside OPF\u2019s training distribution and fictional domains unrecognizable to any fixed classifier. This efficiency, further improvable by strengthening knowledge-base curation, comes with a trade-off. ASIRF\u2019s LLM calls cost more at inference than OPF\u2019s single lightweight forward pass. Within the harness itself, ASIRF-Multi and 4"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "rows": [
+      20
+    ],
+    "question": "How much more efficient is the WP-DE method in terms of the number of evaluations required to generate a complete list compared to the SW alternatives?",
+    "sentence": "Based on the provided passages, WP-DE produces a full ranking using 50 comparisons, which is **59% to 98% fewer** than the SW (windowed) variants require [3].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "More Efficient LLM Reranking with Whole-Pool, Setwise, Long-Context Language Models",
+        "page": 6,
+        "passage": "Computational Cost All 3 Whole-Pool methods build complete rankings using fewer LLM comparisons (Comp./q) than the 4 windowed methods (SW-*) require for only top-10 output. Fig- ure 2 provides a visual overview. WP-DE produces a full ranking with 50 comparisons, 59%\u201398% fewer than the SW variants. This difference reflects how the windowed meth- ods produce their outputs: SW-TB and SW-TH terminate once ten top-ranked candi- dates have been selected, whereas the bottom-oriented variants must resolve the remain- der of the pool before the top-10 ranking is determined. Moreover, producing deeper rankings with the top-oriented windowed methods would require additional compar- isons, while WP-DE\u2019s 50-comparison budget already resolves all 100 candidates. Table 1 gives more detailed results. Panel A shows top-10 effectiveness trade-off. On average, WP-DE trails SW-TB and SW-TH by 0.046 and 0.040 nDCG@10. These differences narrow substantially with larger backbones: on Q27B and M8B, WP-DE is within 0.014 of both baselines, while on M14B it exceeds both by 0.008. Although the top-oriented SW variants perform significantly better on several smaller backbones, the differences are not significant on the larger models. WP-DE also outperforms both bottom-oriented windowed variants on eight of nine backbones. Because each Whole-Pool comparison processes all candidates remaining in the pool, fewer comparisons do not necessarily translate into lower token consumption or 3 Comparisons exclude additional retry generations, token totals retain the final generation per comparison, ranking time excludes the measured duration of additional retries. Table 2 instead includes all generation attempts, their tokens and measured query"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "rows": [
+      21
+    ],
+    "question": "What specific cloud computing hardware specifications were utilized to run the experiments?",
+    "sentence": "* For the KNN implementation experiments, a multi-node SLURM cluster running Ubuntu 22.04 LTS was used, where each compute node contained two Intel Xeon Platinum 8490H processors (Sapphire Rapids, 60 cores per socket, two hardware threads per core, 112.5 MiB of L3 per socket, maximum clock 1.90 GHz) with 2 TB of RAM [2].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "KNN Implementation Details Can Dramatically Change Performance: An Example from Cover Trees",
+        "page": 37,
+        "passage": "B Experiment Details Hardware.All experiments run on a multi-node SLURM cluster. Each compute node contains two Intel Xeon Platinum 8490H processors (Sapphire Rapids, 60 cores per socket, two hardware threads per core, 112.5 MiB of L3 per socket, maximum clock 1.90 GHz, i.e., no turbo boost) with 2 TB of RAM, running Ubuntu 22.04 LTS (Linux 5.15). Every benchmark job is allocated one physical core (--cpus-per-task=1under core-granularity scheduling) and its own memory, so jobs never share a core; they do share each socket\u2019s L3 cache and memory bandwidth with the other jobs on the node. Node load.That sharing matters on the large datasets. On an otherwise idle node,Npinned copies of the mnist all-NN, split evenly across the two sockets, slow down by1.48\u00d7(N=15),1.61\u00d7 (N=30), and1.99\u00d7(N=60) for the C++ reference, and by1.43\u00d7(N=15) and2.07\u00d7(N=60) for RUSTKNN single-tree search (each copy pinned to its own physical core): the two degrade at the same rate, so ratios between implementations measured under the same load are stable even though absolute times are not. Because the clock is fixed, the slowdown is cache and memory- bandwidth contention rather than frequency scaling. We therefore ran every campaign with the nodes held at a similar, high load (about 110 memory-heavy benchmark jobs per 120-core node), using filler jobs that run the same mnist workloads while a campaign\u2019s last allocations finished, so that no configuration was measured on an emptying node. One of the three nodes ran large-dataset allocations1.1\u20131.5\u00d7slower than the other two at the same job count; allocations were"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "rows": [
+      22
+    ],
+    "question": "Which combination of user action implementation techniques yields the highest correlation and lowest error?",
+    "sentence": "Based on the provided passages, combining the mirrored F-pattern with the row-page discount ($d_{RPD}$) yields the highest Spearman\u2019s $\\rho$ and Pearson\u2019s $r$ correlations and the lowest MSE after max normalization [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Revisiting N2DCG: An Empirically Grounded Reformulation of Carousel Recommendation Evaluation",
+        "page": 4,
+        "passage": "Within this family, implementing user actions multiplica- tively (\ud835\udc51\ud835\udc5a\ud835\udc62\ud835\udc59 and\ud835\udc51\ud835\udc45\ud835\udc43\ud835\udc37 ) produces closer match. The best result is achieved by combining the mirrored F-pattern with the row-page discount\ud835\udc51\ud835\udc45\ud835\udc43\ud835\udc37 , which yields the highest Spearman\u2019s\ud835\udf0c and Pearson\u2019s \ud835\udc5f correlations and the lowest MSE after max normalization. Accord- ingly, the next experiment compares the original and reformulated 2DCG using\ud835\udc51\ud835\udc4e and\ud835\udc51\ud835\udc45\ud835\udc43\ud835\udc37 , respectively."
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "rows": [
+      24
+    ],
+    "question": "In what ways do session-based recommendation systems differ from traditional user-level sequential models in terms of their focus and application?",
+    "sentence": "* **Application and User Identity:** Session-based recommendation is particularly suitable and applied when persistent user identities are unavailable, anonymous, or unreliable, whereas sequential models rely on tracking interactions tied to persistent user profiles [3, 5].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "Data Processing for Offline Evaluation in Recommender Systems: a Survey",
+        "page": 36,
+        "passage": "32Recommendation Datasets Sequential Representation Sequential recommendation exploits the temporal ordering of interac- tions. Consequently, in addition to user and item identities, this view requires information that allows interactions to be arranged chronologi- cally. Such ordering may be explicitly provided through timestamps or implicitly derived from the data collection process. For each useru, the corresponding interaction history is obtained from the subset Du = (u,i,\u03c4)\u2208D, containing all events associated withu. By ordering these events according to the information encoded in\u03c4, the user\u2019s history can be represented as a sequence su =\u27e8i 1,i 2,...,i k\u27e9. The dataset is therefore represented as a collection of user sequences S seq ={s u|u\u2208U}. Under this interpretation, users are implicitly characterised by the evolution of their interaction histories rather than by explicit profiles. This enables models to capture temporal dependencies in behaviour, including short-term intent and changes in preferences over time. Such a representation naturally supports next-item prediction and underlies a broad family of sequential recommendation models, including convolutional architectures such as Caser (Tang and Wang, 2018) and self-attention-based approaches such as SASRec (Kang and McAuley, 2018). Session-Based Representation Session-based recommendation focuses on short interaction sequences associated with sessions rather than persistent user identities. In this setting, the interaction attributes\u03c4 must encode session membership, allowing observations to be partitioned into distinct sessions. Conse- quently, the information required for this representation consists of item"
+      },
+      {
+        "number": 5,
+        "paper": "Data Processing for Offline Evaluation in Recommender Systems: a Survey",
+        "page": 37,
+        "passage": "3.3. A Taxonomy of Recommendation Datasets33 identities together with a session identifier, without relying on long-term user profiles. LetDs\u2286D denote the set of interactions belonging to a sessions. Each session can then be represented as an ordered sequence. s=\u27e8i 1,i 2,...,i k\u27e9, obtained by arranging the interactions inDs according to their occurrence. The dataset can therefore be viewed as a collection of sessions. S sess ={s 1,s 2,...,s n}. From this perspective, session-based recommendation can be inter- preted as a specialisation of sequential recommendation in which the unit of analysis shifts from users to sessions. Whereas user-level sequen- tial models aim to capture long-term preference dynamics, session-based approaches focus on short-term interaction patterns and are particularly suitable when persistent user identities are unavailable, anonymous, or unreliable. This formulation naturally supports next-item prediction within a session and forms the basis of a wide range of recommendation models, including recurrent architectures such as GRU4Rec (Hidasiet al., 2016) and graph-based session models such as SR-GNN (Wuet al., 2019). Context-Aware Representation Context-aware recommendation explicitly incorporates contextual at- tributes associated with interaction events. In this setting, the inter- action attributes \u03c4 are required to encode variables describing the circumstances under which interactions occur, allowing recommenda- tions to be conditioned on the surrounding context. Interactions can therefore be represented as tuples(u,i,c ), wherec denotes contextual variables derived from\u03c4. The dataset can thus be viewed as a collection of context-dependent interactions Dc ={(u,i,c)|(u,i,\u03c4)\u2208D}."
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "rows": [
+      25
+    ],
+    "question": "What percentage of owners experience complete separation from all other nodes?",
+    "sentence": "Based on the provided passages, isolated owners\u2014defined as having an observed degree of zero ($d_{\\text{obs}}(v) = 0$), meaning they have no observed edge of any kind\u2014make up **20.6%** of all owners [2, 4].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "When Concealed Links Cannot Be Recovered: A Structural Identifiability Bound and Evaluation Pitfalls in Offshore Leak Networks",
+        "page": 3,
+        "passage": "under five percent of officer relations. The beneficial- owner edges are our concealed target. Everything else forms the observed graph. 3.3 Provenance caveats Three facts about the data shape any honest evaluation. First, ex- traction is partial. A great deal of beneficial ownership lives in unstructured documents and never reaches the graph, which makes \ud835\udc45 a lower bound and turns unlabeled pairs into non-negatives. Sec- ond, ICIJ removes isolated nodes during publication, so the degree distribution is truncated at the low end. Third, the five leaks are separate collections, and we use them as independent replicates in Section 6. 3.4 Recovery rules and channels Let \ud835\udc45\u2229\ud835\udc38=\u2205 , and let \ud835\udc60(\ud835\udc5c,\ud835\udc52 ;\ud835\udc3a) score a candidate ownership pair. The rule is structural, meaning isomorphism-invariant, when \ud835\udc60(\ud835\udf0b(\ud835\udc5c),\ud835\udf0b(\ud835\udc52) ;\ud835\udf0b\u00b7\ud835\udc3a)=\ud835\udc60(\ud835\udc5c,\ud835\udc52 ;\ud835\udc3a) for every relabelling\ud835\udf0b. A rule can draw on three channels of information: topology, internal attributes such as the names already present in the leak, and external attributes joined from outside sources. Our bound is about the topology chan- nel. Section 8 measures the other two. 4 The Recoverability Bound 4.1 Setup For\ud835\udc63\u2208\ud835\udc49 let the footprint \ud835\udc51obs(\ud835\udc63) be its degree in the observed graph\ud835\udc3a, that is, the non-target edges left after\ud835\udc45 is removed. We call an officerisolatedwhen \ud835\udc51obs(\ud835\udc63)= 0, meaning it has no observed edge of any kind. Isolation is the sharpest case, and it holds for20.6% of owners. It should not be confused with beingdisconnectedfrom a particular entity, that is, lying in a different connected component of\ud835\udc3a, which is a weaker condition that holds"
+      },
+      {
+        "number": 4,
+        "paper": "When Concealed Links Cannot Be Recovered: A Structural Identifiability Bound and Evaluation Pitfalls in Offshore Leak Networks",
+        "page": 1,
+        "passage": "for isolated owners, who make up20.6%of all owners, and a trained graph neural network lands on the same floor. Recovery climbs only as structural distinctive- ness grows, and the floor reappears in every one of the five leaks. Along the way we document five evaluation traps. Each one makes a bound that cannot be beaten look beaten, and we give a short rule that avoids them. The practical upshot is to redirect effort from the hidden principal, which is close to unrecoverable, toward the machinery of concealment, and to spell out why fusing external data helps far less than one would hope. arXiv:2609.26171v1 [cs.IR] 10 Aug 2026"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "rows": [
+      26
+    ],
+    "question": "Which architecture does the system deploy for production use?",
+    "sentence": "* A **TensorRT-LLM worker-loop** architecture (SnapLGR) deployed in production for Snapchat content recommendation, which replaced a legacy T5 baseline [2].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "LLM-Based Generative Retrieval for Snapchat Content Recommendation",
+        "page": 8,
+        "passage": "Conference\u201917, July 2017, Washington, DC, USA [Authors] Table 7: Compounding inference throughput optimizations. Speedups are cumulative relative to the baseline central- ized Python-based architecture on A100 GPUs, measured in terms of samples/s/GPU. Optimization Speedup Baseline Centralized Architecture 1.00\u00d7 +TensorRT-LLM CUDA-backed beam search 9.3\u00d7 +Decentralized worker-loop architecture 30.7\u00d7 +Asynchronous I/O and System Overlap45.7\u00d7 Table 8: Online A/B results: SnapLGR vs. legacy T5 baseline. Metric Relative Change p-value View Time +0.37%\u00b10.27% 0.007 Time Spent +0.09%\u00b10.09% 0.048 Deep Sessions +0.18%\u00b10.16% 0.027 Deep Sessions Unique User +0.11%\u00b10.09% 0.017 architecture on a 64\u00d7A100 cluster achieved an additional 3.3\u00d7through- put improvement over the centralized architecture. Asynchronous I/O and System Overlap.After optimizing the framework and distribution architecture, generation speed was bot- tlenecked by data I/O and CPU-side execution. We further opti- mized the worker-loop by executing background row-group prefetch- ing to hide read latencies, isolating Parquet writes to a dedicated asynchronous pool to hide storage latencies, and disabling the ex- ecution of unused metric encoding operations during the genera- tion loop. Together, this combination of I/O and system overlap op- timizations provided another significant gain, multiplying through- put by 1.49\u00d7relative to the un-optimized worker-loop baseline. Cumulative System Gains.As detailed in Table 7, integrating these optimizations yielded compounding improvements across the serving stack. End-to-end, migrating from the legacy Python-based centralized architecture to the fully optimized TensorRT-LLM worker- loop delivered an approximate 45.7\u00d7increase in cumulative per- GPU throughput on A100 GPUs. 4.5 Online Production Impact (RQ4) Table 8 reports a 7-day production A/B test of SnapLGR against the legacy"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "rows": [
+      27
+    ],
+    "question": "What causes the high performance variance observed in the static vocabulary setup on the DoorKey environment?",
+    "sentence": "Based on the provided passages, a single catastrophic seed (seed 789 on DoorKey-8\u00d78, where the static-vocab-only condition reaches only 1% final-100 success compared to 100% for the full diagnostic run) explains much of the variance in the DoorKey static-vocabulary setup [3, 6].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "When LLM Reward Design Fails: Diagnostic-Driven Refinement for Sparse Structured RL",
+        "page": 14,
+        "passage": "illustrates why we avoid dismissing dynamic labels entirely: on DoorKey-8\u00d78 seed 789, static-vocab-only reaches only 1%final-100 success, whereas the full diagnostic run reaches100%. This single catastrophic static-vocab seed explains much of the DoorKey static-vocab variance and is suggestive, not conclusive, evidence that dynamic labels can rescue hard cases. 8.3 Threshold Sensitivity We vary each diagnostic threshold independently while keeping all other components fixed, evaluating on DoorKey-8\u00d78 and KeyCorridor with up to 5 successful seeds per configuration. Table 9 reports mean success rates. 14"
+      },
+      {
+        "number": 6,
+        "paper": "When LLM Reward Design Fails: Diagnostic-Driven Refinement for Sparse Structured RL",
+        "page": 14,
+        "passage": "Published in Transactions on Machine Learning Research (09/2026) merical probe metrics, but removes per-iteration trigger strings such asREWARD HACKING DETECTED,SHAPING TOO WEAK, andPLATEAU DETECTED. Iteration-0 reward functions are shared with the full diagnostic condition when available, so the manipulation begins at refinement. Environment F ull Diagnostic Static V ocab Only Metrics-Only DoorKey-8\u00d7897.6\u00b13.0% 87.6\u00b130.6% 68.6\u00b138.9% KeyCorridor86.7\u00b128.5% 70.7\u00b142.9% 11.5\u00b110.1% Table 8: Static-vocabulary prompt control (10 seeds). Static-vocab-only keeps the failure-mode vocabulary and raw metrics while removing dynamic per-iteration diagnostic labels. It recovers much of the metrics-only gap, especially on KeyCorridor, so the mechanism should be framed as taxonomy-guided prompting plus diagnostics rather than dynamic trigger labels alone. The static-vocabulary control changes the mechanism interpretation. On DoorKey-8\u00d78, full diagnostics exceedstatic-vocabularypromptingby10.0points, buttheintervalincludessmallornegativegaps(bootstrap CI[\u22121.8,30.3]; Welchp= 0.33;d= 0.46). Static vocabulary exceeds metrics-only by19.0points, but that comparison is also not resolved atn= 10(CI[\u221210.6,47.9];p= 0.24;d= 0.54). On KeyCorridor, static vocabulary captures most of the improvement over metrics-only (70.7%vs.11.5%;\u2206 = 59.2points; CI [32.1,83.5];p= 0.0017;d= 1.90), while full diagnostics trend higher than static vocabulary by16.0points but remain statistically unresolved (CI[\u221213.6,46.7];p= 0.34;d= 0.44). We therefore interpret the prompt controls as evidence that the failure taxonomy is a major active ingredient; the online diagnostic labels may add value, but these experiments do not isolate them as the sole driver. A seed-level inspection illustrates why we avoid dismissing dynamic labels entirely: on DoorKey-8\u00d78 seed 789, static-vocab-only reaches only 1%final-100 success, whereas the full diagnostic run reaches100%. This single catastrophic static-vocab seed explains much of the DoorKey static-vocab variance and is suggestive, not conclusive,"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "rows": [
+      28
+    ],
+    "question": "Within what percentage range does label noise cause a noticeable decline in graph neural network performance?",
+    "sentence": "Within the 40%\u201360% interval (centered around a 50% noise ratio), graph neural networks exhibit a smooth transition where performance begins to deteriorate more noticeably, following stability under lower noise ratios and a sharp decline after the transition region [1, 2, 8].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "From Phase Transition to Systemic Failure: A Decoupled Analytics Framework for GNN Robustness",
+        "page": 1,
+        "passage": "sharply only after an observed transition region around the 50% noise ratio. Second, under extreme feature distribution shift, all tested models suffer substantial degradation, with test MSE increasing by 48\u00d7to 316\u00d7and correlation dropping by 73% to 89%. These findings suggest that, in the present controlled setting, GNNs are considerably more tolerant to moderate label perturbation than to severe distribution mismatch. The study provides a controlled empirical baseline for understanding how data quality affects GNN-based graph mining systems and offers practical implications for deployment-oriented monitoring and model maintenance. Index T erms\u2014Graph Mining, Graph Neural Networks, Data Analytics, Machine Learning Robustness, Distribution Shift, Label Noise, MLOps I. Introduction Graph neural networks (GNNs) have emerged as the foun- dational architecture for graph mining and machine learning in big data ecosystems [1]. However, as these models transition This research was funded by Science and Technology Projects of Xizang Autonomous Region, China, project title \u201dResearch and Application of LLM-based Intelligent Tourism Service System for Xizang\u201d, grant number XZ202401ZY0008. from controlled academic benchmarks to dynamic real-world deployments, a critical vulnerability has been exposed: while algorithmic architectures are highly optimized, deployment reliability is fundamentally dictated by the quality, stability, and integrity of the underlying data. In the context of large- scale data analytics, shifting the focus from model-centric structural upgrades to data-centric robustness evaluation has become an urgent necessity [1] [2]. In dynamic deployment environments, data degradation typically manifests through two pervasive yet mechanistically distinct channels: label noise (inaccurate, incomplete, or cor- rupted annotations) and feature distribution"
+      },
+      {
+        "number": 2,
+        "paper": "From Phase Transition to Systemic Failure: A Decoupled Analytics Framework for GNN Robustness",
+        "page": 4,
+        "passage": "Under corrupted supervision, the model exhibits a pre- dictable, progressive degradation trajectory rather than an immediate collapse. Following the experimental design, the label-noise experiments fix GCN-S as the representative model and jointly vary the noise ratio and noise intensity to evaluate model sensitivity to degraded supervision. In the current setting, the noise ratio increases from 0% to 100%, while the noise intensity is set to\ud835\udefc\u2208{0.5,1.0,1.5}. Our analytics reveal that the model exhibits a certain degree of stability under low-to-moderate label noise. Taking the representative results under a noise intensity of 1.5\u00d7std as an example, when the noise ratio increases from 0% to 30%, the test MSE rises only slightly from 3.49\u00b11.01 to 3.65\u00b10.97, while the Pearson correlation coefficient decreases marginally from 0.873\u00b10.019 to 0.862\u00b10.020. In this stage, the performance change remains relatively mild, indicating that under a limited level of supervisory disturbance, neighborhood aggregation over the graph structure is still able to buffer local errors and maintain reasonably stable predictive performance [5] [6]. Fig. 1. MSE trend under increasing noise ratio Fig. 2. Correlation trend under increasing noise ratio Higher noise ratios and intensities consistently accelerate performance degradation (Fig. 1, 2). Notably, this deterioration is gradual rather than abrupt. Under the 1.5\u00d7std setting, the 40%\u201360% interval exhibits a smooth transition: test MSE rises progressively (4.69\u00b11.25\u21925.02\u00b11.42\u21925.23\u00b11.50), while Pearson\ud835\udc5fsteadily declines (0.832\u00b10.032\u21920.823\u00b10.037\u2192 0.815\u00b10.045). This confirms a gradual transition around 50% instead of a single-point collapse. These results confirm that while GNNs are highly fault- tolerant to moderate annotation noise, widespread supervision corruption will"
+      },
+      {
+        "number": 8,
+        "paper": "From Phase Transition to Systemic Failure: A Decoupled Analytics Framework for GNN Robustness",
+        "page": 1,
+        "passage": "From Phase Transition to Systemic Failure: A Decoupled Analytics Framework for GNN Robustness 1st Shuai Yan College of Computer and Software Chengdu Jincheng College Chengdu 611731, China yanshuai1@cdjcc.edu.cn 2nd Dan Peng College of Computer and Software Chengdu Jincheng College Chengdu 611731, China pengdan93@cdjcc.edu.cn 3rd Jie Li College of Computer and Software Chengdu Jincheng College Chengdu 611731, China lijie5787@cdjcc.edu.cn 4th Xiaodong Huang College of Computer and Software Chengdu Jincheng College Chengdu 611731, China huangxiaodong@cdjcc.edu.cn 5th Ke Wang* College of Computer and Software Chengdu Jincheng College Chengdu 611731, China wangke@cdjcc.edu.cn *Corresponding author Abstract\u2014Data quality is a major bottleneck for the reliable deployment of graph neural networks (GNNs) in real-world graph mining tasks. Among various sources of degradation, label noise and feature distribution shift (hereafter referred to as distribution shift) are two common yet fundamentally different challenges. To study their effects under controlled conditions, this paper constructs a synthetic homophilic graph regression benchmark in which the two factors can be manipulated separately. A total of 41 configurations and 410 runs are conducted to evaluate the behavior of representative GNN models under varying noise and shift conditions. The results show two distinct patterns. First, under additive label corruption, performance remains relatively stable over a broad range of noise settings and begins to deterio- rate sharply only after an observed transition region around the 50% noise ratio. Second, under extreme feature distribution shift, all tested models suffer substantial degradation, with test MSE increasing by 48\u00d7to 316\u00d7and correlation dropping by 73% to 89%. These findings suggest"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "rows": [
+      29
+    ],
+    "question": "How do multi-attribute approaches compare against individual metrics when predicting retrieval performance?",
+    "sentence": "Multi-attribute perspectives capture more complex structural patterns, which translates into substantially stronger predictive power compared to relying on any single geometric descriptor or individual metric [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "From Topology to Retrieval: Decoding Embedding Spaces with Unified Signatures",
+        "page": 6,
+        "passage": "a mean Spearman correlation of 0.70\u00b10.11 across the cross-validation folds. The best single metric is effective rank with a correlation of 0.47\u00b10.08 . These results highlight the limitations of relying on any single geometric descriptor. Our multi-attribute perspective, by contrast, captures more complex structural patterns, translating into substantially stronger predictive power. To better understand these patterns, we analyze the feature importance across all folds, summarized in Figure 2 and find that the effective rank is the most important feature. This result is in line with recent theoretical work [87] suggesting that retrieval performance is limited by the dimensionality of 6"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "rows": [
+      30
+    ],
+    "question": "What method is used to adjust the supervision intensity for different sequences within the synthetic set according to their lookahead value?",
+    "sentence": "During optimization, this weight is multiplied by $B$ (the beam size) to eliminate the influence of beam size on the loss magnitude, ensuring gradient updates are predominantly driven by high-confidence sequences [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "DeGRe: Dense-supervised Generative Reranking for Recommendation",
+        "page": 5,
+        "passage": "solutions, sequences within the set still exhibit value disparity. To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T\ud835\udc60\ud835\udc66\ud835\udc5b . For any lookahead sequence \ud835\udc59\u2208T \ud835\udc60\ud835\udc66\ud835\udc5b , the normalized weight is computed as: \ud835\udc64\ud835\udc59 = exp( \u02c6\ud835\udc49(\ud835\udc59)/\ud835\udf0f \ud835\udc64)\u02dd \ud835\udc59\u2032\u2208T\ud835\udc60 \ud835\udc66\ud835\udc5b exp( \u02c6\ud835\udc49(\ud835\udc59\u2032)/\ud835\udf0f\ud835\udc64) (10) During optimization, we multiply\ud835\udc64\ud835\udc59 by\ud835\udc35 to eliminate the influence of beam size on the loss magnitude. Combined with the temperature coefficient\ud835\udf0f\ud835\udc64 that controls the sharpness of the distribution, this mechanism ensures that gradient updates are predominantly driven by high-confidence sequences. Scalability of Offline Mining.To ensure scalability for larger candidate sets, the search space can be effectively constrained by applying Top-\ud835\udc3e pre-truncation at each step. Furthermore, since theO(\ud835\udc41\u00d7\ud835\udc35) expanded sequences evaluated per step are strictly independent, they can be merged into a single GPU batch for parallel scoring. This design allows the exploration overhead to be flexibly controlled by adjusting the beam size\ud835\udc35. 4.3 Efficient Online Generator The Online Generator\ud835\udc3a\ud835\udf03 adopts a lightweight Encoder\u2013Decoder ar- chitecture, designed to satisfy the strict constraints of high through- put and low latency in industrial recommendation systems. Bidirectional Candidate Encoder.During the encoding phase, the generator has global visibility over the candidate set V\ud835\udc62. To maximize the efficiency of knowledge transfer from the evaluator to the generator, the generator employs the same underlying feature processing architecture as the Lookahead Evaluator, including GLN and inter-domain attention. Based on the aligned features, we use an \ud835\udc41\ud835\udc3a-layer bidirectional Transformer to encode the candidate set in parallel, obtaining"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "rows": [
+      31
+    ],
+    "question": "How does the performance of the traversal-safe approach compare to standard soft-deletion regarding recall when handling targeted deletions?",
+    "sentence": "Under targeted or region deletion, the traversal-safe approach (with repair) beats real soft-delete, with the performance margin growing as the deletion fraction increases (+4.3, +16.2, and +42.2 points at deletion fractions of $f = 0.5$, $0.7$, and $0.9$, respectively) [1, 2, 6].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Beyond Private Training: The New Landscape of AI Privacy",
+        "page": 3,
+        "passage": "to the native engine we validate directly (top-10 agreement 1.000; replayed distance count 0.98\u00d7faiss \u2019s own ndis) and run thereleasedverifier over 100 sampled queries: the soft- delete certificatefails(a deleted id in the scored set of every sampled query), while traversal-safe and clean-rebuildpass(0hash/count mismatches; Table 1). Table 1: External-validity audit on unmodified faiss (70% deletion, 3 seeds). The native selector leaves distance work unchanged; the released verifier fails soft-delete and passes the traversal-safe and rebuild certificates. Take-away: output filtering does not stop the memory from reading deleted entries. Conditionndis(targeted) returned leak verifier A. soft-delete (output filter)1,535,152 0FAIL B. nativeIDSelectorBatch1,535,152 0FAIL C. clean rebuild (live only)2,124,533 0PASS Traversal-safe (ours) \u20140PASS 5 Honest recall reconciliation A common butweaksoft-delete baseline oversamples a fixed k\u2032>k then filters; under targeted deletion this leaves few live results and collapses to near-zero recall. faiss\u2019s real soft-delete (native selector, fill-k) is far stronger. We therefore reconcile our recall claims against faiss\u2019s real soft-delete on the same graph (Figure 2). Two honest findings.(i)Underrandomdeletion there is no quality advantage (all methods \u22480.99).(ii)Undertargeted/regiondeletion\u2014the realistic case for erasing a user, a topic, or a compromised source\u2014traversal-safe +repair beats faiss\u2019s real soft-delete by a margin that growswith the deletion fraction ( +4.3/+16.2/+42.2 points at f=0.5/0.7/0.9), far smaller than the gap against the weak baseline. A stop-the-world clean rebuild attains the highest raw recall (\u22650.97 ) at every fraction; traversal-safe+repair is therefore best read as anonline, availability-preserving, certificate-cleanrecovery that beats real soft-delete, not as a replacement for a rebuild on raw quality. 6 Related work"
+      },
+      {
+        "number": 2,
+        "paper": "Beyond Private Training: The New Landscape of AI Privacy",
+        "page": 4,
+        "passage": "0.5 0.7 0.9 Deletion fraction f (targeted) 0.0 0.2 0.4 0.6 0.8 1.0Recall@10 vs.\\ exact live top-10 +0.04 +0.16 +0.42 Clean rebuild (stop-the-world) Traversal-safe + repair (ours) faiss real soft-delete Weak soft-delete baseline Figure 2:Recall@10 vs. exact live top-10 under targeted deletion(mean of 3 seeds), against faiss\u2019srealsoft-delete. The shaded band is the honest gap (traversal-safe +repair \u2212 real soft-delete): +0.043/+0.162/+0.422 at f=0.5/0.7/0.9. Auditable erasure need not cost retrieval quality under targeted deletion; a stop-the-world rebuild leads on raw recall at rebuild cost. Verifiable-ANN certifies resultcorrectness(Wang et al., 2024) and factual-residual audits operate at the model level (Raeesi and Roed, 2026); neither certifies the retrieval process of an inference-time memory. Our residual, defensible contribution is the traversal-exposureaudit propertyfor erasure and its externally verifiable certificate. 7 Limitations The exposure is a process/compliance property, not a client-exploitable channel (returned leakage is 0). Our quality benefit is scoped to targeted/region deletion and grows with f; under random deletion it vanishes, and a stop-the-world rebuild dominates raw recall at rebuild cost. Certificates are scoped to an honest-but-buggy operator; a malicious operator forging traces requires a trusted execution environment or transparency log, which we leave to future work. We study the RAG memory layer specifically; auditable erasure for parametric or in-context memory is complementary and out of scope. References Lucas Bourtoule, Varun Chandrasekaran, Christopher A. Choquette-Choo, Hengrui Jia, Adelin Travers, Baiwu Zhang, David Lie, and Nicolas Papernot. Machine unlearning. InIEEE Symposium on Security and Privacy (S&P), 2021. Chandranil Chakraborttii, Jackeline Garc\u00eda Alvarado, Sitora Abdulofizova, and Shivanshu"
+      },
+      {
+        "number": 6,
+        "paper": "Beyond Private Training: The New Landscape of AI Privacy",
+        "page": 1,
+        "passage": "Beyond Output Filtering: Externally Auditable Erasure for Inference-Time RAG Memory Sean Culatana Atlassian Mountain View, CA sculatana@atlassian.com Kang Li Atlassian Bellevue, W A kli3@atlassian.com Abstract Retrieval-augmented systems increasingly rely on vector indexes that may retain deleted items in their search graph. Existing deletion interfaces can prevent deleted identifiers from appearing in returned results while still computing distances to their embeddings during graph traversal. We formalize this distinction asoutput safetyversustraversal safety, and introduce TSD-AUDIT, a framework for auditing and enforcing traversal-safe deletion in graph-based approximate nearest-neighbor retrieval. On Faiss IndexHNSWFlat, native filtering leaves the number of distance computations unchanged relative to unfiltered search; at a 70% deletion rate, trace- faithful replay detects deleted-vector scoring in all 100 audited queries. Code inspection of hnswlib\u2019s mark_deleted path reveals the same scoring-before- liveness pattern. TSD-AUDITenforces analive-before-scoringinvariant, repairs connectivity using only live candidates, and emits per-query scored-trace certifi- cates that an independent verifier can check against the deletion snapshot. Under region-targeted deletion, TSD-AUDITimproves Recall@10 over native filtering by 4.3\u201342.2 percentage points across deletion fractions from 0.5 to 0.9, while remaining comparable under random deletion. These results show that output-only deletion audits can miss process-level exposure: auditing deletion in vector retrieval requires accounting for the vectors scored during search, not only the identifiers returned. 1 Introduction Privacy research has historically anchored on the training phase, relying predominantly on differ- entially private training such as DP-SGD. But state-of-the-art applications increasingly pivot to inference-time, non-finetuning paradigms: autonomous agents, in-context learning, and retrieval- augmented generation. In these deployments a"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "rows": [
+      32
+    ],
+    "question": "What are the primary inquiries guiding the research on carousel recommendations?",
+    "sentence": "[3]\n* **RQ2.2:** How can off-policy evaluation be performed for carousel recommendation policies?",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "From Click Modeling to Offline and Off-Policy Evaluation in Carousel Recommendation",
+        "page": 3,
+        "passage": "two perspectives: metric design and off-policy evalua- tion. It is divided into two sub-questions: \u2013 RQ2.1: How can offline evaluation metrics be de- signed for carousel layouts? \u2013 RQ2.2: How can off-policy evaluation be performed for carousel recommendation policies? These questions are closely connected: reliable offline and off- policy evaluation requires a clear understanding of how users inter- act with carousel interfaces and what their clicks indicate. Figure 2 shows the papers that make up this thesis and how they build on one another; we then relate each to the research questions above. RQ1.1 is addressed by the eye-tracking dataset (SIGIR 2025) and the follow-up behavior analysis (SIGIR 2026); RQ1.2 by the click model design framework (ICTIR 2025) and the ongoing choice-based click Figure 3: Design of a screen in the RecGaze eye-tracking study. The blue circle represents a user\u2019s current gaze point. model; RQ2.1 by the reformulation of N2DCG, currently under re- view; and RQ2.2 by the planned work on off-policy evaluation for carousel recommendation. The arrows capture methodological dependencies: the dataset enables the behavior analysis, which informs both the choice model and the metric; the click-model framework also feeds the choice model; and the choice model provides the basis for the planned off- policy evaluation. The N2DCG metric and the off-policy evaluation work are complementary components of the evaluation chapter: the former studies how to define carousel-aware offline metrics, while the latter studies how to estimate target-policy value from logged interactions. 4 Research Progress 4.1 Chapter: Rethinking Carousel"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "rows": [
+      33
+    ],
+    "question": "What specific mammalian counterpart name, discovered during literature analysis, enabled the retrieval of the highest-impact papers containing multiple ground-truth annotations?",
+    "sentence": "Based on the provided passages, the mammalian counterpart name discovered during literature analysis that enabled the retrieval of papers containing ground-truth annotations is **LRPPRC** [4, 7].",
+    "cited": [
+      {
+        "number": 4,
+        "paper": "FlyAOC: Evaluating Agentic Ontology Curation of Drosophila Scientific Knowledge Bases",
+        "page": 27,
+        "passage": "partner retrieves papers about the oskar\u2013bsf relationship that did not rank highly under gene-name-only queries. readPMC7001992, PMC8186867, PMC3174985 (3 papers). New papers found via refined query. Phase 4: Refined search \u2014 usingSH1181(learned from PMC4503542) search Query: bsf SH1181 \"Bicoid Stability Factor\" . Adding the mutant allele name retrieves papers that study the gene through its mutant but may not mention the canonical gene name prominently. readPMC4918342, PMC10413924 (2 papers). Phase 5: Refined search \u2014 usingLRPPRC(learned from PMC3192837) search Query: LRPPRC bsf Drosophila BSF mitochondria . The highest-impact refinement. \u201cLRPPRC\u201d is the mammalian counterpart name that appears only in papers the agent already read \u2014 not in the prompt or any external hint. This query retrievesPMC6668790 \u2020 and PMC5559520, which contain 4 ground-truth annotations between them. read PMC6668790\u2020, PMC3474952, PMC10484445, PMC5624782, PMC8843987, PMC3250245 (6 papers). Fills the 16-paper budget. Phase 6: Ontology resolution and submission resolve 22 tool calls to map extracted text descriptions to standardized ontology identifiers (e.g., mapping \u201clocated in mitochondria\u201d to the correct database term). submitFinal output: 9 function annotations, 4 expression annotations, 5 synonyms. \u2020PMC6668790 contains 2 ground-truth annotations and was only reachable via the LRPPRC query. 27"
+      },
+      {
+        "number": 7,
+        "paper": "FlyAOC: Evaluating Agentic Ontology Curation of Drosophila Scientific Knowledge Bases",
+        "page": 26,
+        "passage": "H.4 Retrieval Method Ablation To validate BM25 [Robertson and Zaragoza, 2009] as a baseline retrieval method, we compare four retrieval strategies under Single-Agent at budget 8 (Table 15). Table 15: Retrieval method comparison (Single-Agent, budget 8, GPT-5-mini). Retrieval GO R@30 Expr R@10 Syn R@20 Hybrid (rerank)54.7%47.9%58.1% Hybrid (WRRF) 52.6%49.6%57.4% Lexical (BM25) 50.5%49.6%48.6% Semantic (MedCPT) 23.9% 18.9% 27.8% BM25 is lexical corpus retrieval; MedCPT is biomedical dense retrieval [Jin et al., 2023]; Hybrid (rerank) denotes lexical-plus-semantic reranking; Hybrid (WRRF) uses weighted reciprocal-rank fusion [Cormack et al., 2009]. BM25 remains competitive onGENE ONTOLOGYandEXPRESSION, while hybrid retrieval offers additional gains, especially forSYNONYMS. Pure dense retrieval with MedCPT collapses, likely because scientific papers use precise gene symbols and terminology that lexical matching handles well. The released corpus supports any retrieval strategy, making retrieval an open research variable. H.5 Case Study: End-to-End Annotation ofbsf We trace a complete Single-Agent run forbsf(bicoid stability factor, FBgn0284256) to illustrate the iterative search-read-refine loop and how FLYAOC evaluates the resulting annotations. The full run reads 16 papers over 6 search rounds in approximately 6 minutes ($1.51 API cost). Agent trace.Table 16 shows the full sequence of agent actions. The agent begins with broad queries, reads papers, discovers new vocabulary, and feeds it back into search\u2014each round retrieving papers invisible to earlier queries. Of the 16 papers read,7 were found only by the later refined queries(phases 3\u20135), and two contain ground-truth annotations missed by single-shot retrieval. Evaluation.FlyBase curators have annotatedbsfwith 8 unique in-corpus GO terms, 2 in-corpus expression annotations, and"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "rows": [
+      34
+    ],
+    "question": "What method is used to adjust the supervision intensity for different sequences within the synthetic set according to their lookahead value?",
+    "sentence": "To adjust the supervision intensity according to lookahead value, a sequence weighting mechanism is used for the set $\\mathcal{T}^{syn}$ [1, 2].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "DeGRe: Dense-supervised Generative Reranking for Recommendation",
+        "page": 5,
+        "passage": "solutions, sequences within the set still exhibit value disparity. To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T\ud835\udc60\ud835\udc66\ud835\udc5b . For any lookahead sequence \ud835\udc59\u2208T \ud835\udc60\ud835\udc66\ud835\udc5b , the normalized weight is computed as: \ud835\udc64\ud835\udc59 = exp( \u02c6\ud835\udc49(\ud835\udc59)/\ud835\udf0f \ud835\udc64)\u02dd \ud835\udc59\u2032\u2208T\ud835\udc60 \ud835\udc66\ud835\udc5b exp( \u02c6\ud835\udc49(\ud835\udc59\u2032)/\ud835\udf0f\ud835\udc64) (10) During optimization, we multiply\ud835\udc64\ud835\udc59 by\ud835\udc35 to eliminate the influence of beam size on the loss magnitude. Combined with the temperature coefficient\ud835\udf0f\ud835\udc64 that controls the sharpness of the distribution, this mechanism ensures that gradient updates are predominantly driven by high-confidence sequences. Scalability of Offline Mining.To ensure scalability for larger candidate sets, the search space can be effectively constrained by applying Top-\ud835\udc3e pre-truncation at each step. Furthermore, since theO(\ud835\udc41\u00d7\ud835\udc35) expanded sequences evaluated per step are strictly independent, they can be merged into a single GPU batch for parallel scoring. This design allows the exploration overhead to be flexibly controlled by adjusting the beam size\ud835\udc35. 4.3 Efficient Online Generator The Online Generator\ud835\udc3a\ud835\udf03 adopts a lightweight Encoder\u2013Decoder ar- chitecture, designed to satisfy the strict constraints of high through- put and low latency in industrial recommendation systems. Bidirectional Candidate Encoder.During the encoding phase, the generator has global visibility over the candidate set V\ud835\udc62. To maximize the efficiency of knowledge transfer from the evaluator to the generator, the generator employs the same underlying feature processing architecture as the Lookahead Evaluator, including GLN and inter-domain attention. Based on the aligned features, we use an \ud835\udc41\ud835\udc3a-layer bidirectional Transformer to encode the candidate set in parallel, obtaining"
+      },
+      {
+        "number": 2,
+        "paper": "DeGRe: Dense-supervised Generative Reranking for Recommendation",
+        "page": 5,
+        "passage": "DeGRe: Dense-supervised Generative Reranking for Recommendation KDD \u201926, August 9\u201313, 2026, Jeju Island, Republic of Korea 2 3 4 5 6 1 Candidate Pool ( ) Step t=1: Initial Selection Lookahead Evaluator Step t=2: Contextual Selection 0.1 Soft Label 1 0.1 0.15 0.08 0.12 0.45 1 2 3 4 5 6 1 3 4 5 6 Soft Label 2 0.20 0.12 0.38 0.15 0.15 Context History (<) 2 1 3 4 5 62 2 4 Selected: 2 Selected: 4 [2, 1] [2, 3] [2, 4] [2, 5] [2, 6] 2 4 ? Next Step 0 1 0 00 Step t+1 (To Generator Training) Remaining Candidates Lookahead Sequence Supervision Signal at Step t Hard Label () Soft Label () ... Dense Label Construction Figure 3: Illustration of the dense supervision construction process. At each step (e.g., \ud835\udc61= 1, 2), the Lookahead Evaluator determines the target decision (hard label \ud835\udc63\ud835\udc56\ud835\udc61 , such as \ud835\udc632,\ud835\udc63 4) and constructs soft labels (\ud835\udc5e\ud835\udc61 ) to preserve fine-grained ranking information. These dense signals, which combine deterministic and probabilistic information, are used to guide the training of the generator. This distribution serves as a local regularizer, enabling the genera- tor to perceive the relative merits of non-target items within the candidate space. Sequence Weighting.AlthoughT\ud835\udc60\ud835\udc66\ud835\udc5b contains potential optimal solutions, sequences within the set still exhibit value disparity. To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T\ud835\udc60\ud835\udc66\ud835\udc5b . For any lookahead sequence \ud835\udc59\u2208T \ud835\udc60\ud835\udc66\ud835\udc5b , the normalized weight is"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "rows": [
+      35
+    ],
+    "question": "What is a key limitation of traditional dense retrievers and cross-encoders when gathering multiple passages for complex question-answering tasks?",
+    "sentence": "Consequently, they do not evaluate whether a collection of passages jointly forms useful evidence (query\u2013set compatibility) when individual passages depend on one another to be fully useful [1, 2].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Scoring a Set, Not Summing Passage Scores: Effective and Efficient Set Retrieval",
+        "page": 1,
+        "passage": "for efficient set exploration, andSetCE, an expres- sive cross-encoder for set reranking. Across three multi-hop QA benchmarks and two first-stage retrievers, set-level retrieval consistently provides a complemen- tary signal to passage-level relevance, becoming relatively more effective when more hops are required to reach evidence from the query. Motivated by this com- plementarity, combining the two signals further improves downstream QA perfor- mance, outperforming both deeper passage-level retrieval and an ensemble of dis- tinct passage-level retrievers. Finally, without invoking an LLM during retrieval, our method remains competitive with LLM-assisted evidence-selection pipelines while achieving up to15\u00d7faster evidence selection. 1 INTRODUCTION Document retrieval is commonly formulated as ranking individual passages by their respective rele- vance to a query. This formulation is effective when useful evidence can be identified independently, but many reasoning-intensive tasks, such as multi-hop question answering, require multiple passages whose usefulness depends on one another. For example, a supporting passage may have only weak direct relevance to the original query, yet become essential when combined with another passage that establishes an intermediate entity or relation. Such cases suggest that multi-hop retrieval in- volves not onlyquery\u2013passage relevance, but alsoquery\u2013set compatibility: whether a collection of passages jointly forms useful evidence for answering the query. Existing retrieval paradigms capture such interactions in different ways. Passage-level retrievers learn scores over individual query\u2013passage pairs, while sequential retrievers condition each next- passage decision on previously selected evidence (Zhang et al., 2024; Xiong et al., 2020). Sequential conditioning captures some cross-passage dependencies, but still evaluates one extension at"
+      },
+      {
+        "number": 2,
+        "paper": "Scoring a Set, Not Summing Passage Scores: Effective and Efficient Set Retrieval",
+        "page": 3,
+        "passage": "Under review at ICLR 2027 \u2026 MLP Score q p1 p2 pn ParaSet (Set-Level Efficient Scorer) SetCE (Set-Level Reranker) query passage \u2026 query token passage token Bi-Encoder (Passage-Level Efficient Scorer) Score \u2026 \u2026 query passage \u2026 \u2026 \u2026 MLP Score Cross-Encoder (Passage-Level Reranker) query passage 1 \u2026 MLP Score \u2026 passage n \u2026 \u2026 \u2026 \u2026\u2026 \u2026\u2026 \u2026 \u2026 \u2026 \u2026 \u2026 \u2026 (Pre-computed) Pre-computed & KV-cached contextualized summary passage embedding query embedding pre-computed DP-style reuse Figure 1: Overview of passage-level and set-level scoring. Passage-level retrievers score individual query\u2013passage pairs, whereas our models directly score the compatibility between a query and a candidate passage set.ParaSetreuses precomputed bi-encoder representations and applies set in- teraction for efficient candidate exploration, whileSetCEjointly encodes the query and passages for expressive set-level reranking. mentarity, combining set-level compatibility with passage-level relevance further improves down- stream QA over both deeper passage retrieval and an ensemble of two passage-level scorers. 2 RELATEDWORK 2.1 MULTI-PASSAGERETRIEVAL FORMULTI-HOPQA A common approach to multi-hop QA is to retrieve multiple passages by independently ranking their relevance to a query. Dense retrievers and cross-encoders typically return the top-kpassages under individual query\u2013passage scores (Karpukhin et al., 2020; Izacard & Grave, 2021; Lewis et al., 2020). While simple and effective, this formulation does not explicitly account for dependencies among retrieved passages. Consequently, evidence that is relevant through its connection to other evidence can be difficult to identify without direct retrieval cues in the query. Another line of work performs retrieval iteratively, conditioning each step on previously retrieved"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "rows": [
+      37
+    ],
+    "question": "What is the primary obstacle that the vast majority of participants identified regarding content tailoring?",
+    "sentence": "Based on the provided passages, the overwhelming majority of participants pointed to **data, backend, or infrastructure** as a key concern/challenge regarding personalization (content tailoring) [1, 7].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Do We Care About Personalization and Explainability? An Interview Study with News Recommendation Engineers",
+        "page": 5,
+        "passage": "on different media types. Data, backend and infrastructure.When asking participants about their challenges, the overwhelming majority pointed to data, backend or infrastructure as a key concern (P3, E4, D5, E6, D7, P10, D11, P15). E.g., D7 said that \u201cmost of the time your backend land is pretty disjoint from your data land\u201d and D11 stated that these challenges made it \u201ca little bit hard to debug the system. \u201d E4 indicated that transitioning from one infrastructure to another causes issues, with their recsys team becoming \u201ca centralised unit\u201d while building \u201ca huge new data structure. \u201d P10 mentioned being bottlenecked by old infrastructure. P3 emphasized access to data and subscriber retention, noting that \u201cthe GDPR makes it really hard to get good data that would benefit society. We believe that it would benefit society if more people would have a newspaper subscription. \u201d Improving retention is also a concern for P14: \u201cour biggest pain point is that we want to use recommendations to keep people on the platform, and we can optimize and measure relatively short term results like clicks and plays. \u201d Resources and people.Another stated challenge by participants (P3, E4, D7, E9) was access to resources and people. E9 mentions the \u201cbig computational challenge\u201d of running recommender systems and D7 stated that their\u201ccurrent data science team, it\u2019s four people. We don\u2019t have this in-depth knowledge. We don\u2019t have a specialist. Because at this point, we need generalists 10 who can make changes on the product and not only"
+      },
+      {
+        "number": 7,
+        "paper": "Do We Care About Personalization and Explainability? An Interview Study with News Recommendation Engineers",
+        "page": 5,
+        "passage": "trum, there are questions on how much to invest in personalized experiences. D1 mentioned \u201cWe\u2019re also at a bit of a fork in the road of whether we\u2019re going to stick with that [. . . ] do we want to really invest a lot more in this system and make those kinds of improvements?\u201d Another organization reported prioritizing personalization for its video platform, with news taking a back seat. D5 explained that users may view the platform similarly to a Netflix subscription, where payment implies personalized value, making personalization \u201cone of the top priorities\u201d for their video platform. Zooming out with Figure 1 (left), we find that personalization in news is less widely adopted by public broadcasters than by other types of media organizations. This is unsurprising, as public broadcasters typically lack access to user data comparable to that of privately funded organizations, where logins are often tied to subscription-based funding models. More surprising, however, is the variation within privately funded organizations: one aggregator and one newspaper/magazine fall at the lower end of personaliza- tion, while the others exhibit higher levels of personalization. 4.2 What are the challenges? Drawing on questions 8\u201311 from Section 3, we identify four cat- egories of challenges related to personalization and discuss their impact on different media types. Data, backend and infrastructure.When asking participants about their challenges, the overwhelming majority pointed to data, backend or infrastructure as a key concern (P3, E4, D5, E6, D7, P10, D11, P15). E.g., D7 said that \u201cmost of"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "rows": [
+      38
+    ],
+    "question": "Why might a text that strongly matches a user's search terms still offer minimal value for creating a response?",
+    "sentence": "Conversely, a less directly relevant document may supply facts or premises that make a substantive contribution [3].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "From Ranked Documents to Reliable Contexts: An Answer-Oriented Context Construct Framework for AI Search",
+        "page": 3,
+        "passage": "web pages are no longer presented directly to humans, but instead serve as intermediate inputs to a large language model that generates the final answer [8], [9], [10], [11]. As illustrated in Fig. 1, the primary consumer of the retrieved information shifts from the human user to the generation model, and subsequently the user directly consumes the resulting answers[12]. Before the answer is generated, the search system must determine which retrieved documents to provide as evidence and how the evidence is structured as context to the generator. In other words, the information refinement task that is completed by users in the traditional Web search is now addressed in the AI search engine. This transition creates a structural mismatch between Search Satisfaction and the require- ments of AI Search. First, Relevance measures how well a document matches the query in terms of topic, intent, and semantics, but such alignment does not necessarily indicate its contribution to answer construction. A page that is relevant to the query may provide little of the information needed to derive the answer; conversely, a less directly relevant document may supply facts or premises that make a substantive contribution to answer construction [13], [14], [15], [16], [17]. Second, Authority, Freshness, and Quality provide human-facing cues about whether a result comes from an authoritative source, is sufficiently recent, and is well organized for consumption. These cues help users judge whether the information is worth inspecting and adopting, but they do not fully establish whether the information itself can"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "rows": [
+      39
+    ],
+    "question": "How many distinct prompt variations were tested during the extraction evaluation?",
+    "sentence": "Five variants for the extraction prompt were tested [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "From UNDRR Reports to Event Records: Schema-Constrained LLM Extraction of Georeferenced Disasters",
+        "page": 4,
+        "passage": "units, and consideration of variation in re- porting coverage. 5 Evaluations Prompt Comparisons.Five variants for the ex- traction prompt were tested. These alternatives shared the output schema (see Tab 6), hazard vo- cabulary, and 12,000-character document window, differing only in their written instructions. The five prompt configurations were compared on a common set of 400 documents using GPT-5 with medium reasoning effort. Sampling used random seed (42). Further detail on the proposed prompts\u2019 characteristics and their comparison can be found in Appendix D. Evaluation.Human annotations of 217 docu- ment windows served as the evaluation ground truth. Annotation covered all qualifying events in each displayed window, and model outputs were not shown during annotation. The reference set comprised 217 document windows obtained through stratified sampling (Appendix E). Detec- tion was evaluated on all 217 windows, with 171 labelledyes and 46 treated as negative, comprising 42noand fourunclearannotations. Field extraction was evaluated only on the 171 positive windows, after pooling and deduplicating hazards, locations, and dates within each document. Consequently, field precision excludes predictions from reference-negative windows. All ten LLMs, including GPT-5, were evaluated through Open- Router using a common extraction prompt, target schema, hazard vocabulary, and 12,000-character document-text limit. Complete-match accuracy measures whether all three document-level attribute sets match under the scoring rules. Neither pooled F1 nor complete-match accuracy evaluates event\u2013 argument assignment, including incorrect merging or splitting of occurrences. 6 Results 6.1 Prompt selection Prompt 05 yielded 58 high-confidence documents and 153 resolved geometry rows, compared with a maximum of 44"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "rows": [
+      40
+    ],
+    "question": "What percentage of held-out targets survive decoding to become an ambiguous set rather than a single unique item?",
+    "sentence": "- For the DIGER sensitivity route, approximately 2% to 4% (or visually around 3%) of held-out targets resolve ambiguously [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "SIDScope: A Diagnostic Resource for Semantic-ID Interfaces in Generative Recommendation",
+        "page": 15,
+        "passage": "a Path-to-item accounting target path pt in beam resolve SID M\u22121(pt) {it} unique target {it, ij, \u2026} ambiguous set valid path survives 0% 2% 4% 6% 8% 10% Share of held-out targets GRID/P5 \u00b7 split 0 GRID/P5 \u00b7 split 1 DIGER sensitivity b Path--singleton gap +3.0 pp +2.0 pp +1.2 pp path survival singleton credit Figure 4: Path-to-item accounting in trained trie-constrained beams. (a) A target SID path may survive decoding yet resolve ambiguously rather than to the target item alone. (b) Target-path survival minus singleton credit is 2.0\u20133.0 percentage points in the two GRID/P5 folds and 1.2 points in the DIGER sensitivity route. Points show target-level rates; bars are 95% user-cluster bootstrap intervals over 1,000 resamples. DIGER uses a different last-event split and serves as a portability check. expected credit under a uniform within-leaf draw, and deterministic training-popularity resolution. Every rule uses the same path order and cutoff. The deterministic resolver selects one item per leaf, breaking popularity ties by item ID; it neither expands the item budget nor consults held-out targets. The canonical reverse mapping reproduces every exported resolved-item set. The original path and singleton outcomes also reproduce exactly. GRID resolver counts use its declared training split. For DIGER, the last event of each user is excluded, matching the original trace experiment. Uniform expected credit gives a target-containing leaf of multiplicitym credit1 /m, explicitly assuming a uniform resolver. It is an expectation, not an observed reranking outcome. Table 7: Resolution policies on identical top-50 paths (500 target traces"
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "rows": [
+      41
+    ],
+    "question": "What components make up an edit specification created by the framework?",
+    "sentence": "Based on the provided text, each edit specification consists of three components: an anchor, a suggestion, and a necessity score [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Query Implied Generative Engine Optimization",
+        "page": 4,
+        "passage": "added and where it should be incorporated within the document. Each informational gap is transformed into an edit specifica- tion consisting of three components: an anchor, a suggestion, and a necessity score. The anchor identifies the sentence or passage most closely related to the gap, the suggestion describes the missing concept that should be incorporated, and the necessity score reflects the importance of addressing the gap. Anchoring edits to existing content provides a clear location for modification and helps maintain consistency with the surrounding context. Edits are applied sequentially using the current version of the document. To preserve document structure and minimize unintended changes, the rewriter is instructed to make local- ized additions rather than perform large-scale rewrites. In most cases, edits are implemented by appending a short clause or sentence to the selected anchor while leaving the remainder of the document unchanged. The use of anchored edits improves traceability throughout the optimization process. Every revision can be linked back to a specific informational gap and a corresponding location in the original document, making the resulting changes easier to inspect and verify. The final output is an optimized document that incorporates high-value missing information while preserving the intent, structure, and content of the original text. V. EXPERIMENTALRESULTS A. Research Questions The experiments are designed to evaluate whether docu- ment semantics can be used as an alternative to query-based"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "rows": [
+      42
+    ],
+    "question": "How many individuals needed to participate in the study according to the power analysis?",
+    "sentence": "According to the power analysis described for the study, a sample size of $N = 200$ dialogues (with $k = 5$ raters per dialogue) was used to achieve 80% power to detect an ICC as low as $\\approx 0.06$ [1, 3].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "On the Reliability of User-Centric Evaluation of Conversational Recommender Systems",
+        "page": 2,
+        "passage": "Each participant was assigned a batch of 10 dialogues: 9 randomly sampled from the target pool and one \u201cquasi-gold\u201d dialogue (with known low quality) for validation. For each dialogue, participants rated 18 items corresponding to CRS-Que dimensions (e.g.,accuracy,novelty,rapport) on a 5-point Likert scale (1=strongly disagree, 5=strongly agree). Annotators were instructed to adopt the perspective of the information seeker. We recruited 124 participants with native English proficiency between December 2025 and January 2026. Participants were compensated \u00a33.75 per submission, corresponding to an hourly rate of approx. \u00a39/hr. 2.1.3 Quality Control.We implemented a multi-layered quality assurance procedure to ensure data validity: (1)Attention Checks: Two explicit instruction-based checks were embedded as additional dimensions labeled \u201cAttention Check, \u201d prompting raters to select Strongly AgreeorDisagree; (2)Quasi-Gold Dialogues: Participants who failed to distinguish clearly low-quality control dialogues were flagged; and (3)Response Patterns: Submissions with unrealistic completion times were removed. After applying these filters, we retained 117 high-quality submissions (7 removed), providing ade- quate coverage for the 200 target dialogues, each dialogue receiving 5\u20138 ratings (on avg. 5.27). 2.2 Statistical Framework To rigorously assess the quality and structure of the collected anno- tations, we apply a combination of power analysis, random-effects modeling, and rank-based agreement metrics. 0.0 0.2 0.4 0.6 0.8 1.0 Target ICC ( ) 0 50 100 150 200 250 300 350 400Sample Size (N) Study Size (N=200) Detectable ICC > 0.06 Raters (k) 2 3 5 10 Figure 1: Power Analysis for Inter-Rater Reliability 2.2.1 Power Analysis.To ensure our study is robust and cost-"
+      },
+      {
+        "number": 3,
+        "paper": "On the Reliability of User-Centric Evaluation of Conversational Recommender Systems",
+        "page": 2,
+        "passage": "50 100 150 200 250 300 350 400Sample Size (N) Study Size (N=200) Detectable ICC > 0.06 Raters (k) 2 3 5 10 Figure 1: Power Analysis for Inter-Rater Reliability 2.2.1 Power Analysis.To ensure our study is robust and cost- effective, we conducted ana prioripower analysis following the approximation method of Walter et al. [18]. Our design goal was two-fold: (1) to achieve sufficient statistical power to detect non- random agreement (\ud835\udc3b0 : ICC= 0), and (2) to ensure precise esti- mation of reliability coefficients with narrow confidence intervals (RQ1). As shown in Figure 1, with \ud835\udc58= 5raters per dialogue, a sample size of\ud835\udc41= 200(dashed line) provides 80% power (\ud835\udefc=. 05) to detect an ICC as low as\u2248 0.06. This high sensitivity is critical for identifying dimensions where inter-rater agreement is present but weak, preventing Type II errors in the reliability analysis. Re- garding precision, assuming a moderate true reliability (\ud835\udf0c= 0.6), the expected width of the 95% confidence interval is approximately 0.12(\u00b10.06). This level of precision ensures that observed reliability scores can be meaningfully categorized (e.g., distinguishingfair frommoderateagreement). Additionally, for the structural analysis (RQ2), a sample size of\ud835\udc41= 200dialogues provides over 99% power to detect medium correlations (\ud835\udc5f= 0.3) and 80% power to detect weak correlations (\ud835\udc5f\u2248 0.2) between dimensions, ensuring a robust basis for the cluster analysis. 2.2.2 Reliability.We evaluate reliability using complementary agreement- and variance-based metrics to assess signal presence and stability under sparse crowdsourced annotation. These mea- sures characterize whether dialogue-level signals are detectable and how"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "rows": [
+      43
+    ],
+    "question": "How does reinforcement learning during the final stage impact the effectiveness of the model's recommendation outputs?",
+    "sentence": "Specifically, the model progressively learns to discard redundant or less relevant reasoning steps that do not contribute to ranking the target item, leading to improved recommendation reasoning and performance [2].",
+    "cited": [
+      {
+        "number": 2,
+        "paper": "Learning Better Reasoning for Generative Recommendation with Semantic IDs",
+        "page": 7,
+        "passage": "learning signal, but partial SID agreement does not necessarily correspond to ranking the correct item higher. In contrast, the NDCG reward naturally captures both retrieval and ranking: it assigns zero reward when the ground-truth SID is not retrieved in the top-10beam, while discounting successful retrievals according to their rank. Adding an additional Recall@10 term therefore overemphasizes retrieval and weakens the relative ranking signal, which may explain the degraded performance of NDCG+Recall. 4.4 Discussion 4.4.1 Reasoning length.Figure 2 shows how reasoning behavior evolves during Stage-3 reinforcement learning. Across all three domains, the average reasoning length decreases substantially dur- ing training and eventually converges to a shorter level, while recommendation performance continues to improve. Notably, our objective contains no length penalty; the reward is determined solely by how well a reasoning trajectory ranks the ground-truth SID under constrained beam search. The shortening of reasoning therefore emerges naturally from ranking-aware optimization. Stage-2 provides the model with better reasoning trajectories as a useful initialization, and during Stage-3 RL, the model progres- sively learns to disgard those redundant or less relevant reasoning that do not contribute to ranking the target item. This behavior sug- gests that improved recommendation reasoning does not require increasingly long chains of thought. Instead, effective reasoning appears to depend on how efficiently a trajectory captures infor- mation that is useful for ranking. In this sense, Stage-3 RL help the model achieve stronger recommendation performance with shorter and more targeted reasoning trajectories. 4.4.2 Evolution of Thinking Performance.Table 7 compares rec- ommendation performance"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "rows": [
+      44
+    ],
+    "question": "How long did the entire recorded pipeline take to execute for the Llama-2-70B model?",
+    "sentence": "The entire recorded pipeline for the Llama-2-70B model took 69,470.3 seconds (or about 19.3 hours) to execute [3].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "Seal, Then Sample: Sampled Layerwise Proofs for Verifiable LLM Inference from GPT-2 to 70B",
+        "page": 11,
+        "passage": "Seal, Then Sample SLP, September 2026 f32 Corpus Random 0.0 2.5 5.0 7.5 10.0 12.5 15.0Perplexity 11.94 12.95 12.94 (a) Perplexity (lower is better) f32 Corpus Random 0 20 40 60 80 100Agreement (%) 100% 84.8% 84.9% (b) Argmax agreement with f32 Figure 4:Paired TinyLlama evaluation on the WikiText-2 test split. Perplexity and top-1 agreement measure different properties; the two calibration arms coincide at logged precision. Stage Time (s) Recorded memory or output Load and quantize with spilling 8,906 About 387 GB resident peak Create all weight commitments 10,553 About 60 GB working set Registration subtotal 19,459 About 5.4 h Generate integer inference trace 48,706 Model-sized integer weights resident Seal 163 chunks and prove five 1,259 Proof: 4.34 MiB Verify sampled proof 46.3 CPU verification without model weights Per-inference subtotal 50,011.3 About 13.9 h Entire recorded pipeline 69,470.3 About 19.3 h; completed on the 2 TB host T able 4:Llama-2-70B, one recorded execution. The stage sum is 69,470.3 s; the program\u2019s own wall-clock total, including inter-stage overhead, was 69,500 s. No separate proving-stage memory peak was recorded. processes, while the GPU inference of a fixed model on a fixed input still varies. The variability lies in floating-point execution order on the device rather than in calibration; identifying the kernel is future work. An earlier four- registration observation of one differing fingerprint did not retain comparable data and is kept as history rather than combined into a 14-trial statistic. 7.5 Scope of the fidelity result The evaluation compares the canonical model"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "rows": [
+      45
+    ],
+    "question": "Why is the muon collider field considered an effective environment for testing information retrieval systems?",
+    "sentence": "* **Distributed knowledge:** Relevant knowledge is distributed across multiple subfields\u2014such as accelerator design, beam-induced background studies, detector performance, and physics analyses\u2014making cross-document evidence aggregation necessary to answer focused questions [1].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Agentic Hybrid RAG for Evidence-Grounded Muon Collider Analysis",
+        "page": 5,
+        "passage": "its physics motivation and detector challenges, the muon collider domain provides a useful testbed for retrieval-augmented generation systems in scientific research. Unlike established high-energyphysicssubfields,itlacksmatureAI-assistedliteraturenavigationtoolsandstandardized benchmarks for information retrieval and synthesis. At the same time, relevant knowledge is distributed across accelerator design, beam-induced background studies, detector performance, and physics analyses, making it difficult to answer focused questions without cross-document evidence aggregation. Thiscombinationmakesitwell-suitedforevaluatingwhetherRAGsystemscanperform fine-grained retrieval, multi-source synthesis, and evidence-grounded reasoning under realistic scientific conditions. To characterize the structure of information needs in this domain, we define representative application scenarios for our agentic hybrid RAG framework in Table 1. These scenarios span accelerator design and beam performance, machine\u2013detector interface studies, beam-induced background mitigation, Higgs and electroweak measurements, beyond-the-Standard-Model searches, multi-boson processes, and answerability checking. These characteristics create a practical challenge for literature navigation. Scientific questions often require connecting accelerator constraints, beam-induced background mitigation, detector performancelimitations,andphysicsanalysisrequirementsacrossmultiplesources. Correctanswers frequently depend on retrieving specific evidence fragments rather than entire documents. For instance, a query on timing cuts for beam-induced background rejection requires different evidence from one on vector-boson fusion sensitivity to anomalous quartic gauge couplings, even though both arise within the same literature corpus. This motivates a retrieval-augmented system capable of chunk-level evidence retrieval, source traceability, and grounded answer synthesis for detector and physics studies. \u2013 4 \u2013"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "rows": [
+      46
+    ],
+    "question": "What specific guidelines govern how the employer's advocate must utilize evidence when formulating claims?",
+    "sentence": "* **Reference evidence and verbatim spans:** Every claim must reference at least one evidence node and a short verbatim span relied on [5].",
+    "cited": [
+      {
+        "number": 5,
+        "paper": "LabourCrew: A Multi-Agent RAG Framework for Trustworthy Adversarial Deliberation and Statutory Reasoning over Labour Law",
+        "page": 27,
+        "passage": "the rule plainly even where only one advocate naturally covers it. INPUT SPECIFICATION.Case seeds, the evidence pack of retrieved and hopped statute chunks \u2014 the only material you may cite \u2014 and the opponent\u2019s claims on record, if any. With no retrieval tool, insufficient evidence means fewer or no claims, not reasoning beyond it. RULES \u2014 the Evidence Exchange Protocol. \u2022 Cite ONLY evidence nodes that appear in the provided pack \u2014 never invent a citation or rely on outside knowledge of the law. \u2022 Every claim must reference at least one evidence node and a short verbatim span relied on. \u2022 If the evidence pack supports no claim for your side, return an empty claims list rather than inventing one. \u2022 Do not assign a claim ID or side \u2014 the calling code sets these after your response. \u2022 Reason in English or Bangla, whichever you reason best in; a quoted span stays exactly as it appears in the evidence, never translated. OUTPUT SPECIFICATION.A list of claims, each with: the claim itself in plain language, the reasoning steps from evidence to claim, the cited evidence (node ID, span, and optional hop-path ID), an optional claim ID being rebutted, and a confidence score. 27"
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "rows": [
+      47
+    ],
+    "question": "What level of accuracy did the automated inference mode achieve when tested on the Lean Blueprint project?",
+    "sentence": "(Additionally, when evaluated using a path-based analysis, the F1 reached 0.864) [1, 2].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "KnowTeX: Visualizing Mathematical Dependencies",
+        "page": 10,
+        "passage": "in the Blueprint graph, bringing the path-based F1 to 0.864. A notable difference appears in edge style classification. The Blueprint marks 62 edges as dashed (statement-level), while infer mode produces only 5 dashed edges. This gap arises because infer mode discovers most dependencies through\\ref{}commands inside proofs (rule D1, producing solid edges), whereas the Blueprint assigns statement-level status based on information from the Lean side that is not visible in the LATEX source. 5.5 Discussion The evaluation shows that infer mode performs well on structured mathematical texts: it achieves high node detection accuracy and discovers the majority of true dependencies. The path-based analysis is particularly encouraging, as it shows that most extra inferred edges are transitively justified shortcuts rather than genuinely incorrect claims. It is worth noting that the quality of the inferred graph is closely tied to the quality of the source text itself. The deterministic rules (D1\u2013D2) rely on cross-references: an author who consistently uses 10"
+      },
+      {
+        "number": 2,
+        "paper": "KnowTeX: Visualizing Mathematical Dependencies",
+        "page": 10,
+        "passage": "same source with all annota- tions removed. Two lemmas in the PFR source carry two\\label{}commands each:rho initand rho of uniformon the same lemma, andrhominus nonnegandrhoMinus nonnegon another. Know- TeX selects the first label while the Blueprint selects the second, producing different node identifiers for the same lemma. After normalizing these two pairs, all 218 nodes match across the three graphs. Table 4: Evaluation results for the PFR Lean Blueprint project (218 nodes, normalized). Mode Precision Recall F1 Style acc. Manual 0.998 0.998 0.998 100% Infer 0.898 0.764 0.826 96.4% Infer (path-based) 0.921 0.814 0.864 \u2013 Results.Table 4 shows the normalized results. Manual mode reproduces the Blueprint graph with an F1 of 0.998: out of 403 Blueprint edges, only 1 is missed and 1 extra edge is produced. Edge style accuracy is 100%. This confirms that KnowTeX\u2019s processing of\\uses{}and\\proves{}commands is fully compatible with the Lean Blueprint system. Infer mode achieves an F1 of 0.826 without any annotations. The main limitation is recall (0.764): 95 Blueprint edges are missed because the PFR source does not use\\ref{}commands for all de- pendencies. Many connections in this text are expressed through mathematical notation and natural language rather than explicit cross-references. Of the 35 extra edges produced by infer mode, 8 are reachable through alternative paths in the Blueprint graph, bringing the path-based F1 to 0.864. A notable difference appears in edge style classification. The Blueprint marks 62 edges as dashed (statement-level), while infer mode produces only 5 dashed edges. This gap arises because infer mode"
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "rows": [
+      48
+    ],
+    "question": "How many total queries are included in the NASA-EO-Bench benchmark?",
+    "sentence": "(Alternatively, considering query-dataset pairs, there are 47,654 query-dataset pairs [1, 2, 3]).",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Bringing Agentic Search to Earth Observation Data Discovery",
+        "page": 4,
+        "passage": "Minghan Yu, Youran Sun, Chugang Yi, Yixin Wen, and Haizhao Yang Table 1: Benchmark comparison. Benchmark #Queries Train Test ReSearch [31] 28 \u2013 28 NASA-EO-Bench (ours) 21,272 17,038 4,234 3 Benchmark 3.1 Data Source and Construction NASA-EO-Bench is a large-scale benchmark for geoscience data- set retrieval derived from peer-reviewed NASA GES DISC pub- lications.3 Each query is grounded in an actual scientific paper. From each paper\u2019s abstract, we prompt an LLM to generate a query phrased as a geoscience domain expert might naturally ask, simu- lating the retrieval intent of a future user of our agent, while the datasets explicitly cited by that paper serve as ground-truth answers. This construction ensures that queries reflect genuine, diverse sci- entific information needs, grounded in real research practice rather than manually crafted prompts. Concretely, we start from theNASA Earth Observation Knowledge Graph(NASA EO-KG) [ 31],4 which links publications to the NASA CMR datasets they cite. We select the top 10,636 publications by citation count and generate two task-based queries per publication of the form\u201cI want to . . . \u201dusing an LLM conditioned on the paper abstract (the full prompt is in the dataset card released with NASA- EO-Bench); the two queries are independent samples from the same prompt, intended to diversify the surface phrasing of the same underlying research intent. We retain only queries whose ground-truth answer set is non-empty after resolving against the CMR dataset corpus. The resulting benchmark contains47,654 query\u2013dataset pairs(21,272 task-based queries; mean 2.24 cited datasets per query, median"
+      },
+      {
+        "number": 2,
+        "paper": "Bringing Agentic Search to Earth Observation Data Discovery",
+        "page": 2,
+        "passage": "for the two LLMs we evaluate in this mode. Compared with the closest prior frontier work, Terrenzi et al. [33], built on a fixed pre-built index, we instead use live web and arXiv tool calls, with the detailed distinction given in Section 2. Contributions. \u2022 NASA-EO-Bench benchmark.47,654 query\u2013dataset pos- itive pairs (21,272 citation-grounded queries, 38k/9k pairs for training/test) over a corpus of 8,058 NASA CMR data- sets. To our knowledge in geoscience dataset retrieval, this is thefirst benchmark at this scale that supports supervised training. \u2022 Retrieval suite.NN-SSC neural-score correction, a fine- tuned sentence transformer, and BM25 fused through con- vex combination; the suite lifts both R@10 and MRR by more than5\u00d7over the unadapted cosine baseline. \u2022 Controlled agentic-vs-LLM-rerank comparison.On the same model, candidate set, and evaluation protocol, we"
+      },
+      {
+        "number": 3,
+        "paper": "Bringing Agentic Search to Earth Observation Data Discovery",
+        "page": 4,
+        "passage": "surface phrasing of the same underlying research intent. We retain only queries whose ground-truth answer set is non-empty after resolving against the CMR dataset corpus. The resulting benchmark contains47,654 query\u2013dataset pairs(21,272 task-based queries; mean 2.24 cited datasets per query, median 2) split into: \u2022Training set.38,078 pairs (17,038 queries). \u2022Test set.9,576 pairs (4,234 queries). The 17,038 / 4,234 split ispublication-level: both queries from a given publication are kept in the same split, so no publication appears in both training and test, ruling out sibling-query leakage from the source-paper level. The split is stratified by cited_by_count so that the citation-count distribution is matched between training and test, avoiding domain shift across citation tiers. The dataset corpus consists of 8,058 NASA CMR datasets, each represented by itsshortName,longName, and free-text abstract. 3.2 Comparison with Existing Benchmarks Table 1 compares NASA-EO-Bench to prior geoscience retrieval benchmarks. The ReSearch benchmark [31] contains 28 task-based queries from 14 publications, which is insufficient for stable met- ric estimation. NASA-EO-Bench is roughly 760\u00d7 larger in query count and provides a training split that enables supervised model development. 3NASA-EO-Bench is publicly released at https://huggingface.co/datasets/ HamiltonMYu/NASA-EO-Bench. 4https://huggingface.co/datasets/nasa-gesdisc/nasa-eo-knowledge-graph 4 Evaluation Metrics Following Sun et al. [31], we evaluate retrieval quality with two complementary metric families, and we refer to them throughout the paper by the short names introduced here.GT metricsare the ground-truth (GT) citation-based measures R@\ud835\udc3e, MAP, and MRR (Equations (1)\u2013(3)), whose positives are the datasets actually cited by the source publication; they quantifycitation coverage.Judge metricsare the LLM-as-a-Judge precision measures P@\ud835\udc3e (Equa-"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "rows": [
+      49
+    ],
+    "question": "How should an agent retrieve information during a task according to the described design approach?",
+    "sentence": "This is supported by organizing documents and indexes via the Open Knowledge Format (OKF) with a Skill-compatible `SKILL.md` at the root of the knowledge base [1], allowing the agent to inspect titles and summaries first (similar to using a search engine) rather than dealing with decontextualized, traditional RAG text chunks [6].",
+    "cited": [
+      {
+        "number": 1,
+        "paper": "Knowledge-as-Skill: A Structural Design for Autonomous Knowledge-Base Use by LLM Agents",
+        "page": 2,
+        "passage": "needs an agent- oriented redesign: it should become usable as a skill. Knowledge and skills are not identical. Knowledge describes facts, whereas a skill de- scribes a way of doing something. Our claim is more speci\ufb01c: when knowledge has clear bound- aries, structure, documentation, and an access pro- tocol, an agent can understand and use it like a skill. The resulting knowledge base should satisfy three requirements: 1. Discoverable: the agent can determine whether a knowledge base is relevant to the current task and whether it should use it. 2. Navigable: after entering the knowledge base, the agent can progressively narrow its search through explicit structure rather than relying on a single keyword-to-chunk interface. 3. Self-descriptive: each document carries meta- data about its topic, purpose, type, provenance, and freshness, allowing the agent to estimate its value before reading the full text. We instantiate these requirements by organiz- ing documents and indexes according to the Open Knowledge Format (OKF) and adding a Skill- compatible SKILL.md at the root of the knowl- edge base. The design, implementation, and pre- liminary evaluation are the contributions of this pa- per. 2 Related Work 2.1 Retrieval-augmented generation RAG combines parametric generation with non- parametric evidence retrieved from an external col- lection ( Lewis et al. , 2020). The standard recipe indexes a corpus of\ufb02ine, retrieves passages on- line, and concatenates them with the question. This architecture has been improved through query rewriting, reranking, hybrid retrieval, and iterative retrieval. These techniques operate inside the re- trieval"
+      },
+      {
+        "number": 6,
+        "paper": "Knowledge-as-Skill: A Structural Design for Autonomous Knowledge-Base Use by LLM Agents",
+        "page": 2,
+        "passage": "Such a work\ufb02ow could not naturally represent an uncertain trajectory such as \u201cinspect once, read the result, and then decide what to do next.\u201d Both conditions have changed. Modern mod- els have stronger reasoning and tool-use capabili- ties, longer contexts, and more stable agent loops. Once retrieval authority is given to an agent, how- ever, a previously hidden problem becomes visi- ble: the agent does not know what is in the knowl- edge base. Traditional RAG delivers a few retrieved text chunks. The chunks are often decontextualized and lack identity. The agent may not know which document produced a passage, what problem the document addresses, or whether a more relevant document is available elsewhere. Such output may be suf\ufb01cient for a \ufb01xed retrieve\u2013concatenate\u2013 answer pipeline. For an autonomous agent, the \ufb01rst question is different: what are these artifacts, and are they worth reading further? A knowledge base should therefore expose doc- uments as knowledge objects that can explain their own purpose. An agent should see a document\u2019s topic, summary, type, and relations before decid- ing whether to read its full text. This is closer to how a person uses a search engine: inspect a title and summary \ufb01rst, then open selected results. 1.3 Knowledge-as-Skill We argue that a knowledge base needs an agent- oriented redesign: it should become usable as a skill. Knowledge and skills are not identical. Knowledge describes facts, whereas a skill de- scribes a way of doing something. Our claim is more speci\ufb01c: when knowledge has clear"
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "rows": [
+      50
+    ],
+    "question": "What impact can score ties have on ranking metrics like NDCG@10?",
+    "sentence": "Uniform random tie-breaking or analytical averaging over ties reveals the true expected metric (e.g., dropping expected NDCG@10 from 1 down to 0.1466 in a tied block of 31 items), showing that high initial scores were an artifact of the tie block rather than the score identifying the relevant item [3].",
+    "cited": [
+      {
+        "number": 3,
+        "paper": "Tie Handling Is Part of the Evaluation Protocol: An Order-Invariance Audit for Tie-Heavy Recommender Scores",
+        "page": 3,
+        "passage": "Underuniform random orderingwithin the tie block, its rank is uniform on {\ud835\udc4e+ 1, . . . , \ud835\udc4e+\ud835\udc61}. With one relevant item per row, E[Hit@\ud835\udc58] = max{0,min(\ud835\udc61, \ud835\udc58\u2212\ud835\udc4e)}\ud835\udc61 ,(1) E[NDCG@\ud835\udc58] = 1\ud835\udc61 min(\ud835\udc4e+\ud835\udc61,\ud835\udc58)\u2211\ufe01 \ud835\udc5f=\ud835\udc4e+1 1 log2(\ud835\udc5f+ 1) .(2) With one relevant item (the positive) and 30 negatives all tied (\ud835\udc4e= 0, \ud835\udc61= 31 ), placing the relevant item first gives Hit@10 and NDCG@10 equal to 1.Uniform random tie-breakinggives expected Hit@10 = 10/31 = 0.3226 and expected NDCG@10 = 0.1466. The difference follows mechanically from the tie block; it is not evidence that the score identified the relevant item. Uniformly permuting the complete candidate row independently of relevance before applying a stable sort is equivalent, in expectation, to uniform random ordering within each tie block. The metric from a single permutation is therefore an unbiased estimate of the expectation above, but it remains noisy and can change from run to run. Repeated random tie-breaking or direct analytic averaging gives a clearer summary. 3.3. Practical tie-breaking choices We compare four ways to handle exact ties: 1. Input-order tie-breaking.Sort by score and keep the original candidate order when scores are equal. The result is deterministic but can depend on row construction. 2. Deterministic hash tie-breaking.Within each tie, sort by a reproducible key computed from a disclosed seed, user ID, and item ID, using item ID as the final fallback. This gives one repeatable ranking independent of input order. 3. Repeated random tie-breaking.Break ties with different random seeds and report the metric\u2019s mean and"
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+{
+  "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+  "depth": 20,
+  "questions": 53,
+  "scores": {
+    "qwen": {
+      "recall@5": 77.35849056603773,
+      "recall@20": 90.56603773584905,
+      "ndcg@10": 71.56445683101728
+    },
+    "llm": {
+      "recall@5": 84.90566037735849,
+      "recall@20": 90.56603773584905,
+      "ndcg@10": 77.25686215685353
+    }
+  },
+  "recall@5 rose": 4,
+  "recall@5 fell": 0,
+  "failures": [],
+  "verdict": "worth a full configuration",
+  "date": "2026-11-03T18:16:37+00:00"
+}

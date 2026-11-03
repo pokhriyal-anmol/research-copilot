@@ -1,0 +1,67 @@
+{
+  "name": "qwen3-embedding-8b-full",
+  "questions": 597,
+  "scores": {
+    "recall@20": 79.25181462869905,
+    "recall@100": 90.65605806811838,
+    "ndcg@10": 60.3720524344112
+  },
+  "breakdowns": {
+    "specificity=0": {
+      "recall@20": 68.15053763440861,
+      "recall@100": 86.26881720430107,
+      "ndcg@10": 48.434632455202866,
+      "questions": 155
+    },
+    "specificity=1": {
+      "recall@20": 83.1447963800905,
+      "recall@100": 92.1945701357466,
+      "ndcg@10": 64.558251748387,
+      "questions": 442
+    },
+    "query_set=inline_acl": {
+      "recall@20": 75.64625850340137,
+      "recall@100": 90.52721088435374,
+      "ndcg@10": 56.42095210888043,
+      "questions": 98
+    },
+    "query_set=inline_nonacl": {
+      "recall@20": 75.09881422924902,
+      "recall@100": 87.15415019762845,
+      "ndcg@10": 55.503818628582444,
+      "questions": 253
+    },
+    "query_set=manual_acl": {
+      "recall@20": 81.93548387096774,
+      "recall@100": 92.25806451612904,
+      "ndcg@10": 62.15156252934418,
+      "questions": 155
+    },
+    "query_set=manual_iclr": {
+      "recall@20": 90.10989010989012,
+      "recall@100": 97.8021978021978,
+      "ndcg@10": 75.1308097977308,
+      "questions": 91
+    },
+    "gold_without_abstract": {
+      "recall@20": 16.666666666666668,
+      "recall@100": 25.0,
+      "ndcg@10": 16.666666666666668,
+      "questions": 6
+    }
+  },
+  "settings": {
+    "retriever": "dense",
+    "model": "Qwen/Qwen3-Embedding-8B",
+    "dtype": "float16",
+    "device_map": "auto",
+    "max_length": 1024,
+    "batch_size": 8,
+    "instruction": "Given a web search query, retrieve relevant passages that answer the query",
+    "cache_key": "9da283cc861ea56de565908b8943e3e9ce68af375bce069905078946eb25af81",
+    "seed": 13,
+    "split": "full"
+  },
+  "date": "2026-11-02T22:14:46+00:00",
+  "missing_gold": 0
+}

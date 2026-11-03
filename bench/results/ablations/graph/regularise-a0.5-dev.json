@@ -1,0 +1,61 @@
+{
+  "method": "score regularisation a=0.5 over undirected citations in the top 200",
+  "base": "Qwen3-Embedding-8B, protocol instruction",
+  "split": "dev",
+  "date": "2026-11-02T23:10:17+00:00",
+  "mean_pool_size": 200.0,
+  "groups": {
+    "all": {
+      "questions": 200,
+      "dense": {
+        "recall@20": 85.15,
+        "recall@200": 98.0,
+        "ndcg@10": 65.73509054912779
+      },
+      "regularise-0.5": {
+        "recall@20": 84.3,
+        "recall@200": 98.0,
+        "ndcg@10": 61.83638916618076
+      }
+    },
+    "source not in corpus (inline_nonacl)": {
+      "questions": 85,
+      "dense": {
+        "recall@20": 82.94117647058823,
+        "recall@200": 97.6470588235294,
+        "ndcg@10": 64.3939585643991
+      },
+      "regularise-0.5": {
+        "recall@20": 82.3529411764706,
+        "recall@200": 97.6470588235294,
+        "ndcg@10": 56.90016131122451
+      }
+    },
+    "author-written (manual_acl, manual_iclr)": {
+      "questions": 82,
+      "dense": {
+        "recall@20": 85.36585365853658,
+        "recall@200": 98.78048780487805,
+        "ndcg@10": 67.51487342175116
+      },
+      "regularise-0.5": {
+        "recall@20": 85.36585365853658,
+        "recall@200": 98.78048780487805,
+        "ndcg@10": 68.5813212675486
+      }
+    },
+    "source may be in corpus (inline_acl, not counted)": {
+      "questions": 33,
+      "dense": {
+        "recall@20": 90.3030303030303,
+        "recall@200": 96.96969696969697,
+        "ndcg@10": 64.76703064448606
+      },
+      "regularise-0.5": {
+        "recall@20": 86.66666666666667,
+        "recall@200": 96.96969696969697,
+        "ndcg@10": 57.790781146760125
+      }
+    }
+  }
+}
