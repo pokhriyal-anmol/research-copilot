@@ -50,6 +50,8 @@ A first pass judged each citation against its one passage and found 80% fully su
 
 The three failures are the kind worth fixing. One states a figure the passage does not give ("about 2% to 4%", where the passage reports a 1.2-point gap). Two overstate: one says a system "replaced" a baseline it was only A/B-tested against, the other says sequential recommenders "rely on persistent user profiles", which its passage does not say. These are AI judgements, not a human check; labels and quoted reasons are in [evals/results](../evals/results/2026-11-03-sentence-labels.json).
 
+The demo also refused 26 of the 120 questions. Most of those questions never say which paper they mean ("How many A800 GPUs were used to run the experiments?"), because the question generator was told not to mention the paper. On the 44 questions that two AI labellers agree do identify their paper, it refuses 2 (4.5%). The generator is fixed; the investigation is in [evals/results](../evals/results/2026-11-04-refusals.md).
+
 ## Caveats
 
 - The nDCG@10 lead on test is 2.99 points, just under the 3-point margin set in advance as "clearly better". Recall@20 clears it.

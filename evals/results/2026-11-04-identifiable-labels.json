@@ -1,0 +1,969 @@
+{
+  "date": "2026-11-04",
+  "sheet": "evals/results/2026-11-04-questions-to-label.json",
+  "labellers": "two Claude Sonnet subagents (F, H), same rubric, question text only; transcripts show neither opened another labeller's file. A third (G) was discarded for giving one generic reason to all 76 of its 'not identifiable' labels.",
+  "F": {
+    "1": {
+      "identifiable": true,
+      "reason": "Overlap Tree over cache entries"
+    },
+    "2": {
+      "identifiable": false,
+      "reason": "refers to 'the detection framework' unnamed; many papers have tiers"
+    },
+    "3": {
+      "identifiable": false,
+      "reason": "unnamed 'model variant' and corrupt data; generic"
+    },
+    "4": {
+      "identifiable": false,
+      "reason": "unnamed system and production architecture; generic"
+    },
+    "5": {
+      "identifiable": false,
+      "reason": "generic negative sampling question; many recsys papers answer it"
+    },
+    "6": {
+      "identifiable": false,
+      "reason": "cloud hardware specs; any paper could answer"
+    },
+    "7": {
+      "identifiable": true,
+      "reason": "training queries partitioning a knowledge graph into regions during optimization"
+    },
+    "8": {
+      "identifiable": true,
+      "reason": "web agents' errors on scholarly tasks"
+    },
+    "9": {
+      "identifiable": true,
+      "reason": "temporal cues influencing which passage is judged better"
+    },
+    "10": {
+      "identifiable": false,
+      "reason": "batch size halving; generic"
+    },
+    "11": {
+      "identifiable": true,
+      "reason": "graph agents/path-based methods and multi-anchor (multiple starting point) queries"
+    },
+    "12": {
+      "identifiable": false,
+      "reason": "generic multi-attribute vs single metric; no named method"
+    },
+    "13": {
+      "identifiable": false,
+      "reason": "unnamed knowledge base cost; generic"
+    },
+    "14": {
+      "identifiable": false,
+      "reason": "unnamed generated samples and datasets"
+    },
+    "15": {
+      "identifiable": true,
+      "reason": "'highest weight estimator' and a complete estimator"
+    },
+    "16": {
+      "identifiable": true,
+      "reason": "names SPARQL-LLM"
+    },
+    "17": {
+      "identifiable": true,
+      "reason": "Lean Blueprint project with automated inference mode"
+    },
+    "18": {
+      "identifiable": true,
+      "reason": "names a specific player and the seventh Women's World Cup"
+    },
+    "19": {
+      "identifiable": true,
+      "reason": "mammalian counterpart name found in literature analysis with ground-truth annotations"
+    },
+    "20": {
+      "identifiable": false,
+      "reason": "Koo and Li ICC thresholds are cited by many papers"
+    },
+    "21": {
+      "identifiable": true,
+      "reason": "sparse transition matrix, HBM, twenty million items"
+    },
+    "22": {
+      "identifiable": true,
+      "reason": "perturbation overlap across cellular environments per target gene"
+    },
+    "23": {
+      "identifiable": false,
+      "reason": "unnamed regeneration process; generic percentage"
+    },
+    "24": {
+      "identifiable": true,
+      "reason": "names Global-View Navigator"
+    },
+    "25": {
+      "identifiable": true,
+      "reason": "names yProv4DV"
+    },
+    "26": {
+      "identifiable": true,
+      "reason": "names ULTRAG-OTS on Wikidata"
+    },
+    "27": {
+      "identifiable": false,
+      "reason": "unnamed system's DBMS choices; many RAG papers"
+    },
+    "28": {
+      "identifiable": false,
+      "reason": "temperature purpose; generic"
+    },
+    "29": {
+      "identifiable": true,
+      "reason": "opinion enrichment and demographic coverage"
+    },
+    "30": {
+      "identifiable": true,
+      "reason": "conditional click probabilities by position within a column (grid layout)"
+    },
+    "31": {
+      "identifiable": false,
+      "reason": "refers to 'the provided example' unnamed"
+    },
+    "32": {
+      "identifiable": true,
+      "reason": "names UltraGCN"
+    },
+    "33": {
+      "identifiable": true,
+      "reason": "Wikipedia vs RAG source verified-claim proportion"
+    },
+    "34": {
+      "identifiable": false,
+      "reason": "generic faithfulness vs usefulness; many RAG papers"
+    },
+    "35": {
+      "identifiable": true,
+      "reason": "AI platforms' share of distinct references on environmental queries"
+    },
+    "36": {
+      "identifiable": true,
+      "reason": "lookahead-weighted supervision on a synthetic set"
+    },
+    "37": {
+      "identifiable": false,
+      "reason": "unnamed system's fingerprint threshold; no distinguishing detail"
+    },
+    "38": {
+      "identifiable": true,
+      "reason": "static vocabulary on DoorKey environment"
+    },
+    "39": {
+      "identifiable": true,
+      "reason": "cold-start dataset stabilizing RL for search behavior"
+    },
+    "40": {
+      "identifiable": false,
+      "reason": "generic SAE training dataset; many papers"
+    },
+    "41": {
+      "identifiable": false,
+      "reason": "unnamed joint training; generic"
+    },
+    "42": {
+      "identifiable": true,
+      "reason": "names WP-DE vs SW methods"
+    },
+    "43": {
+      "identifiable": false,
+      "reason": "unnamed backbone model; many papers"
+    },
+    "44": {
+      "identifiable": true,
+      "reason": "film benchmark database size"
+    },
+    "45": {
+      "identifiable": true,
+      "reason": "muon collider field as IR testbed"
+    },
+    "46": {
+      "identifiable": false,
+      "reason": "unnamed algorithm's ad revenue lift; many industry papers"
+    },
+    "47": {
+      "identifiable": false,
+      "reason": "vague evaluation-framework question without named subject"
+    },
+    "48": {
+      "identifiable": true,
+      "reason": "'file fidelity' domain query count"
+    },
+    "49": {
+      "identifiable": true,
+      "reason": "names NASA-EO-Bench"
+    },
+    "50": {
+      "identifiable": false,
+      "reason": "generic limitation of dense retrievers/cross-encoders; many papers"
+    },
+    "51": {
+      "identifiable": false,
+      "reason": "power-analysis sample size; many user studies"
+    },
+    "52": {
+      "identifiable": false,
+      "reason": "generic data structure for snapshots; unnamed system"
+    },
+    "53": {
+      "identifiable": false,
+      "reason": "anti-collapse regularizer used in many models"
+    },
+    "54": {
+      "identifiable": true,
+      "reason": "names RAM and citation age"
+    },
+    "55": {
+      "identifiable": false,
+      "reason": "unnamed benchmark's non-relevant categories"
+    },
+    "56": {
+      "identifiable": false,
+      "reason": "attention head count; generic"
+    },
+    "57": {
+      "identifiable": true,
+      "reason": "Greek statutory articles and translation"
+    },
+    "58": {
+      "identifiable": true,
+      "reason": "held-out targets with ambiguous decoding sets"
+    },
+    "59": {
+      "identifiable": false,
+      "reason": "vague user action implementation techniques"
+    },
+    "60": {
+      "identifiable": true,
+      "reason": "carousel recommendation research questions"
+    },
+    "61": {
+      "identifiable": false,
+      "reason": "max training iterations; generic"
+    },
+    "62": {
+      "identifiable": false,
+      "reason": "unnamed target distribution; generic theory phrasing"
+    },
+    "63": {
+      "identifiable": false,
+      "reason": "max past reviews; generic unnamed model"
+    },
+    "64": {
+      "identifiable": false,
+      "reason": "context length threshold; generic"
+    },
+    "65": {
+      "identifiable": true,
+      "reason": "traversal-safe deletion vs soft-deletion recall"
+    },
+    "66": {
+      "identifiable": true,
+      "reason": "AI-created verification component gating security decisions"
+    },
+    "67": {
+      "identifiable": true,
+      "reason": "unmasked state-conditioned query pilot, top-ten repeated evidence"
+    },
+    "68": {
+      "identifiable": false,
+      "reason": "generic OCR-only pipelines drawback; many multi-page doc papers"
+    },
+    "69": {
+      "identifiable": false,
+      "reason": "unnamed product matching system; generic metric"
+    },
+    "70": {
+      "identifiable": false,
+      "reason": "unnamed study and tailoring obstacle; generic"
+    },
+    "71": {
+      "identifiable": true,
+      "reason": "AI models predicting seasonings"
+    },
+    "72": {
+      "identifiable": false,
+      "reason": "generic usability evaluation method; many user studies"
+    },
+    "73": {
+      "identifiable": false,
+      "reason": "few-shot micro-F1 for Sonnet 4.6; many papers use it"
+    },
+    "74": {
+      "identifiable": true,
+      "reason": "pooled median of per-document cut locations"
+    },
+    "75": {
+      "identifiable": false,
+      "reason": "vector DB and client version; generic"
+    },
+    "76": {
+      "identifiable": true,
+      "reason": "Qwen3.5 local entropy analysis setup"
+    },
+    "77": {
+      "identifiable": false,
+      "reason": "generic relevance vs utility point; many papers"
+    },
+    "78": {
+      "identifiable": true,
+      "reason": "hierarchical vs flat codebook, resource-count variance, top-1 category share"
+    },
+    "79": {
+      "identifiable": true,
+      "reason": "names BT-SR vs SASRec"
+    },
+    "80": {
+      "identifiable": false,
+      "reason": "prompt variation count; generic"
+    },
+    "81": {
+      "identifiable": true,
+      "reason": "suggested artist rated below three triggers a process"
+    },
+    "82": {
+      "identifiable": false,
+      "reason": "unnamed system's confidence combination; generic"
+    },
+    "83": {
+      "identifiable": true,
+      "reason": "VLM classifying query-caption pairs"
+    },
+    "84": {
+      "identifiable": true,
+      "reason": "UK case law precedent retrieval benchmark"
+    },
+    "85": {
+      "identifiable": false,
+      "reason": "unnamed design approach for agent retrieval"
+    },
+    "86": {
+      "identifiable": true,
+      "reason": "owners separated from all other nodes"
+    },
+    "87": {
+      "identifiable": false,
+      "reason": "BM25 parameter tuning recall; many papers"
+    },
+    "88": {
+      "identifiable": false,
+      "reason": "training time of unnamed released model"
+    },
+    "89": {
+      "identifiable": false,
+      "reason": "generic score ties and NDCG@10 point"
+    },
+    "90": {
+      "identifiable": false,
+      "reason": "unnamed scoring scheme; generic"
+    },
+    "91": {
+      "identifiable": false,
+      "reason": "pipeline time for Llama-2-70B; many papers"
+    },
+    "92": {
+      "identifiable": true,
+      "reason": "matrix B initialization matching Context-only"
+    },
+    "93": {
+      "identifiable": true,
+      "reason": "employer's advocate evidence rules"
+    },
+    "94": {
+      "identifiable": false,
+      "reason": "unnamed framework's edit spec; generic"
+    },
+    "95": {
+      "identifiable": false,
+      "reason": "initial candidate count; generic"
+    },
+    "96": {
+      "identifiable": false,
+      "reason": "unnamed framework's second layer; generic"
+    },
+    "97": {
+      "identifiable": true,
+      "reason": "frozen summary in bypass, AUC across label budgets"
+    },
+    "98": {
+      "identifiable": true,
+      "reason": "Granite model with 13,194 samples"
+    },
+    "99": {
+      "identifiable": true,
+      "reason": "cross-country global recommendation recipe failure"
+    },
+    "100": {
+      "identifiable": false,
+      "reason": "generic defense utility metrics; many papers"
+    },
+    "101": {
+      "identifiable": true,
+      "reason": "names ASIRF vs OPF"
+    },
+    "102": {
+      "identifiable": false,
+      "reason": "unnamed concepts and external KB; generic"
+    },
+    "103": {
+      "identifiable": true,
+      "reason": "names dense_ffn variant"
+    },
+    "104": {
+      "identifiable": true,
+      "reason": "ALCE human-rated links dev split"
+    },
+    "105": {
+      "identifiable": false,
+      "reason": "unnamed dataset size after cleaning; generic"
+    },
+    "106": {
+      "identifiable": true,
+      "reason": "citizen's view of a proposal generating a comment"
+    },
+    "107": {
+      "identifiable": false,
+      "reason": "generic RL final stage effect; many recsys papers"
+    },
+    "108": {
+      "identifiable": false,
+      "reason": "generic constrained decoding to valid items; many generative rec papers"
+    },
+    "109": {
+      "identifiable": false,
+      "reason": "unnamed profiling framework; generic"
+    },
+    "110": {
+      "identifiable": true,
+      "reason": "action summaries, ridge transition MAE, unseen policies"
+    },
+    "111": {
+      "identifiable": false,
+      "reason": "A800 GPU count; many papers"
+    },
+    "112": {
+      "identifiable": true,
+      "reason": "urgency categories with synthetic vs real-log queries"
+    },
+    "113": {
+      "identifiable": false,
+      "reason": "recommendations per user; generic"
+    },
+    "114": {
+      "identifiable": true,
+      "reason": "graph-derived positional embeddings vs learnable/rotary/time-aware"
+    },
+    "115": {
+      "identifiable": false,
+      "reason": "unnamed encoder choice; generic"
+    },
+    "116": {
+      "identifiable": false,
+      "reason": "label noise GNN percentage; generic"
+    },
+    "117": {
+      "identifiable": false,
+      "reason": "generic session-based vs sequential comparison; many papers"
+    },
+    "118": {
+      "identifiable": false,
+      "reason": "constant fusion weight; unnamed multimodal system"
+    },
+    "119": {
+      "identifiable": false,
+      "reason": "test window count; generic"
+    },
+    "120": {
+      "identifiable": false,
+      "reason": "generic preference extraction framework; many papers"
+    }
+  },
+  "H": {
+    "1": {
+      "identifiable": true,
+      "reason": "Names \"Overlap Tree\" for query overlaps and cache-entry dependencies, a distinctive method."
+    },
+    "2": {
+      "identifiable": false,
+      "reason": "\"the second tier of the detection framework\" is never named; any multi-tier network detection paper fits."
+    },
+    "3": {
+      "identifiable": false,
+      "reason": "\"Which model variant\" separates corrupt from clean data, but no model or dataset is named."
+    },
+    "4": {
+      "identifiable": false,
+      "reason": "\"the system deploy for production use\" names no system; many papers describe a production architecture."
+    },
+    "5": {
+      "identifiable": false,
+      "reason": "\"negative sampling in recommender systems that rely on implicit feedback\" is a general topic covered by many papers."
+    },
+    "6": {
+      "identifiable": false,
+      "reason": "\"cloud computing hardware specifications\" for experiments is boilerplate shared by many papers."
+    },
+    "7": {
+      "identifiable": false,
+      "reason": "\"training queries ... divide the knowledge graph into distinct regions\" names no method or paper-level detail."
+    },
+    "8": {
+      "identifiable": true,
+      "reason": "\"automated web agents\" making mistakes in \"scholarly tasks\" points to a scholarly web-agent benchmark/analysis paper."
+    },
+    "9": {
+      "identifiable": true,
+      "reason": "\"temporal cues\" influencing \"which passage is chosen as better\" points to a paper on temporal bias in passage judging."
+    },
+    "10": {
+      "identifiable": false,
+      "reason": "\"batch size is reduced by half\" has no method or task; any training paper could answer."
+    },
+    "11": {
+      "identifiable": true,
+      "reason": "\"graph agents and path-based methods\" failing recall on \"multiple starting points\" is a specific multi-anchor KG retrieval problem."
+    },
+    "12": {
+      "identifiable": false,
+      "reason": "\"multi-attribute approaches\" vs \"individual metrics\" predicting retrieval performance is a broad query-performance-prediction theme."
+    },
+    "13": {
+      "identifiable": false,
+      "reason": "\"creating the initial knowledge base\" cost names no system; many RAG papers report this."
+    },
+    "14": {
+      "identifiable": false,
+      "reason": "\"expanded range of aggregated statistics\" in \"generated samples\" names no dataset or method."
+    },
+    "15": {
+      "identifiable": false,
+      "reason": "\"complete estimator\" vs \"highest weight estimator\" are unnamed in context (no domain, task or paper)."
+    },
+    "16": {
+      "identifiable": true,
+      "reason": "Names \"SPARQL-LLM\" and its ablation study."
+    },
+    "17": {
+      "identifiable": true,
+      "reason": "Names the \"Lean Blueprint project\" and an \"automated inference mode\"."
+    },
+    "18": {
+      "identifiable": true,
+      "reason": "Names a specific person, \"Sukanya Chor Charoenying\", and the Women's World Cup edition."
+    },
+    "19": {
+      "identifiable": true,
+      "reason": "\"mammalian counterpart name\" found in literature analysis with \"ground-truth annotations\" is a distinctive biomedical retrieval detail."
+    },
+    "20": {
+      "identifiable": false,
+      "reason": "\"Koo and Li\" reliability-coefficient ranges is a common citation (ICC guidelines) used by many papers."
+    },
+    "21": {
+      "identifiable": true,
+      "reason": "\"sparse transition matrix\" with \"twenty million items\" and high-bandwidth memory is a distinctive scaling claim."
+    },
+    "22": {
+      "identifiable": true,
+      "reason": "\"chosen perturbations\" overlapping \"across different cellular environments\" for a \"target gene\" points to a perturbation-selection paper."
+    },
+    "23": {
+      "identifiable": false,
+      "reason": "\"complete regeneration process\" for \"data samples\" names no method; unclear which pipeline."
+    },
+    "24": {
+      "identifiable": true,
+      "reason": "Names \"Global-View Navigator\" and its three filtering phases."
+    },
+    "25": {
+      "identifiable": true,
+      "reason": "Names the \"yProv4DV library\"."
+    },
+    "26": {
+      "identifiable": true,
+      "reason": "Names \"ULTRAG-OTS\" on the Wikidata dataset."
+    },
+    "27": {
+      "identifiable": false,
+      "reason": "\"vector store and the knowledge graph within the system architecture\" names no system; many GraphRAG papers match."
+    },
+    "28": {
+      "identifiable": false,
+      "reason": "\"temperature parameter during generation of document transformations\" is generic with no named method."
+    },
+    "29": {
+      "identifiable": true,
+      "reason": "\"opinion enrichment\" and \"demographic coverage\" together indicate a specific synthetic-population/opinion paper."
+    },
+    "30": {
+      "identifiable": true,
+      "reason": "\"conditional click probabilities ... across positions within the same column\" points to a grid/column-layout click model paper."
+    },
+    "31": {
+      "identifiable": false,
+      "reason": "\"in the provided example\" refers to an unnamed example; many recommender papers show book examples."
+    },
+    "32": {
+      "identifiable": true,
+      "reason": "Names \"UltraGCN\" and its avoidance of message passing."
+    },
+    "33": {
+      "identifiable": false,
+      "reason": "\"Wikipedia source\" vs \"RAG source\" on verified claims has no named system or benchmark."
+    },
+    "34": {
+      "identifiable": false,
+      "reason": "\"high faithfulness score despite failing to provide a useful response\" is a generic RAG evaluation observation."
+    },
+    "35": {
+      "identifiable": true,
+      "reason": "\"AI platform\" with the highest share of distinct references in \"environmental search inquiries\" is a specific citation-source study."
+    },
+    "36": {
+      "identifiable": true,
+      "reason": "\"lookahead value\" weighting supervision on a \"synthetic set\" is a distinctive training detail."
+    },
+    "37": {
+      "identifiable": false,
+      "reason": "\"fingerprint threshold\" as an \"efficiency-focused operating point\" names no system; unclear which paper."
+    },
+    "38": {
+      "identifiable": true,
+      "reason": "\"static vocabulary setup\" and \"DoorKey environment\" together point to one RL-with-vocabulary paper."
+    },
+    "39": {
+      "identifiable": false,
+      "reason": "\"cold-start dataset\" preventing RL instability in search behaviour fits many search-agent RL papers."
+    },
+    "40": {
+      "identifiable": false,
+      "reason": "\"dataset was utilized to train the Sparse Autoencoder\" names no paper-specific context."
+    },
+    "41": {
+      "identifiable": false,
+      "reason": "\"every training example required for joint model training\" names no model or task."
+    },
+    "42": {
+      "identifiable": true,
+      "reason": "Names \"WP-DE\" versus \"SW alternatives\" for evaluations needed to generate a list."
+    },
+    "43": {
+      "identifiable": false,
+      "reason": "\"backbone for evidence reading and reasoning tasks\" names no system; many papers fit."
+    },
+    "44": {
+      "identifiable": false,
+      "reason": "\"films ... in the benchmark's database\" does not name the benchmark."
+    },
+    "45": {
+      "identifiable": true,
+      "reason": "\"muon collider field\" as an IR test environment is a unique domain."
+    },
+    "46": {
+      "identifiable": false,
+      "reason": "\"new algorithm\" and \"total advertising income during the live experiment\" name no algorithm or platform."
+    },
+    "47": {
+      "identifiable": false,
+      "reason": "\"dependable assessment structure ... continuously shifting array of models and uses\" is vague and names nothing."
+    },
+    "48": {
+      "identifiable": true,
+      "reason": "\"file fidelity domain\" is a distinctive benchmark domain name with a query count."
+    },
+    "49": {
+      "identifiable": true,
+      "reason": "Names \"NASA-EO-Bench\"."
+    },
+    "50": {
+      "identifiable": false,
+      "reason": "\"traditional dense retrievers and cross-encoders\" limitation for multi-passage QA is a common framing in many papers."
+    },
+    "51": {
+      "identifiable": false,
+      "reason": "\"power analysis\" participant count is a user-study detail with no study named."
+    },
+    "52": {
+      "identifiable": false,
+      "reason": "\"data structure ... graph snapshots\" names no system; ambiguous."
+    },
+    "53": {
+      "identifiable": false,
+      "reason": "\"anti-collapse regularizer in the model's objective\" names no model; many embedding papers use one."
+    },
+    "54": {
+      "identifiable": true,
+      "reason": "Names \"RAM\" and its age-adjustment of \"incoming citations\"."
+    },
+    "55": {
+      "identifiable": false,
+      "reason": "\"non-relevant query results\" types, with no dataset or system named."
+    },
+    "56": {
+      "identifiable": false,
+      "reason": "\"attention heads ... Transformer component of the encoder\" names no model."
+    },
+    "57": {
+      "identifiable": true,
+      "reason": "\"Greek statutory articles and queries\" with translation is a distinctive legal-retrieval setup."
+    },
+    "58": {
+      "identifiable": true,
+      "reason": "\"held-out targets survive decoding to become an ambiguous set\" points to a semantic-ID collision analysis."
+    },
+    "59": {
+      "identifiable": false,
+      "reason": "\"user action implementation techniques\" with correlation and error has no named simulator or paper."
+    },
+    "60": {
+      "identifiable": true,
+      "reason": "\"carousel recommendations\" with research questions points to one carousel-focused paper."
+    },
+    "61": {
+      "identifiable": false,
+      "reason": "\"maximum training iterations during the optimization process\" names no method."
+    },
+    "62": {
+      "identifiable": false,
+      "reason": "\"complete target distribution remains unaffected by the recommender parameters\" has no named method."
+    },
+    "63": {
+      "identifiable": false,
+      "reason": "\"item encoder processes ... past reviews for a given event\" lacks a named model."
+    },
+    "64": {
+      "identifiable": false,
+      "reason": "\"context length threshold\" for optimal accuracy names no task or model."
+    },
+    "65": {
+      "identifiable": true,
+      "reason": "\"traversal-safe approach\" vs \"soft-deletion\" for \"targeted deletions\" is a specific ANN-index deletion method."
+    },
+    "66": {
+      "identifiable": true,
+      "reason": "\"AI-created verification component\" needing validation milestones before influencing \"security choices\" is distinctive."
+    },
+    "67": {
+      "identifiable": true,
+      "reason": "\"unmasked state-conditioned query pilot\" and \"top ten repeated evidence\" are paper-specific terms."
+    },
+    "68": {
+      "identifiable": false,
+      "reason": "\"early retrieval pipelines that depend solely on OCR\" is a common motivation for many multi-page document retrieval papers."
+    },
+    "69": {
+      "identifiable": false,
+      "reason": "\"differentiate between correct and incorrect product matches\" has no named system or metric."
+    },
+    "70": {
+      "identifiable": false,
+      "reason": "\"vast majority of participants\" on \"content tailoring\" obstacle: unnamed study."
+    },
+    "71": {
+      "identifiable": true,
+      "reason": "\"accurately predict specific types of seasonings\" by AI models is a distinctive food-domain evaluation."
+    },
+    "72": {
+      "identifiable": false,
+      "reason": "\"method used to evaluate usefulness and usability\" names no system."
+    },
+    "73": {
+      "identifiable": false,
+      "reason": "\"five examples\" and \"micro-F1 for Sonnet 4.6\" fit many classification/extraction papers; no task named."
+    },
+    "74": {
+      "identifiable": true,
+      "reason": "\"pooled median of the per-document cut locations\" is a distinctive measured quantity."
+    },
+    "75": {
+      "identifiable": false,
+      "reason": "\"vector database engine and Python client version\" is boilerplate setup detail."
+    },
+    "76": {
+      "identifiable": false,
+      "reason": "\"hardware ... and framework ... locally run the Qwen3.5 models\" does not isolate a paper beyond a model family."
+    },
+    "77": {
+      "identifiable": false,
+      "reason": "\"text that strongly matches search terms yet offers minimal value\" is a general relevance-vs-utility theme."
+    },
+    "78": {
+      "identifiable": true,
+      "reason": "\"hierarchical codebook\" vs \"flat single-layer\" with \"resource-count variance\" and \"top-1 category share\" is a specific ablation."
+    },
+    "79": {
+      "identifiable": true,
+      "reason": "Names \"BT-SR\" versus SASRec."
+    },
+    "80": {
+      "identifiable": false,
+      "reason": "\"distinct prompt variations ... extraction evaluation\" names no task or paper."
+    },
+    "81": {
+      "identifiable": true,
+      "reason": "\"suggested artist receives a rating of less than three\" is a specific music recommendation workflow."
+    },
+    "82": {
+      "identifiable": false,
+      "reason": "\"confidence scores when new information supports a previously established edge\" names no system."
+    },
+    "83": {
+      "identifiable": false,
+      "reason": "\"vision-language model ... classify each query-caption pair\" gives no named dataset or method."
+    },
+    "84": {
+      "identifiable": true,
+      "reason": "\"UK case law precedent retrieval benchmark\" is a distinct benchmark."
+    },
+    "85": {
+      "identifiable": false,
+      "reason": "\"according to the described design approach\" refers to an unnamed design."
+    },
+    "86": {
+      "identifiable": false,
+      "reason": "\"owners experience complete separation from all other nodes\" has no named dataset or domain."
+    },
+    "87": {
+      "identifiable": false,
+      "reason": "\"adjustment to the BM25 parameters\" improving \"top-200 recall\" has no named dataset."
+    },
+    "88": {
+      "identifiable": false,
+      "reason": "\"contrastive phase of training for the released model\" does not name the model."
+    },
+    "89": {
+      "identifiable": false,
+      "reason": "\"score ties ... NDCG@10\" is a general evaluation issue many papers discuss."
+    },
+    "90": {
+      "identifiable": false,
+      "reason": "\"score points given to documents that have not been evaluated\" is unanchored to a named evaluation."
+    },
+    "91": {
+      "identifiable": false,
+      "reason": "\"entire recorded pipeline\" time for \"Llama-2-70B\" is unnamed; many papers use that model."
+    },
+    "92": {
+      "identifiable": false,
+      "reason": "\"initial setting for matrix B\" matching \"Context-only\" lacks a named method."
+    },
+    "93": {
+      "identifiable": true,
+      "reason": "\"employer's advocate\" evidence guidelines indicates a specific legal multi-agent debate setup."
+    },
+    "94": {
+      "identifiable": false,
+      "reason": "\"edit specification created by the framework\" names no framework."
+    },
+    "95": {
+      "identifiable": false,
+      "reason": "\"candidate items retrieved before any reranking\" is generic for many pipelines."
+    },
+    "96": {
+      "identifiable": false,
+      "reason": "\"second layer in the proposed framework\" and its vertices: framework unnamed."
+    },
+    "97": {
+      "identifiable": true,
+      "reason": "\"frozen summary\" in the \"bypass\" with AUC across \"label budgets\" is a distinctive ablation."
+    },
+    "98": {
+      "identifiable": true,
+      "reason": "\"Granite model\" with \"13,194 samples\" macro-F1 is a distinctive dataset size."
+    },
+    "99": {
+      "identifiable": false,
+      "reason": "\"standard recipe applications\" for \"cross-country global recommendations\" is vague about method."
+    },
+    "100": {
+      "identifiable": false,
+      "reason": "\"metrics ... utility of a defense mechanism\" names no defense or setting."
+    },
+    "101": {
+      "identifiable": true,
+      "reason": "Names \"ASIRF\" versus \"OPF\" runtime costs."
+    },
+    "102": {
+      "identifiable": false,
+      "reason": "\"external knowledge base ... universal frame of reference\" names no system."
+    },
+    "103": {
+      "identifiable": false,
+      "reason": "\"dense_ffn variant\" is a variant label with no model or paper named."
+    },
+    "104": {
+      "identifiable": true,
+      "reason": "\"human-rated links from ALCE\" split into a development set is specific to one paper's dataset construction."
+    },
+    "105": {
+      "identifiable": false,
+      "reason": "\"training pairs remained after cleaning and deduplication\" names no dataset."
+    },
+    "106": {
+      "identifiable": true,
+      "reason": "\"citizen's view of a specific proposal generates a comment\" points to a civic-participation simulation paper."
+    },
+    "107": {
+      "identifiable": false,
+      "reason": "\"reinforcement learning during the final stage\" for recommendation outputs names no model."
+    },
+    "108": {
+      "identifiable": false,
+      "reason": "\"prevent the generation of invalid catalog items during rollout\" fits many generative recommender papers."
+    },
+    "109": {
+      "identifiable": false,
+      "reason": "\"profiling framework capture submodules and runtime inputs\" names no framework."
+    },
+    "110": {
+      "identifiable": true,
+      "reason": "\"ridge transition prediction on unseen policies\" with \"action summaries\" and normalized MAE is distinctive."
+    },
+    "111": {
+      "identifiable": false,
+      "reason": "\"A800 graphics processing units\" count is a hardware detail shared by many papers."
+    },
+    "112": {
+      "identifiable": false,
+      "reason": "\"certain urgency categories\" with synthetic vs search-log queries lacks a named benchmark."
+    },
+    "113": {
+      "identifiable": false,
+      "reason": "\"recommendations generated for each user during the experiments\" names no paper."
+    },
+    "114": {
+      "identifiable": true,
+      "reason": "\"graph-derived positional embeddings\" vs learnable, rotary, time-aware ones in sequential recommendation is a specific proposal."
+    },
+    "115": {
+      "identifiable": false,
+      "reason": "\"which specific encoder model was selected\" names no task or paper."
+    },
+    "116": {
+      "identifiable": false,
+      "reason": "\"label noise ... decline in graph neural network performance\" is a general topic."
+    },
+    "117": {
+      "identifiable": false,
+      "reason": "\"session-based vs user-level sequential models\" is a general survey-style comparison."
+    },
+    "118": {
+      "identifiable": false,
+      "reason": "\"constant weight ... textual and visual scores\" names no model or dataset."
+    },
+    "119": {
+      "identifiable": false,
+      "reason": "\"test windows for each condition in the final evaluation\" names nothing specific."
+    },
+    "120": {
+      "identifiable": false,
+      "reason": "\"algorithmic framework ... unobserved user preferences from varied behavioral signals\" is a broad topic."
+    }
+  }
+}
