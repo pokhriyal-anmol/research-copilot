@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "env",
+      "runtimeArgs": ["WEB_ORIGINS=http://localhost:3001", "uv", "run", "--env-file", ".env", "uvicorn", "copilot.app:app", "--port", "8000"],
+      "port": 8000
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "web", "run", "dev", "--", "--port", "3001"],
+      "port": 3001
+    }
+  ]
+}

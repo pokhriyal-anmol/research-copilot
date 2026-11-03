@@ -1,0 +1,17 @@
+// Splits answer text on citation markers like [2] or [1, 3].
+export type Segment = { text: string } | { cite: number[] };
+
+// Same pattern as CITATION in src/copilot/answer.py.
+const MARKER = /\[(\d+(?:\s*,\s*\d+)*)\]/g;
+
+export function segments(text: string): Segment[] {
+  const out: Segment[] = [];
+  let last = 0;
+  for (const m of text.matchAll(MARKER)) {
+    if (m.index > last) out.push({ text: text.slice(last, m.index) });
+    out.push({ cite: m[1].split(",").map(Number) });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push({ text: text.slice(last) });
+  return out;
+}

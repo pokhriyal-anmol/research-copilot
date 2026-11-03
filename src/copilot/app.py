@@ -7,6 +7,7 @@ from pathlib import Path
 import httpx
 import psycopg
 from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -32,6 +33,8 @@ http_client = httpx.Client()
 SEARCH_MODE = os.environ.get("SEARCH_MODE", "rerank")
 if SEARCH_MODE not in MODES:
     raise ValueError(f"SEARCH_MODE must be one of {MODES}")
+# The web app's exact origins, comma-separated; unset means no cross-origin access.
+WEB_ORIGINS = [o.strip() for o in os.environ.get("WEB_ORIGINS", "").split(",") if o.strip()]
 
 
 class Question(BaseModel):
@@ -47,6 +50,8 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title="Research Copilot", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+app.add_middleware(CORSMiddleware, allow_origins=WEB_ORIGINS, allow_methods=["GET", "POST"],
+                   allow_headers=["Content-Type"])
 
 
 @app.middleware("http")
@@ -103,7 +108,7 @@ def post_answer(body: Question) -> dict:
         "text": result.text,
         "citations": [
             {"number": n, "arxiv_id": p.arxiv_id, "title": p.title, "page": p.page,
-             "url": f"https://arxiv.org/abs/{p.arxiv_id}"}
+             "url": f"https://arxiv.org/abs/{p.arxiv_id}", "passage": p.text}
             for n, p in result.citations.items()
         ],
     }
