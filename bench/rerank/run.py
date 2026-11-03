@@ -20,7 +20,7 @@ from copilot.litsearch.dense import DenseIndex
 from copilot.litsearch.encoders import Qwen3Encoder
 from copilot.litsearch.metrics import mean_scores
 from copilot.litsearch.cross import Qwen3Reranker, reorder
-from copilot.litsearch.rerank import cached, gemini, rerank
+from copilot.litsearch.rerank import cached, chat, rerank
 from copilot.litsearch.split import split_questions
 
 DEPTH = 100
@@ -54,7 +54,7 @@ def main() -> None:
     del index  # frees ~1 GB of paper vectors before the reranker loads, on a 16 GB Mac
     number, name, stem = CONFIGS[args.reranker]
     if args.reranker == "gemini":
-        llm = cached(gemini(httpx.Client(), os.environ["GEMINI_API_KEY"], name), name, CACHE)
+        llm = cached(chat(httpx.Client(), os.environ["GEMINI_API_KEY"], name), name, CACHE)
     else:
         cross = Qwen3Reranker(name)
     reranked, failures, started = {}, [], time.time()

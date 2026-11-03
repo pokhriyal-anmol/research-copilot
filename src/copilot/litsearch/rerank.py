@@ -63,9 +63,11 @@ class ModelFailed(Exception):
     pass
 
 
-def gemini(client: httpx.Client, key: str, model: str, tries: int = 6, timeout: float = 300.0,
-           sleep: Callable[[float], None] = time.sleep) -> Model:
-    """One pinned model, no fallback, so a run never mixes rerankers. Waits and retries on errors and empty replies."""
+def chat(client: httpx.Client, key: str, model: str, url: str = GEMINI_URL, tries: int = 6, timeout: float = 300.0,
+         sleep: Callable[[float], None] = time.sleep) -> Model:
+    """One pinned model on one OpenAI-compatible endpoint, no fallback, so a run never mixes rerankers.
+
+    Waits and retries on errors and empty replies."""
 
     def call(messages: list[dict]) -> str:
         problem = ""
@@ -73,7 +75,7 @@ def gemini(client: httpx.Client, key: str, model: str, tries: int = 6, timeout: 
             if attempt:
                 sleep(min(30 * 2 ** (attempt - 1), 300))  # 30 s, 60 s, 120 s, then 300 s; free-tier limits are per minute
             try:
-                response = client.post(GEMINI_URL, headers={"Authorization": f"Bearer {key}"}, timeout=timeout,
+                response = client.post(url, headers={"Authorization": f"Bearer {key}"}, timeout=timeout,
                                        json={"model": model, "messages": messages, "temperature": 0})
                 response.raise_for_status()
                 text = response.json()["choices"][0]["message"]["content"]

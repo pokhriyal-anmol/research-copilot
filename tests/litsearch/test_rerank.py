@@ -73,11 +73,11 @@ def test_the_cache_stores_the_prompt_with_the_reply(tmp_path):
     assert saved["model"] == "m" and saved["reply"] == "[1]" and saved["messages"][0]["content"] == "x"
 
 
-# The Gemini caller: one pinned model, no fallback, retries with waits.
+# The chat caller: one pinned model, no fallback, retries with waits.
 import httpx
 import pytest
 
-from copilot.litsearch.rerank import ModelFailed, gemini
+from copilot.litsearch.rerank import GEMINI_URL, ModelFailed, chat
 
 
 def transport(*replies):
@@ -94,7 +94,7 @@ def transport(*replies):
 
 def test_the_pinned_model_is_sent_at_temperature_zero():
     t, calls = transport((200, "[1]"))
-    gemini(httpx.Client(transport=t), "secret", "gemini-x", sleep=lambda s: None)([{"role": "user", "content": "q"}])
+    chat(httpx.Client(transport=t), "secret", "gemini-x", sleep=lambda s: None)([{"role": "user", "content": "q"}])
     body = json.loads(calls[0].content)
     assert body["model"] == "gemini-x" and body["temperature"] == 0
 
@@ -102,17 +102,30 @@ def test_the_pinned_model_is_sent_at_temperature_zero():
 def test_a_rate_limit_is_retried_after_a_wait():
     t, calls = transport((429, None), (200, "[1]"))
     waits = []
-    reply = gemini(httpx.Client(transport=t), "secret", "m", sleep=waits.append)([{"role": "user", "content": "q"}])
+    reply = chat(httpx.Client(transport=t), "secret", "m", sleep=waits.append)([{"role": "user", "content": "q"}])
     assert reply == "[1]" and len(calls) == 2 and waits
 
 
 def test_an_empty_reply_is_retried_not_returned():
     t, calls = transport((200, ""), (200, "[2]"))
-    assert gemini(httpx.Client(transport=t), "secret", "m", sleep=lambda s: None)([]) == "[2]"
+    assert chat(httpx.Client(transport=t), "secret", "m", sleep=lambda s: None)([]) == "[2]"
 
 
 def test_it_gives_up_after_the_last_try_without_showing_the_key():
     t, calls = transport((500, None))
     with pytest.raises(ModelFailed) as info:
-        gemini(httpx.Client(transport=t), "secret-key", "m", tries=3, sleep=lambda s: None)([])
+        chat(httpx.Client(transport=t), "secret-key", "m", tries=3, sleep=lambda s: None)([])
     assert len(calls) == 3 and "secret-key" not in str(info.value)
+
+
+def test_gemini_is_the_default_endpoint():
+    t, calls = transport((200, "[1]"))
+    chat(httpx.Client(transport=t), "secret", "m", sleep=lambda s: None)([])
+    assert str(calls[0].url) == GEMINI_URL
+
+
+def test_another_openai_compatible_endpoint_can_be_pinned():
+    t, calls = transport((200, "[1]"))
+    url = "https://openrouter.ai/api/v1/chat/completions"
+    chat(httpx.Client(transport=t), "secret", "m", url=url, sleep=lambda s: None)([])
+    assert str(calls[0].url) == url
