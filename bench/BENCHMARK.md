@@ -115,6 +115,19 @@ Pass rule: the same three generalisation rules as the citation-graph stage, on R
 
 Caveat recorded in advance: LitSearch was published in July 2024, and its papers are public. The model may have seen both, which would make any gain partly memory. This can't be ruled out, and the result will be reported with the caveat.
 
+### Reranker configuration 2: Qwen3-Reranker-4B
+Recorded 2026-11-03, before it runs, after configuration 1 hit Gemini's free-tier cap of 20 requests a day. The setup follows the Qwen3-Reranker-4B model card:
+- **Template.** The ChatML template with the system line "Judge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be "yes" or "no".", then "<Instruct>: {instruction}\n<Query>: {query}\n<Document>: {doc}", then an assistant turn opening with an empty think block.
+- **Score.** P(yes) from a softmax over the "yes" and "no" logits at the last position. Left padding.
+- **Instruction.** The protocol task, "Given a scientific literature search query, retrieve relevant papers". The card recommends a task-specific one, and the same text beat Qwen's default by 2.3 / 2.4 on the 8B embedder.
+- **Inputs.** The dense 8B's top 100, title and abstract, each pair capped at 1,024 tokens. Only the document is truncated, never the template.
+- **Order.** Sorted by score, ties going to the better dense rank. Anything past 100 keeps its place.
+- **Hardware.** float16 on the Mac's GPU, with the same NaN check as the encoder. Scores are cached per question.
+
+Why the 4B: on the card, the 4B reranking a Qwen3 embedder's top 100 scores 69.76 on MTEB-R, against 69.02 for the 8B, at half the size.
+
+Pass rule: the same three generalisation rules, on Recall@20 and nDCG@10 against the dense 8B on dev. This scores each paper on its own, unlike LitSearch's listwise GPT-4o, so a result here is not a reproduction of their reranker.
+
 ## Change log
 - 2026-11-02: first version.
 - 2026-11-02: added the Kaggle cross-hardware check, before the first Kaggle run.
@@ -130,3 +143,5 @@ Caveat recorded in advance: LitSearch was published in July 2024, and its papers
 - 2026-11-03: pre-registered method 3, score regularisation, with its three weights.
 - 2026-11-03, method 3 outcome: no weight passes, so score regularisation is dropped. Dev overall, Recall@20 / nDCG@10 against 85.2 / 65.7: a=0.1 gives 85.2 / 66.0, a=0.3 gives 85.5 / 65.5, a=0.5 gives 84.3 / 61.8. No weight raises both metrics overall (rule 1), and every weight lowers nDCG@10 on source-not-in-corpus questions (rule 2): 64.4 to 64.0, 62.0 and 56.9. Author-written questions rose at every weight (nDCG@10 67.5 to 68.5, 70.2 and 68.6), the reverse of the expected artifact. With 82 questions that is within noise, and it is recorded here, not acted on. Configurations tried: 3, so 5 in total across graph methods. All three published families tried here failed on the 8B.
 - 2026-11-03: pre-registered reranker configuration 1, LitSearch's vanilla listwise rerank with gemini-3.5-flash.
+- 2026-11-03, reranker configuration 1 stopped at 11 of 200 dev questions. The free tier allows gemini-3.5-flash 20 requests a day per project (quota GenerateRequestsPerDayPerProjectPerModel-FreeTier, read from the 429 reply), so the 200 dev questions would take 10 days and the 397 test questions 20 more. The 11 replies stay cached and are not scored, since a partial run is not a result.
+- 2026-11-03: pre-registered reranker configuration 2, Qwen3-Reranker-4B.
