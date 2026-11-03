@@ -91,3 +91,33 @@ def test_page_sends_security_headers_and_loads_its_script(client):
     assert page.headers["x-frame-options"] == "DENY"
     assert "<script>" not in page.text  # inline script would be blocked by the policy
     assert client.get("/static/app.js").status_code == 200
+
+
+def test_a_citation_carries_its_passage_text(client, monkeypatch):
+    # The web app opens each citation on the exact passage it rests on.
+    stub_llm(monkeypatch, "Claim [1].")
+    assert client.post("/answer", json={"question": "what?"}).json()["citations"][0]["passage"] == "x"
+
+
+@pytest.fixture
+def web_origin_app(monkeypatch):
+    import importlib
+
+    monkeypatch.setenv("DATABASE_URL", os.environ["TEST_DATABASE_URL"])
+    monkeypatch.setenv("WEB_ORIGINS", "https://copilot.example")
+    yield importlib.reload(app_module).app
+    monkeypatch.delenv("WEB_ORIGINS")
+    importlib.reload(app_module)
+
+
+def test_the_configured_web_origin_may_call_the_api(web_origin_app):
+    with TestClient(web_origin_app) as c:
+        r = c.options("/answer", headers={"Origin": "https://copilot.example", "Access-Control-Request-Method": "POST",
+                                          "Access-Control-Request-Headers": "content-type"})
+    assert r.headers.get("access-control-allow-origin") == "https://copilot.example"
+
+
+def test_any_other_origin_is_refused(web_origin_app):
+    with TestClient(web_origin_app) as c:
+        r = c.options("/answer", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
+    assert "access-control-allow-origin" not in r.headers
