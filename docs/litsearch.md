@@ -44,9 +44,11 @@ On the 53 development questions where GPT-4o still wins, a free LLM (Nemotron 3 
 
 ## Citations in the demo's answers
 
-The demo is a separate, small app over 299 openly licensed IR papers. Its code withholds an answer that cites a passage it was not given, but it does not check that the passage backs the sentence. To measure that, the demo answered 120 reviewed questions (94 answered, 26 refused), and 50 of the 217 citations in those answers were sampled at random.
+The demo is a separate, small app over 299 openly licensed IR papers. Its code withholds an answer that cites a passage it was not given, but it does not check that the passage backs the sentence. To measure that, the demo answered 120 reviewed questions (94 answered, 26 refused), and 50 of the 217 citations in those answers were sampled at random, covering 48 distinct sentences.
 
-Two AI labellers, working separately with the same rubric, marked **40 of 50 (80%, 95% interval 67 to 89%)** as fully supported by the cited passage. They agreed on 44 of 50 (Cohen's kappa 0.54). Only 2 were marked unsupported by either: one names a protein the passage never mentions, the other states a 2 to 4% figure the passage does not give. Most of the rest add a detail the passage lacks, such as "80% power" and "5 raters" in a sentence whose passage gives only the sample size and the detectable effect. These are AI judgements, not a human check; the labels and reasons are in [evals/results](../evals/results/2026-11-03-citation-labels.json).
+A first pass judged each citation against its one passage and found 80% fully supported. That undercounted: 22 of the sampled sentences cite several passages, and the missing detail was often in the other one. Judged the standard way, as ALCE's citation recall (Gao et al., 2023), each of the 48 distinct sentences against all the passages it cites, two AI labellers working separately agreed on all 48: **45 of 48 sentences (94%, 95% interval 83 to 98%) are fully supported** by their cited passages. Of the 77 cited passages, 74 or 75 contribute support.
+
+The three failures are the kind worth fixing. One states a figure the passage does not give ("about 2% to 4%", where the passage reports a 1.2-point gap). Two overstate: one says a system "replaced" a baseline it was only A/B-tested against, the other says sequential recommenders "rely on persistent user profiles", which its passage does not say. These are AI judgements, not a human check; labels and quoted reasons are in [evals/results](../evals/results/2026-11-03-sentence-labels.json).
 
 ## Caveats
 

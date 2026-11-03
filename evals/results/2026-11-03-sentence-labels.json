@@ -1,0 +1,740 @@
+{
+  "date": "2026-11-03",
+  "sheet": "evals/results/2026-11-03-sentences-to-label.json",
+  "method": "sentence level, as ALCE's citation recall (Gao et al. 2023): each of 48 distinct sentences judged against all the passages it cites, read in full; plus whether each cited passage contributes (citation precision)",
+  "labellers": "two Claude Sonnet subagents, same rubric, working separately; their transcripts show neither opened the other's file",
+  "D": {
+    "1": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage gives the same softmax weight formula and says tau_w 'controls the sharpness of the distribution'."
+    },
+    "2": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Passage: Sparse Autoencoder 'with the same MS-MARCO training setup'."
+    },
+    "3": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "4": true
+      },
+      "reason": "Passage 3 tests pools K in {20,40,80,160}; passage 4 says the LLM 'receives the top-10 retrieval candidates'."
+    },
+    "4": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Table 5 text: 'Exchange at H=720 is the only test condition with fewer than 8,192 pairs'; table row shows 6384, and reason is the shorter admissible test range."
+    },
+    "5": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'bge-base-en-v1.5 ... FULL ... strongest first-stage retrieval performance (MRR@5 = 0.5842) and was therefore selected'."
+    },
+    "6": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "P1: 'intercepts key file operations ... without altering the user's code logic', observes reads, monitors file creation; P2 adds open() interception."
+    },
+    "7": {
+      "label": "supported",
+      "contributes": {
+        "1": false,
+        "5": true
+      },
+      "reason": "P5 (Employer prompt continuation) rules: 'Cite ONLY evidence nodes that appear in the provided pack - never invent a citation or rely on outside knowledge'. The same rules in P1 precede the EmployerCounsel header, so they belong to the worker prompt."
+    },
+    "8": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "3": true,
+        "4": true
+      },
+      "reason": "P2 'bypasses explicit message passing entirely using a constraint-based objective'; P3 'approximate the infinite-layer message-passing'; P4 'mathematical simplification ... (in one step)'."
+    },
+    "9": {
+      "label": "supported",
+      "contributes": {
+        "4": true
+      },
+      "reason": "Employer prompt text: 'Only claim what bears directly on the primary issues; a retrieved node's mere presence is not a reason to claim about it.'"
+    },
+    "10": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'between 0.50 and 0.75 moderate' per Koo and Li."
+    },
+    "11": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "3": true
+      },
+      "reason": "P3: 'order of the carousels are completely randomized per screen'; P1: 'item ordering within carousels is not randomized but ordered by popularity'."
+    },
+    "12": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'We initialize B to zero, making the initial retrieval function equivalent to Context-only scoring.'"
+    },
+    "13": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'Two items that look similar can play very different roles across markets, so a content-only criterion injects substantial noise.'"
+    },
+    "14": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "5": true,
+        "6": false
+      },
+      "reason": "P5: 'user-level sequential models aim to capture long-term preference dynamics'; P3: models 'capture temporal dependencies in behaviour'. P6 does not say this."
+    },
+    "15": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "3": true
+      },
+      "reason": "P3: '2015 FIFA Women's World Cup was the seventh edition'; both passages: she 'was part of the team at the 2015 FIFA Women's World Cup'."
+    },
+    "16": {
+      "label": "supported",
+      "contributes": {
+        "4": true
+      },
+      "reason": "'In the first round, the LLM selects the more relevant passage in each pair, establishing a baseline preference.'"
+    },
+    "17": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "reason": "'pooled median of 0.79' (P1, P2) and 'median = 0.792' in the figure (P3)."
+    },
+    "18": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "5": true
+      },
+      "reason": "P1: 'conditional click probability is actually statistically dependent on display position', a deviation from the examination hypothesis; P2 and P5 say it is refuted."
+    },
+    "19": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "'ASIRF's LLM calls cost more at inference than OPF's single lightweight forward pass.'"
+    },
+    "20": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "'WP-DE produces a full ranking with 50 comparisons, 59%-98% fewer than the SW variants.'"
+    },
+    "21": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Hardware paragraph lists SLURM cluster, two Xeon Platinum 8490H (60 cores/socket, 112.5 MiB L3, 1.90 GHz), 2 TB RAM, Ubuntu 22.04."
+    },
+    "22": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'combining the mirrored F-pattern with the row-page discount d_RPD ... highest Spearman's rho and Pearson's r ... lowest MSE after max normalization'."
+    },
+    "23": {
+      "label": "partly",
+      "contributes": {
+        "3": true,
+        "5": true
+      },
+      "reason": "P5 supports session-based fitting 'when persistent user identities are unavailable, anonymous, or unreliable', but 'sequential models rely on ... persistent user profiles' overstates: P3 says users are characterised by histories 'rather than by explicit profiles'."
+    },
+    "24": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "4": true
+      },
+      "reason": "'it holds for 20.6% of owners' and 'isolated owners, who make up 20.6% of all owners'; isolation defined as d_obs=0."
+    },
+    "25": {
+      "label": "partly",
+      "contributes": {
+        "2": true
+      },
+      "reason": "P2 shows a TensorRT-LLM worker-loop architecture and a 7-day A/B of SnapLGR 'against the legacy T5' baseline, but only an A/B test, not that it 'replaced' T5; Snapchat content recommendation and 'deployed in production' as that architecture are not stated."
+    },
+    "26": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "6": true
+      },
+      "reason": "'This single catastrophic static-vocab seed explains much of the DoorKey static-vocab variance'; seed 789, 1% vs 100%."
+    },
+    "27": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "8": true
+      },
+      "reason": "P2: 'the 40%-60% interval exhibits a smooth transition'; abstract: stable then 'deteriorate sharply only after an observed transition region around the 50% noise ratio'."
+    },
+    "28": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'Our multi-attribute perspective ... captures more complex structural patterns, translating into substantially stronger predictive power' vs best single metric 0.47 (vs 0.70)."
+    },
+    "29": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'we multiply w_l by B to eliminate the influence of beam size on the loss magnitude ... gradient updates are predominantly driven by high-confidence sequences'."
+    },
+    "30": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "6": true
+      },
+      "reason": "P1: 'traversal-safe + repair beats faiss's real soft-delete by a margin that grows with the deletion fraction (+4.3/+16.2/+42.2 points at f=0.5/0.7/0.9)'; P2 gives the same gaps."
+    },
+    "31": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "'RQ2.2: How can off-policy evaluation be performed for carousel recommendation policies?'"
+    },
+    "32": {
+      "label": "supported",
+      "contributes": {
+        "4": true,
+        "7": false
+      },
+      "reason": "P4: ''LRPPRC' is the mammalian counterpart name ... retrieves PMC6668790 and PMC5559520, which contain 4 ground-truth annotations'. P7 never mentions LRPPRC."
+    },
+    "33": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "'To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T_syn.'"
+    },
+    "34": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "P2: top-k by individual scores 'does not explicitly account for dependencies among retrieved passages'; P1 defines query-set compatibility as 'whether a collection of passages jointly forms useful evidence'."
+    },
+    "35": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "7": true
+      },
+      "reason": "'the overwhelming majority pointed to data, backend or infrastructure as a key concern'."
+    },
+    "36": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "'a less directly relevant document may supply facts or premises that make a substantive contribution to answer construction'."
+    },
+    "37": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'Five variants for the extraction prompt were tested.'"
+    },
+    "38": {
+      "label": "not",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage gives the DIGER path-survival minus singleton-credit gap as 1.2 points (GRID/P5 folds are 2.0-3.0 pp); a 2%-4% or ~3% DIGER figure is not stated and 1.2 contradicts it."
+    },
+    "39": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'edit specification consisting of three components: an anchor, a suggestion, and a necessity score'."
+    },
+    "40": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "3": true
+      },
+      "reason": "P3: 'with k=5 raters per dialogue, a sample size of N=200 provides 80% power (alpha=.05) to detect an ICC as low as ~0.06'; P1 confirms 200 target dialogues."
+    },
+    "41": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "'during Stage-3 RL, the model progressively learns to disgard those redundant or less relevant reasoning that do not contribute to ranking the target item' while performance improves."
+    },
+    "42": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Table 4: 'Entire recorded pipeline 69,470.3 About 19.3 h' for Llama-2-70B."
+    },
+    "43": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "'relevant knowledge is distributed across accelerator design, beam-induced background studies, detector performance, and physics analyses, making it difficult to answer ... without cross-document evidence aggregation'."
+    },
+    "44": {
+      "label": "supported",
+      "contributes": {
+        "5": true
+      },
+      "reason": "'Every claim must reference at least one evidence node and a short verbatim span relied on.'"
+    },
+    "45": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "'bringing the path-based F1 to 0.864'; Table 4 'Infer (path-based) ... 0.864'."
+    },
+    "46": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "reason": "'The resulting benchmark contains 47,654 query-dataset pairs (21,272 task-based queries'."
+    },
+    "47": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "6": true
+      },
+      "reason": "P1: organizing by OKF 'and adding a Skill-compatible SKILL.md at the root'; P6: chunks 'decontextualized', agent should 'inspect a title and summary first'."
+    },
+    "48": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "'expected NDCG@10 = 0.1466' vs 1 for t=31 all tied; 'not evidence that the score identified the relevant item'."
+    }
+  },
+  "E": {
+    "1": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage gives \"the normalized weight is computed as\" the softmax over exp(V/tau_w) and tau_w \"controls the sharpness of the distribution\"."
+    },
+    "2": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Passage says \"with the same MS-MARCO training setup\" for the Sparse Autoencoder."
+    },
+    "3": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "4": true
+      },
+      "reason": "[3] says \"candidate pools of K in {20,40,80,160}\"; [4] says \"the LLM receives the top-10 retrieval candidates\"."
+    },
+    "4": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Table 5 audit: 8192 pairs per condition and \"Exchange at H=720 is the only test condition with fewer than 8,192 pairs\" (6384, shorter chronological test range)."
+    },
+    "5": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: BGE-base FULL \"achieved the strongest first-stage retrieval performance (MRR@5 = 0.5842) and was therefore selected as the base retriever\"."
+    },
+    "6": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "[1] \"runtime layer that intercepts key file operations ... without altering the user's code logic\"; [2] intercepts open() reads and infers dependencies \"without changing the user's execution script\"."
+    },
+    "7": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "5": true
+      },
+      "reason": "Both passages: \"Cite ONLY evidence nodes that appear in the provided pack - never invent a citation or rely on outside knowledge of the law.\""
+    },
+    "8": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "3": true,
+        "4": true
+      },
+      "reason": "[2] \"bypasses explicit message passing entirely using a constraint-based objective\"; [3] \"approximate the infinite-layer message-passing\"; [4] simplification of message passing \"(in one step)\"."
+    },
+    "9": {
+      "label": "supported",
+      "contributes": {
+        "4": true
+      },
+      "reason": "Passage: \"Only claim what bears directly on the primary issues; a retrieved node's mere presence is not a reason to claim about it.\""
+    },
+    "10": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"between 0.50 and 0.75 moderate\" following Koo and Li."
+    },
+    "11": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "3": true
+      },
+      "reason": "[3] \"vertical order of the carousels are completely randomized per screen\"; [1] \"item ordering within carousels is not randomized but ordered by popularity\"."
+    },
+    "12": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"We initialize B to zero, making the initial retrieval function equivalent to Context-only scoring.\""
+    },
+    "13": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"Two items that look similar can play very different roles across markets, so a content-only criterion injects substantial noise.\""
+    },
+    "14": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "5": true,
+        "6": true
+      },
+      "reason": "[5] \"user-level sequential models aim to capture long-term preference dynamics\"; [3] models \"capture temporal dependencies in behaviour\"; [6] predicts from \"ordered user histories\"."
+    },
+    "15": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "3": true
+      },
+      "reason": "[3] \"the 2015 FIFA Women's World Cup was the seventh edition\"; [2] she \"was part of the team at the 2015 FIFA Women's World Cup\"."
+    },
+    "16": {
+      "label": "supported",
+      "contributes": {
+        "4": true
+      },
+      "reason": "Passage: \"In the first round, the LLM selects the more relevant passage in each pair, establishing a baseline preference.\""
+    },
+    "17": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "reason": "All state \"pooled median of 0.79\"; [3] figure also shows \"median = 0.792\"."
+    },
+    "18": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "5": true
+      },
+      "reason": "[1] \"statistically dependent on display position\"; [2] \"refute Assumption 3 and thus the examination hypothesis\"; [5] \"vary significantly across rows within the same column\"."
+    },
+    "19": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Passage: \"ASIRF's LLM calls cost more at inference than OPF's single lightweight forward pass.\""
+    },
+    "20": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Passage: \"WP-DE produces a full ranking with 50 comparisons, 59%-98% fewer than the SW variants.\""
+    },
+    "21": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Passage hardware section matches every detail: two Xeon Platinum 8490H, 60 cores/socket, 112.5 MiB L3, 1.90 GHz, 2 TB RAM, Ubuntu 22.04."
+    },
+    "22": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"combining the mirrored F-pattern with the row-page discount d_RPD, which yields the highest Spearman's rho and Pearson's r correlations and the lowest MSE after max normalization\"."
+    },
+    "23": {
+      "label": "partly",
+      "contributes": {
+        "3": true,
+        "5": true
+      },
+      "reason": "Session-based use \"when persistent user identities are unavailable, anonymous, or unreliable\" is stated [5], but the claim that sequential models \"rely on ... persistent user profiles\" is not; [3] says users are characterised by interaction histories \"rather than by explicit profiles\"."
+    },
+    "24": {
+      "label": "supported",
+      "contributes": {
+        "2": true,
+        "4": true
+      },
+      "reason": "Both: isolated owners (d_obs = 0) are \"20.6% of all owners\"."
+    },
+    "25": {
+      "label": "partly",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Passage supports the TensorRT-LLM worker-loop and a SnapLGR production A/B vs \"legacy T5 baseline\", but never says SnapLGR was deployed or \"replaced\" T5; the worker-loop replaced a \"centralized Python-based architecture\"."
+    },
+    "26": {
+      "label": "supported",
+      "contributes": {
+        "3": true,
+        "6": true
+      },
+      "reason": "Passage: \"seed 789, static-vocab-only reaches only 1% final-100 success, whereas the full diagnostic run reaches 100%. This single catastrophic static-vocab seed explains much of the DoorKey static-vocab variance\"."
+    },
+    "27": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "8": true
+      },
+      "reason": "[2] \"the 40%-60% interval exhibits a smooth transition\" (under 1.5xstd); [1],[8] deterioration \"sharply only after ... a transition region around the 50% noise ratio\"."
+    },
+    "28": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: single best metric 0.47 vs multi-attribute 0.70; \"multi-attribute perspective ... captures more complex structural patterns, translating into substantially stronger predictive power\"."
+    },
+    "29": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"we multiply w_l by B to eliminate the influence of beam size on the loss magnitude ... gradient updates are predominantly driven by high-confidence sequences\"."
+    },
+    "30": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "6": true
+      },
+      "reason": "[1] \"beats faiss's real soft-delete by a margin that grows with the deletion fraction (+4.3/+16.2/+42.2 points at f=0.5/0.7/0.9)\"; [2] gives the same gaps in recall."
+    },
+    "31": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Passage lists \"RQ2.2: How can off-policy evaluation be performed for carousel recommendation policies?\" verbatim."
+    },
+    "32": {
+      "label": "supported",
+      "contributes": {
+        "4": true,
+        "7": false
+      },
+      "reason": "[4]: \"LRPPRC is the mammalian counterpart name ... retrieves PMC6668790 and PMC5559520, which contain 4 ground-truth annotations\"; [7] only gives general case-study context."
+    },
+    "33": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "Both: \"To reshape the supervision intensity according to lookahead value, we introduce a sequence weighting mechanism for the set T_syn.\""
+    },
+    "34": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "[2] dense retrievers/cross-encoders rank \"individual query-passage scores\" and do not \"explicitly account for dependencies among retrieved passages\"; [1] defines query-set compatibility."
+    },
+    "35": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "7": true
+      },
+      "reason": "Passage: \"the overwhelming majority pointed to data, backend or infrastructure as a key concern\" when asked about personalization challenges."
+    },
+    "36": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Passage: \"a less directly relevant document may supply facts or premises that make a substantive contribution to answer construction\"."
+    },
+    "37": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"Five variants for the extraction prompt were tested.\""
+    },
+    "38": {
+      "label": "not",
+      "contributes": {
+        "1": false
+      },
+      "reason": "Passage gives no 2-4% or ~3% ambiguous share for DIGER; it reports only a \"1.2 points\" gap (path survival minus singleton credit) for DIGER, with the chart values not given in text."
+    },
+    "39": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"edit specification consisting of three components: an anchor, a suggestion, and a necessity score.\""
+    },
+    "40": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "3": true
+      },
+      "reason": "[3] \"with k=5 raters per dialogue, a sample size of N=200 provides 80% power (alpha=.05) to detect an ICC as low as approx 0.06\"."
+    },
+    "41": {
+      "label": "supported",
+      "contributes": {
+        "2": true
+      },
+      "reason": "Passage: \"during Stage-3 RL, the model progressively learns to disgard those redundant or less relevant reasoning that do not contribute to ranking the target item\" with performance continuing to improve."
+    },
+    "42": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Table 4: \"Entire recorded pipeline 69,470.3 About 19.3 h\"."
+    },
+    "43": {
+      "label": "supported",
+      "contributes": {
+        "1": true
+      },
+      "reason": "Passage: \"relevant knowledge is distributed across accelerator design, beam-induced background studies, detector performance, and physics analyses, making it difficult to answer focused questions without cross-document evidence aggregation\"."
+    },
+    "44": {
+      "label": "supported",
+      "contributes": {
+        "5": true
+      },
+      "reason": "Passage rule: \"Every claim must reference at least one evidence node and a short verbatim span relied on.\""
+    },
+    "45": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true
+      },
+      "reason": "Table 4: \"Infer (path-based) 0.921 0.814 0.864\"; text \"bringing the path-based F1 to 0.864\"."
+    },
+    "46": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "2": true,
+        "3": true
+      },
+      "reason": "All state \"47,654 query-dataset pairs (21,272 task-based queries)\"."
+    },
+    "47": {
+      "label": "supported",
+      "contributes": {
+        "1": true,
+        "6": true
+      },
+      "reason": "[1] organizes documents \"according to the Open Knowledge Format (OKF) and adding a Skill-compatible SKILL.md at the root\"; [6] \"inspect a title and summary first\" and RAG chunks \"are often decontextualized\"."
+    },
+    "48": {
+      "label": "supported",
+      "contributes": {
+        "3": true
+      },
+      "reason": "Passage: 31-item tie block, uniform random tie-breaking gives \"expected NDCG@10 = 0.1466\" vs 1; \"not evidence that the score identified the relevant item\"."
+    }
+  }
+}
