@@ -117,7 +117,7 @@ def test_a_zero_weight_keeps_the_dense_order():
     assert regularise(SCORED, {1: [3], 4: [2]}, alpha=0.0) == [1, 2, 3, 4]
 
 
-def test_with_no_links_among_candidates_the_dense_order_is_kept():
+def test_with_no_links_among_candidates_regularisation_keeps_the_dense_order():
     assert regularise(SCORED, {1: [99]}, alpha=0.5) == [1, 2, 3, 4]
 
 

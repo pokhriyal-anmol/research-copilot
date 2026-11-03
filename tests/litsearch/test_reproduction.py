@@ -11,11 +11,16 @@ import pytest
 
 RESULTS = Path(__file__).parents[2] / "bench" / "results"
 TOLERANCE = 2.0
+# The 8B gate failed high and is reported failed (BENCHMARK.md change log, 2026-11-03); strict, so a
+# result that starts matching PairSem fails here too and gets looked at.
+GATE_FAILED = pytest.mark.xfail(strict=True, reason="8B reproduction gate recorded as failed in BENCHMARK.md")
 # (result file, metric, published value, source)
 TARGETS = [
     ("bm25-full.json", "ndcg@10", 40.2, "CASPER arXiv 2508.13394 Table 2"),
-    ("qwen3-embedding-8b-full.json", "recall@20", 79.2, "PairSem arXiv 2510.09897 Table 1"),
-    ("qwen3-embedding-8b-full.json", "ndcg@10", 58.0, "PairSem arXiv 2510.09897 Table 1"),
+    pytest.param("qwen3-embedding-8b-full.json", "recall@20", 79.2, "PairSem arXiv 2510.09897 Table 1",
+                 marks=GATE_FAILED),
+    pytest.param("qwen3-embedding-8b-full.json", "ndcg@10", 58.0, "PairSem arXiv 2510.09897 Table 1",
+                 marks=GATE_FAILED),
 ]
 
 

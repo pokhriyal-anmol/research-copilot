@@ -15,11 +15,11 @@ from pathlib import Path
 
 import httpx
 
+from copilot.litsearch.cross import Qwen3Reranker, reorder
 from copilot.litsearch.data import load
 from copilot.litsearch.dense import DenseIndex
 from copilot.litsearch.encoders import Qwen3Encoder
 from copilot.litsearch.metrics import mean_scores
-from copilot.litsearch.cross import Qwen3Reranker, reorder
 from copilot.litsearch.rerank import cached, chat, rerank
 from copilot.litsearch.split import split_questions
 

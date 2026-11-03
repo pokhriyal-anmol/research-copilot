@@ -27,3 +27,6 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint.isort]
+known-first-party = ["copilot"]  # local and CI runs disagreed on whether copilot was first-party

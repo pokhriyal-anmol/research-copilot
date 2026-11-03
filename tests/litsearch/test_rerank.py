@@ -107,7 +107,7 @@ def test_a_rate_limit_is_retried_after_a_wait():
 
 
 def test_an_empty_reply_is_retried_not_returned():
-    t, calls = transport((200, ""), (200, "[2]"))
+    t, _ = transport((200, ""), (200, "[2]"))
     assert chat(httpx.Client(transport=t), "secret", "m", sleep=lambda s: None)([]) == "[2]"
 
 

@@ -2,6 +2,7 @@
 import math
 
 import pytest
+
 from copilot.litsearch.metrics import mean_scores, ndcg_at_k, recall_at_k
 
 

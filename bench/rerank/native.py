@@ -4,6 +4,7 @@ Run from the repo root: HF_HUB_OFFLINE=1 uv run --group bench python bench/reran
 Broad questions (specificity 0) get R@20, specific ones (1) R@5 and R@20, as in arXiv 2407.18940, Table 3.
 """
 import statistics as st
+
 from copilot.litsearch.cross import Qwen3Reranker, reorder
 from copilot.litsearch.data import load
 from copilot.litsearch.dense import DenseIndex
@@ -29,4 +30,4 @@ for split, ids in (("full", None), ("test", set(test))):
             s5 = [recall_at_k(runs[q.id], q.gold, 5) for q in qs if q.specificity == 1]
             s20 = [recall_at_k(runs[q.id], q.gold, 20) for q in qs if q.specificity == 1]
             row += [100 * st.mean(b), 100 * st.mean(s5), 100 * st.mean(s20)]
-        print(f"{split:4} {name:22}", " ".join(f"{v:5.1f}" for v in row[:3]), "|", " ".join(f"{v:5.1f}" for v in row[3:6]), "| avg broad R@20 %.1f specific R@5 %.1f" % (row[6], row[7]))
+        print(f"{split:4} {name:22}", " ".join(f"{v:5.1f}" for v in row[:3]), "|", " ".join(f"{v:5.1f}" for v in row[3:6]), f"| avg broad R@20 {row[6]:.1f} specific R@5 {row[7]:.1f}")

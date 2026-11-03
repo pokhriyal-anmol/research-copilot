@@ -16,11 +16,11 @@ from pathlib import Path
 
 import httpx
 
+from copilot import llm
 from copilot.answer import CITATION, answer
 from copilot.db import connect
 from copilot.embed import embed_query
 from copilot.evaluate import load_questions
-from copilot import llm
 from copilot.llm import AllProvidersFailed
 from copilot.retrieve import search
 

@@ -2,8 +2,15 @@
 import numpy as np
 import pytest
 
-from copilot.litsearch.cross import (PREFIX, SUFFIX, Qwen3Reranker, build_inputs, format_pair, reorder,
-                                     yes_probability)
+from copilot.litsearch.cross import (
+    PREFIX,
+    SUFFIX,
+    Qwen3Reranker,
+    build_inputs,
+    format_pair,
+    reorder,
+    yes_probability,
+)
 from copilot.litsearch.encoders import TASK
 
 
