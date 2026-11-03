@@ -1,0 +1,685 @@
+{
+  "date": "2026-11-04",
+  "sheet": "evals/results/2026-11-04-v2-answerable-to-label.json",
+  "labellers": "two Claude Sonnet subagents (L, M), same rubric, question and full passage; transcripts show neither opened the other's file",
+  "marginal_by_both": [
+    "36",
+    "59"
+  ],
+  "L": {
+    "1": {
+      "answerable": true,
+      "reason": "CBS2 'caches all intermediate matrix multiplication results'."
+    },
+    "2": {
+      "answerable": true,
+      "reason": "Lists 'Normal', 'Known attack' and 'Novel attack' as the 3 major classes in stage two."
+    },
+    "3": {
+      "answerable": true,
+      "reason": "Says it takes only g1 and 'is also unable to precisely distinguish noisy data since \u03b5(a) is determined by all dimensions of g'."
+    },
+    "4": {
+      "answerable": true,
+      "reason": "'adds the observed watch time of the next video, w_{n+1}, to the user tower's inputs'."
+    },
+    "5": {
+      "answerable": true,
+      "reason": "'a window parameter ranging from 1 to 10'."
+    },
+    "6": {
+      "answerable": true,
+      "reason": "'goal is to construct compact graph regions that preserve frequently reused reasoning patterns'."
+    },
+    "7": {
+      "answerable": true,
+      "reason": "Conclusion: 'time-invariant arXiv tasks that capture realistic scholarly interactions'."
+    },
+    "8": {
+      "answerable": true,
+      "reason": "Table caption: ChemVocab 'maintains semantic sub-units (e.g., functional groups)' vs over-segmentation by bert-base-uncased."
+    },
+    "9": {
+      "answerable": true,
+      "reason": "'group the human-judged passages by relevance level (0, 1, 2, and 3) and generate all unordered pairs within each group'."
+    },
+    "10": {
+      "answerable": false,
+      "reason": "Passage cuts off at 'GTSQA is the first benchmark to make this'; its function is never stated."
+    },
+    "11": {
+      "answerable": false,
+      "reason": "Only a reference entry titled 'SUBER: An RL environment with simulated human behavior'; nothing on what the environment includes."
+    },
+    "12": {
+      "answerable": true,
+      "reason": "'Since some properties are affected by class imbalance, we use balanced accuracy as the evaluation metric' (applies to the UTS experiments; IsoScore appears only as a stray heading)."
+    },
+    "13": {
+      "answerable": true,
+      "reason": "'selecting q\u0302_k = q^(i0)_k, where i0 = arg max_i \u03c9^(i)_k' (the particle with highest weight)."
+    },
+    "14": {
+      "answerable": true,
+      "reason": "'SPARQL-LLM shows a significant decline in performance when examples are not supplied'."
+    },
+    "15": {
+      "answerable": true,
+      "reason": "'an infer mode with eight layered rules (D1\u2013D4 deterministic, H1\u2013H4 heuristic)'."
+    },
+    "16": {
+      "answerable": true,
+      "reason": "'less than 0.50 poor, between 0.50 and 0.75 moderate, and above 0.75 good', following Koo and Li."
+    },
+    "17": {
+      "answerable": true,
+      "reason": "'replicated on the HBM of every device', eliminating All-Gather/All-Reduce during the constraint check."
+    },
+    "18": {
+      "answerable": true,
+      "reason": "'Off-diagonal Jaccard values average 0.191, indicating ~19% of selected perturbations overlap'."
+    },
+    "19": {
+      "answerable": true,
+      "reason": "'(1) Information sufficiency Analysis, (2) Relevance Filtering, and (3) Operational Efficiency Ranking'."
+    },
+    "20": {
+      "answerable": true,
+      "reason": "'execution monitoring, artifact tracking, and provenance and reproducibility packaging'."
+    },
+    "21": {
+      "answerable": true,
+      "reason": "'NV-Embed-v2 (4096d) for dense retrieval ... This is the primary benchmark pipeline'."
+    },
+    "22": {
+      "answerable": true,
+      "reason": "'annotators preferred Opinion-Enriched KB responses 79.2% of the time'."
+    },
+    "23": {
+      "answerable": true,
+      "reason": "'four special tokens, including <think>, <tool_call>, <tool_response>, and <answer>'."
+    },
+    "24": {
+      "answerable": true,
+      "reason": "'extends LightGCN with refined neighborhood aggregation and layer-wise representation combination'."
+    },
+    "25": {
+      "answerable": true,
+      "reason": "'unsuccessful-outcome rate of 0.940'."
+    },
+    "26": {
+      "answerable": true,
+      "reason": "Soft labels 'preserve fine-grained ranking information' and guide generator training as a local regularizer."
+    },
+    "27": {
+      "answerable": true,
+      "reason": "'a = 1.294\u00d710^-9, b = 1.0573' indicating near-linear scaling."
+    },
+    "28": {
+      "answerable": true,
+      "reason": "'vary each diagnostic threshold independently while keeping all other components fixed, evaluating on DoorKey-8\u00d78 and KeyCorridor with up to 5 successful seeds'."
+    },
+    "29": {
+      "answerable": true,
+      "reason": "Tutor 'is given the ground-truth answer and constructs a backward chain of shell commands whose execution retrieves documents supporting the answer'."
+    },
+    "30": {
+      "answerable": false,
+      "reason": "Datasets given (LoTTE, five domains plus pooled) but the baseline list is cut off before LoTTE baselines are named and the dataset sentence ends at 'Each domain includes 21'."
+    },
+    "31": {
+      "answerable": true,
+      "reason": "'an ANN lookup against a CPU-hosted Faiss index sits between them'."
+    },
+    "32": {
+      "answerable": true,
+      "reason": "'WP-DE produces a full ranking with 50 comparisons'."
+    },
+    "33": {
+      "answerable": true,
+      "reason": "'served locally at temperature 0 with a 32,768-token context window'."
+    },
+    "34": {
+      "answerable": true,
+      "reason": "Three stages: Discovery (TMDB /discover/movie), Enrichment (metadata requests), Normalization and validation (drop incomplete records)."
+    },
+    "35": {
+      "answerable": true,
+      "reason": "Lists scenarios: accelerator design and beam performance, machine-detector interface, beam-induced background mitigation, Higgs/electroweak, BSM searches, multi-boson, answerability checking."
+    },
+    "36": {
+      "answerable": true,
+      "reason": "Passage says the query 'belongs to the Construction Manual but also contains safety vocabulary' (example 'safety considerations for crusher site inspections'), which breaks Monolithic and MASDR-RAG."
+    },
+    "37": {
+      "answerable": true,
+      "reason": "'the candidate size allocated to the INTERACTOR branch is two per ad'."
+    },
+    "38": {
+      "answerable": true,
+      "reason": "'we prompt an LLM to generate a query' from each paper's abstract, two 'I want to ...' task-based queries per publication."
+    },
+    "39": {
+      "answerable": true,
+      "reason": "'ParaSet reuses precomputed bi-encoder representations and applies set interaction for efficient candidate exploration'."
+    },
+    "40": {
+      "answerable": true,
+      "reason": "'we constructed an mixed-design ANOVA model'."
+    },
+    "41": {
+      "answerable": true,
+      "reason": "'A graph is represented by a two-level nested tree': outer vertex tree with an inner tree of each vertex's neighbors."
+    },
+    "42": {
+      "answerable": true,
+      "reason": "'forces the negative branch to retain visual evidence' by penalizing null-token attention."
+    },
+    "43": {
+      "answerable": true,
+      "reason": "RAM_i = sum R_ij with R_ij = \u03b3^(tc \u2212 tj) if j cites i; decay \u03b3 in (0,1), tj the citing paper's publication year."
+    },
+    "44": {
+      "answerable": true,
+      "reason": "'ingests a 2-hour capacity history at minute-level resolution'."
+    },
+    "45": {
+      "answerable": true,
+      "reason": "'GuRE applies generative query rewriting to legal passage retrieval'."
+    },
+    "46": {
+      "answerable": true,
+      "reason": "'compares the original and reformulated 2DCG using d_a and d_RPD, respectively'."
+    },
+    "47": {
+      "answerable": true,
+      "reason": "Equal weight is 'MISLEADING' because the reader should 'walk away with a correct sense of how common each view is'; dominant should dominate, rare mentioned but not over-emphasized."
+    },
+    "48": {
+      "answerable": true,
+      "reason": "'auxiliary short-horizon PRR-Stat and Shuffled suites use five seeds (0\u20134)'."
+    },
+    "49": {
+      "answerable": true,
+      "reason": "'Reference answers identify the corresponding notes and their onset and offset times'."
+    },
+    "50": {
+      "answerable": true,
+      "reason": "'consume sequences of event-level representations \u03a6_{u,i,t} rather than pre-aggregated item text'."
+    },
+    "51": {
+      "answerable": true,
+      "reason": "'Fable 5.1 named the target in 12/25 episodes without a directive'."
+    },
+    "52": {
+      "answerable": true,
+      "reason": "'A stop-the-world clean rebuild attains the highest raw recall (\u22650.97)'; traversal-safe+repair is 'not a replacement for a rebuild on raw quality'."
+    },
+    "53": {
+      "answerable": true,
+      "reason": "'Test500 evaluates each frozen candidate pool as released, retaining observed units where they occur'."
+    },
+    "54": {
+      "answerable": true,
+      "reason": "'representing each page with visual patch embeddings and using MaxSim-style scoring'."
+    },
+    "55": {
+      "answerable": false,
+      "reason": "Passage cuts off mid-definition: 'evaluates the percentage of relevant items that are included within'; the rest is missing."
+    },
+    "56": {
+      "answerable": true,
+      "reason": "Table 4: AdaMem 64\u00d7 peak memory 44.4 GB (also stated 'at 64\u00d7 ... 44.4 versus 53.5 GB')."
+    },
+    "57": {
+      "answerable": true,
+      "reason": "'GPT-5.2 in a zero-shot setting failed to recognize the necessity of dark soy sauce and proposed using light soy sauce'."
+    },
+    "58": {
+      "answerable": true,
+      "reason": "'the legal basis for doing so depends on each document's licence and on the terms of the underlying model service' (passing uploaded papers to cloud LLMs)."
+    },
+    "59": {
+      "answerable": true,
+      "reason": "'Phase 1 is a down-sampler ... it reduces the 468k-sentence corpus to a cost-effective pool for the agentic loop'."
+    },
+    "60": {
+      "answerable": true,
+      "reason": "'AdaMerge matches tuned PtM in this regime without the per-dataset budget search PtM requires'."
+    },
+    "61": {
+      "answerable": true,
+      "reason": "'deploy the three Qwen3.5 backbones locally on 8\u00d7NVIDIA H20 GPUs using SGLang with 4-way tensor parallelism for every model'."
+    },
+    "62": {
+      "answerable": true,
+      "reason": "'lowers the resource-count variance from 1510.85 to 389.57'."
+    },
+    "63": {
+      "answerable": true,
+      "reason": "'The hyperparameter \u03b1 modulates the influence of self-supervised regularization during training', weighting L_BT in the total loss."
+    },
+    "64": {
+      "answerable": true,
+      "reason": "'Five variants for the extraction prompt were tested'."
+    },
+    "65": {
+      "answerable": true,
+      "reason": "'The judge ... output[s] a detailed rationale for the deficiency and identifies 1 to 3 alternative artists demonstrating superior fit'."
+    },
+    "66": {
+      "answerable": true,
+      "reason": "'normalises mentions through case folding, abbreviation expansion, and alias matching'."
+    },
+    "67": {
+      "answerable": true,
+      "reason": "'constructed from cases obtained from the UK National Archives'."
+    },
+    "68": {
+      "answerable": true,
+      "reason": "'Layered exposure', 'Self-description', and 'Separated entry and structure'."
+    },
+    "69": {
+      "answerable": true,
+      "reason": "'Ranking o against a uniformly random member of C gives expected ROC-auc exactly 1/2'."
+    },
+    "70": {
+      "answerable": true,
+      "reason": "Table 4: MLDR-it 'test 200' queries, 10,000 docs."
+    },
+    "71": {
+      "answerable": true,
+      "reason": "'The default adapter rank is r = 8'."
+    },
+    "72": {
+      "answerable": true,
+      "reason": "'an anchor, a suggestion, and a necessity score'."
+    },
+    "73": {
+      "answerable": true,
+      "reason": "'Factual Hypergraph H_K ... The foundational layer. Vertices denote named entities; hyperedges represent pairwise or higher-order relations'."
+    },
+    "74": {
+      "answerable": true,
+      "reason": "'Adding the frozen summary to the bypass improves AUC by 0.021\u20130.024 at every label budget'."
+    },
+    "75": {
+      "answerable": true,
+      "reason": "'reaches macro-F1 0.6536'."
+    },
+    "76": {
+      "answerable": true,
+      "reason": "'first learns a shared semantic codebook from multi-modal content and behavioral co-occurrence across countries'."
+    },
+    "77": {
+      "answerable": true,
+      "reason": "'ASIRF's LLM calls cost more at inference than OPF's single lightweight forward pass'."
+    },
+    "78": {
+      "answerable": true,
+      "reason": "Retrieved 'using Eq. (6)': argmax over edge subsets of size k_d of the sum of cosine similarity between edge embedding and query."
+    },
+    "79": {
+      "answerable": true,
+      "reason": "'dense_ffn has 54M more than transformer_dense (117M)' at 171M active parameters."
+    },
+    "80": {
+      "answerable": true,
+      "reason": "'Retained paths reduce post-alarm review by 28.8%'."
+    },
+    "81": {
+      "answerable": true,
+      "reason": "'accumulated routing and execution errors are consolidated through slower periodic model updates'."
+    },
+    "82": {
+      "answerable": true,
+      "reason": "Passage says Stage-3 RL 'consistently recovers and substantially improves' performance after Stage-2's weak starting point."
+    },
+    "83": {
+      "answerable": true,
+      "reason": "'uses PyTorch hooks to capture submodules and their runtime inputs'."
+    },
+    "84": {
+      "answerable": true,
+      "reason": "'by predicting the consequences of nearby slate actions and selecting them under utility constraints'."
+    }
+  },
+  "M": {
+    "1": {
+      "answerable": true,
+      "reason": "\"caches all intermediate matrix multiplication results\""
+    },
+    "2": {
+      "answerable": true,
+      "reason": "\"Normal\", \"Known attack\" and \"Novel attack\""
+    },
+    "3": {
+      "answerable": true,
+      "reason": "\"\u03b5(a) is determined by all dimensions of g\" but ug takes only first coordinate g1"
+    },
+    "4": {
+      "answerable": true,
+      "reason": "adds \"the observed watch time of the next video, w_{n+1}, to the user tower's inputs\""
+    },
+    "5": {
+      "answerable": true,
+      "reason": "window parameter \"ranging from 1 to 10\""
+    },
+    "6": {
+      "answerable": true,
+      "reason": "\"construct compact graph regions that preserve frequently reused reasoning patterns\""
+    },
+    "7": {
+      "answerable": true,
+      "reason": "\"time-invariant arXiv tasks that capture realistic scholarly interactions\""
+    },
+    "8": {
+      "answerable": true,
+      "reason": "\"maintains semantic sub-units (e.g., functional groups)\" vs over-segmentation"
+    },
+    "9": {
+      "answerable": true,
+      "reason": "\"group the human-judged passages by relevance level (0, 1, 2, and 3)\" and form all pairs within each group"
+    },
+    "10": {
+      "answerable": false,
+      "reason": "Passage cuts off at \"GTSQA is the first benchmark to make this\"; it never states GTSQA's primary function, only discusses KG-agent recall results."
+    },
+    "11": {
+      "answerable": false,
+      "reason": "Passage is only a bibliography entry (title \"SUBER: An RL environment with simulated human behavior...\"); it does not say what the RL environment includes."
+    },
+    "12": {
+      "answerable": false,
+      "reason": "Passage says balanced accuracy is used for class imbalance, but in a UTS (Unified Topological Signatures) evaluation; IsoScore appears only as a fragment, so attributing the metric to IsoScore is unsupported."
+    },
+    "13": {
+      "answerable": true,
+      "reason": "\"selecting q^_k = q^(i0), where i0 = arg max omega^(i)_k\""
+    },
+    "14": {
+      "answerable": true,
+      "reason": "\"significant decline in performance when examples are not supplied\""
+    },
+    "15": {
+      "answerable": true,
+      "reason": "\"an infer mode with eight layered rules (D1-D4 deterministic, H1-H4 heuristic)\""
+    },
+    "16": {
+      "answerable": true,
+      "reason": "<0.50 poor, 0.50-0.75 moderate, above 0.75 good (Koo and Li)"
+    },
+    "17": {
+      "answerable": true,
+      "reason": "\"replicated on the HBM of every device\", eliminating All-Gather/All-Reduce"
+    },
+    "18": {
+      "answerable": true,
+      "reason": "\"Off-diagonal Jaccard values average 0.191\""
+    },
+    "19": {
+      "answerable": true,
+      "reason": "\"(1) Information sufficiency Analysis, (2) Relevance Filtering, and (3) Operational Efficiency Ranking\""
+    },
+    "20": {
+      "answerable": true,
+      "reason": "\"execution monitoring, artifact tracking, and provenance and reproducibility packaging\""
+    },
+    "21": {
+      "answerable": true,
+      "reason": "\"NV-Embed-v2 (Lee et al., 2024) (4096d) for dense retrieval\" in the primary pipeline"
+    },
+    "22": {
+      "answerable": true,
+      "reason": "\"annotators preferred Opinion-Enriched KB responses 79.2% of the time\""
+    },
+    "23": {
+      "answerable": true,
+      "reason": "\"<think>, <tool_call>, <tool_response>, and <answer>\""
+    },
+    "24": {
+      "answerable": true,
+      "reason": "\"refined neighborhood aggregation and layer-wise representation combination\""
+    },
+    "25": {
+      "answerable": true,
+      "reason": "\"unsuccessful-outcome rate of 0.940\""
+    },
+    "26": {
+      "answerable": true,
+      "reason": "\"constructs soft labels to preserve fine-grained ranking information\" used to guide generator training"
+    },
+    "27": {
+      "answerable": true,
+      "reason": "\"a=1.294x10^-9, b=1.0573\" indicates near-linear scaling"
+    },
+    "28": {
+      "answerable": true,
+      "reason": "\"vary each diagnostic threshold independently while keeping all other components fixed\", on DoorKey-8x8 and KeyCorridor, up to 5 seeds"
+    },
+    "29": {
+      "answerable": true,
+      "reason": "Tutor \"is given the ground-truth answer and constructs a backward chain of shell commands\""
+    },
+    "30": {
+      "answerable": false,
+      "reason": "Passage names LoTTE (five domains plus pooled) but the baseline list is cut off (\"Each domain includes 21\") and the earlier model names belong to a different (scalability) evaluation; benchmark datasets/baselines only partly given."
+    },
+    "31": {
+      "answerable": true,
+      "reason": "\"an ANN lookup against a CPU-hosted Faiss index sits between them\""
+    },
+    "32": {
+      "answerable": true,
+      "reason": "\"WP-DE produces a full ranking with 50 comparisons\""
+    },
+    "33": {
+      "answerable": true,
+      "reason": "\"temperature 0 with a 32,768-token context window\""
+    },
+    "34": {
+      "answerable": true,
+      "reason": "three stages: Discovery via TMDB /discover/movie, Enrichment, Normalization and validation; 153 movies"
+    },
+    "35": {
+      "answerable": true,
+      "reason": "scenarios \"span accelerator design and beam performance, machine-detector interface studies... answerability checking\""
+    },
+    "36": {
+      "answerable": true,
+      "reason": "\"What are the safety considerations for crusher site inspections?\" belongs to Construction Manual but contains safety vocabulary; passage gives this example as the breaking query"
+    },
+    "37": {
+      "answerable": true,
+      "reason": "\"candidate size allocated to the INTERACTOR branch is two per ad\""
+    },
+    "38": {
+      "answerable": true,
+      "reason": "\"we prompt an LLM to generate a query\" from each paper abstract, two task-based \"I want to...\" queries per publication"
+    },
+    "39": {
+      "answerable": true,
+      "reason": "\"reuses precomputed bi-encoder representations and applies set interaction for efficient candidate exploration\""
+    },
+    "40": {
+      "answerable": true,
+      "reason": "\"we constructed an mixed-design ANOVA model\""
+    },
+    "41": {
+      "answerable": true,
+      "reason": "\"A graph is represented by a two-level nested tree\" (outer vertex tree, inner neighbor trees)"
+    },
+    "42": {
+      "answerable": true,
+      "reason": "\"forces the negative branch to retain visual evidence\" by penalizing null-attention"
+    },
+    "43": {
+      "answerable": true,
+      "reason": "\"RAM applies this weighting directly to individual incoming citations\" with R_ij = gamma^(tc-tj)"
+    },
+    "44": {
+      "answerable": true,
+      "reason": "\"ingests a 2-hour capacity history at minute-level resolution\""
+    },
+    "45": {
+      "answerable": true,
+      "reason": "\"GuRE applies generative query rewriting to legal passage retrieval\""
+    },
+    "46": {
+      "answerable": true,
+      "reason": "\"compares the original and reformulated 2DCG using d_a and d_RPD, respectively\""
+    },
+    "47": {
+      "answerable": true,
+      "reason": "equal weight is \"MISLEADING\" because a dominant opinion should dominate and a rare one be mentioned but not over-emphasized (reader should get a correct sense of proportions)"
+    },
+    "48": {
+      "answerable": true,
+      "reason": "\"auxiliary short-horizon PRR-Stat and Shuffled suites use five seeds (0-4)\""
+    },
+    "49": {
+      "answerable": true,
+      "reason": "\"Reference answers identify the corresponding notes and their onset and offset times\""
+    },
+    "50": {
+      "answerable": true,
+      "reason": "\"consume sequences of event-level representations\" rather than pre-aggregated item text"
+    },
+    "51": {
+      "answerable": true,
+      "reason": "\"Fable 5.1 named the target in 12/25 episodes without a directive\""
+    },
+    "52": {
+      "answerable": true,
+      "reason": "clean rebuild \"attains the highest raw recall (>=0.97)\"; traversal-safe+repair is \"not a replacement for a rebuild on raw quality\""
+    },
+    "53": {
+      "answerable": true,
+      "reason": "\"evaluates each frozen candidate pool as released, retaining observed units where they occur\""
+    },
+    "54": {
+      "answerable": true,
+      "reason": "\"representing each page with visual patch embeddings\" (multi-vector, MaxSim scoring)"
+    },
+    "55": {
+      "answerable": false,
+      "reason": "Passage is cut off: \"HR@K evaluates the percentage of relevant items that are included within\" and the sentence ends without saying within what."
+    },
+    "56": {
+      "answerable": true,
+      "reason": "Table 4 row AdaMem 64x: Mem. 44.4 GB; text also says \"(44.4 versus 53.5 GB)\""
+    },
+    "57": {
+      "answerable": true,
+      "reason": "\"failed to recognize the necessity of dark soy sauce and proposed using light soy sauce\""
+    },
+    "58": {
+      "answerable": true,
+      "reason": "\"the legal basis... depends on each document's licence and on the terms of the underlying model service\""
+    },
+    "59": {
+      "answerable": true,
+      "reason": "\"reduces the 468k-sentence corpus to a cost-effective pool for the agentic loop\" (no pool size given, but the stated answer fits)"
+    },
+    "60": {
+      "answerable": true,
+      "reason": "\"AdaMerge matches tuned PtM in this regime without the per-dataset budget search PtM requires\""
+    },
+    "61": {
+      "answerable": true,
+      "reason": "\"deploy the three Qwen3.5 backbones locally on 8xH20 GPUs using SGLang with 4-way tensor parallelism\""
+    },
+    "62": {
+      "answerable": true,
+      "reason": "\"lowers the resource-count variance from 1510.85 to 389.57\""
+    },
+    "63": {
+      "answerable": true,
+      "reason": "\"modulates the influence of self-supervised regularization during training\""
+    },
+    "64": {
+      "answerable": true,
+      "reason": "\"Five variants for the extraction prompt were tested\""
+    },
+    "65": {
+      "answerable": true,
+      "reason": "\"triggers an automated feedback mechanism\": judge outputs a rationale and 1 to 3 alternative artists"
+    },
+    "66": {
+      "answerable": true,
+      "reason": "\"through case folding, abbreviation expansion, and alias matching\""
+    },
+    "67": {
+      "answerable": true,
+      "reason": "\"constructed from cases obtained from the UK National Archives\""
+    },
+    "68": {
+      "answerable": true,
+      "reason": "Layered exposure, Self-description, Separated entry and structure"
+    },
+    "69": {
+      "answerable": true,
+      "reason": "\"expected ROC-auc exactly 1/2\""
+    },
+    "70": {
+      "answerable": true,
+      "reason": "Table 4 row MLDR-it: Queries 200"
+    },
+    "71": {
+      "answerable": true,
+      "reason": "\"The default adapter rank is r = 8\""
+    },
+    "72": {
+      "answerable": true,
+      "reason": "\"an anchor, a suggestion, and a necessity score\""
+    },
+    "73": {
+      "answerable": true,
+      "reason": "\"The foundational layer. Vertices denote named entities. Hyperedges represent pairwise or higher-order relations\""
+    },
+    "74": {
+      "answerable": true,
+      "reason": "\"improves AUC by 0.021-0.024 at every label budget\""
+    },
+    "75": {
+      "answerable": true,
+      "reason": "\"reaches macro-F1 0.6536\""
+    },
+    "76": {
+      "answerable": true,
+      "reason": "\"learns a shared semantic codebook from multi-modal content and behavioral co-occurrence across countries\""
+    },
+    "77": {
+      "answerable": true,
+      "reason": "\"ASIRF's LLM calls cost more at inference than OPF's single lightweight forward pass\""
+    },
+    "78": {
+      "answerable": true,
+      "reason": "\"retrieving the k_d deep insight edges most relevant to the query using Eq. (6)\", argmax of summed cosine similarity to the query"
+    },
+    "79": {
+      "answerable": true,
+      "reason": "\"dense_ffn has 54M more than transformer_dense (117M)\" at 171M"
+    },
+    "80": {
+      "answerable": true,
+      "reason": "\"Retained paths reduce post-alarm review by 28.8%\""
+    },
+    "81": {
+      "answerable": true,
+      "reason": "\"consolidated through slower periodic model updates\""
+    },
+    "82": {
+      "answerable": true,
+      "reason": "\"Stage-3 RL consistently recovers and substantially improves\" recommendation performance after weak Stage-2 performance"
+    },
+    "83": {
+      "answerable": true,
+      "reason": "\"uses PyTorch hooks to capture submodules and their runtime inputs\", explicitly capturing each submodule at selected component boundaries"
+    },
+    "84": {
+      "answerable": true,
+      "reason": "\"UA-TWM connects sequential ranking to target-directed decisions by predicting the consequences of nearby slate actions\""
+    }
+  }
+}
