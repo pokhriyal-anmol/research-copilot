@@ -1,0 +1,64 @@
+{
+  "configuration": 2,
+  "model": "Qwen/Qwen3-Reranker-4B",
+  "depth": 100,
+  "base": "Qwen3-Embedding-8B, protocol instruction",
+  "split": "test",
+  "questions": 397,
+  "failures": [],
+  "date": "2026-11-03T15:32:09+00:00",
+  "groups": {
+    "all": {
+      "questions": 397,
+      "dense": {
+        "recall@20": 79.7649034424853,
+        "recall@100": 91.28883291351806,
+        "ndcg@10": 61.31468188855948
+      },
+      "reranked": {
+        "recall@20": 85.30646515533167,
+        "recall@100": 91.28883291351806,
+        "ndcg@10": 64.08946738696548
+      }
+    },
+    "source not in corpus (inline_nonacl)": {
+      "questions": 168,
+      "dense": {
+        "recall@20": 74.10714285714286,
+        "recall@100": 87.5,
+        "ndcg@10": 55.59754899723068
+      },
+      "reranked": {
+        "recall@20": 78.86904761904762,
+        "recall@100": 87.5,
+        "ndcg@10": 53.021378359082334
+      }
+    },
+    "author-written (manual_acl, manual_iclr)": {
+      "questions": 164,
+      "dense": {
+        "recall@20": 88.41463414634147,
+        "recall@100": 96.34146341463415,
+        "ndcg@10": 70.44800747951936
+      },
+      "reranked": {
+        "recall@20": 95.1219512195122,
+        "recall@100": 96.34146341463415,
+        "ndcg@10": 77.26971452462736
+      }
+    },
+    "source may be in corpus (inline_acl, not counted)": {
+      "questions": 65,
+      "dense": {
+        "recall@20": 72.56410256410255,
+        "recall@100": 88.33333333333333,
+        "ndcg@10": 53.0471884858797
+      },
+      "reranked": {
+        "recall@20": 77.17948717948717,
+        "recall@100": 88.33333333333333,
+        "ndcg@10": 59.441443173239634
+      }
+    }
+  }
+}
