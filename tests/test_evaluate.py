@@ -23,3 +23,11 @@ def test_draft_filter_rejects_skip_and_non_questions():
     assert is_usable("How is recall measured?")
     assert not is_usable("SKIP")
     assert not is_usable("Recall is measured.")
+
+
+def test_questions_can_come_from_another_file(tmp_path):
+    from copilot.evaluate import load_questions
+
+    other = tmp_path / "q.csv"
+    other.write_text("reviewed,question\nyes,a?\nno,b?\n")
+    assert [r["question"] for r in load_questions(False, other)] == ["a?"]

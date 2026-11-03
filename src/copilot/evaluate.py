@@ -1,6 +1,6 @@
 """Compare retrieval modes on labelled questions.
 
-Usage: python -m copilot.evaluate [--include-drafts]
+Usage: python -m copilot.evaluate [--include-drafts] [--questions <file.csv>]
 Hit means a labelled paper and page appears in the top K.
 """
 import csv
@@ -17,8 +17,8 @@ QUESTIONS = Path("evals/questions.csv")
 TOP_K = 20
 
 
-def load_questions(include_drafts: bool) -> list[dict]:
-    with QUESTIONS.open(newline="") as f:
+def load_questions(include_drafts: bool, path: Path = QUESTIONS) -> list[dict]:
+    with path.open(newline="") as f:
         rows = list(csv.DictReader(f))
     return [r for r in rows if include_drafts or r["reviewed"].strip().lower() == "yes"]
 
@@ -40,8 +40,8 @@ def first_hit(results: list, arxiv_id: str, page: int) -> int | None:
     return None
 
 
-def run(include_drafts: bool) -> None:
-    rows = load_questions(include_drafts)
+def run(include_drafts: bool, path: Path = QUESTIONS) -> None:
+    rows = load_questions(include_drafts, path)
     if not rows:
         sys.exit("No questions to score. Mark rows reviewed=yes, or pass --include-drafts.")
     conn = connect()
@@ -60,4 +60,5 @@ def run(include_drafts: bool) -> None:
 
 
 if __name__ == "__main__":
-    run("--include-drafts" in sys.argv)
+    path = Path(sys.argv[sys.argv.index("--questions") + 1]) if "--questions" in sys.argv else QUESTIONS
+    run("--include-drafts" in sys.argv, path)

@@ -1,0 +1,338 @@
+[
+ {
+  "id": 1,
+  "question": "In Cache-based Baseline-2, what results are cached?"
+ },
+ {
+  "id": 2,
+  "question": "In the proposed rule-based framework, what are the three major classes used to classify the input sample in the second stage?"
+ },
+ {
+  "id": 3,
+  "question": "In XGBoost-ug, why is the variant unable to precisely distinguish noisy data?"
+ },
+ {
+  "id": 4,
+  "question": "In the DNN-based CRM, how is the observed watch time of the next video incorporated into the user tower?"
+ },
+ {
+  "id": 5,
+  "question": "In AffRo, what is the range of values for the window parameter?"
+ },
+ {
+  "id": 6,
+  "question": "In SPLIT-RAG, what goal does the partition objective serve?"
+ },
+ {
+  "id": 7,
+  "question": "In WebArxiv, what type of tasks does the benchmark capture to simulate realistic scholarly interactions?"
+ },
+ {
+  "id": 8,
+  "question": "In ChemVocab, what type of sub-units does the tokenizer maintain compared to the bert-base-uncased tokenizer?"
+ },
+ {
+  "id": 9,
+  "question": "In the pairwise preference experiment, how are the human-judged passages grouped for each query?"
+ },
+ {
+  "id": 10,
+  "question": "What is the primary function of GTSQA?"
+ },
+ {
+  "id": 11,
+  "question": "In SUBER, what is included as part of the RL environment for recommender systems?"
+ },
+ {
+  "id": 12,
+  "question": "In IsoScore, what evaluation metric is used to address the effects of class imbalance?"
+ },
+ {
+  "id": 13,
+  "question": "In RBPF, how is the highest weight estimator defined?"
+ },
+ {
+  "id": 14,
+  "question": "In SPARQL-LLM, what happens to the performance when examples are not supplied?"
+ },
+ {
+  "id": 15,
+  "question": "In KnowTeX, how many layered rules does the infer mode introduce?"
+ },
+ {
+  "id": 16,
+  "question": "In CRS-Que, how are variance-based reliability coefficients interpreted?"
+ },
+ {
+  "id": 17,
+  "question": "In STATIC, how is the sparse transition matrix stored to eliminate cross-chip communication during the constraint check?"
+ },
+ {
+  "id": 18,
+  "question": "In PT-RAG, what is the average off-diagonal Jaccard value indicating the overlap of selected perturbations between cell types for the same query gene?"
+ },
+ {
+  "id": 19,
+  "question": "In the Global-View Navigator, what are the three steps of the selection process performed by the Selector?"
+ },
+ {
+  "id": 20,
+  "question": "In yProv4DV, what are the three main components that the architecture can be broadly subdivided into?"
+ },
+ {
+  "id": 21,
+  "question": "In HippoRAG2, what dense retrieval model is used for the primary benchmark pipeline?"
+ },
+ {
+  "id": 22,
+  "question": "In Opinion-Enriched KB, how often did human annotators prefer responses over the baseline?"
+ },
+ {
+  "id": 23,
+  "question": "In RRCM, what four special tokens does the instruction prompt incorporate?"
+ },
+ {
+  "id": 24,
+  "question": "In LightGCN++, what modifications are made to extend LightGCN for improved embedding quality and recommendation performance?"
+ },
+ {
+  "id": 25,
+  "question": "In Lexical Full-Text RAG, what unsuccessful-outcome rate is recorded?"
+ },
+ {
+  "id": 26,
+  "question": "In DeGRe, what purpose do the soft labels constructed by the Lookahead Evaluator serve?"
+ },
+ {
+  "id": 27,
+  "question": "In the MOSS system (Winnowing), what fitted power-law model parameters indicate near-linear scaling of single-query latency with dataset size?"
+ },
+ {
+  "id": 28,
+  "question": "In Threshold Sensitivity, how are the diagnostic thresholds evaluated?"
+ },
+ {
+  "id": 29,
+  "question": "In GrepSeek, how does an answer-aware Tutor model construct the chain of shell commands for training questions?"
+ },
+ {
+  "id": 30,
+  "question": "In SSR, what datasets and baselines are used to benchmark the system?"
+ },
+ {
+  "id": 31,
+  "question": "In UniPinRec, what sits between the retrieval and ranking independent Triton ensemble nodes?"
+ },
+ {
+  "id": 32,
+  "question": "In WP-DE, how many comparisons are used to produce a full ranking?"
+ },
+ {
+  "id": 33,
+  "question": "In Qwen3-VL-32B-Instruct, what temperature and context window size are used for serving?"
+ },
+ {
+  "id": 34,
+  "question": "In $\\tau$-Rec, how is the movie catalog constructed?"
+ },
+ {
+  "id": 35,
+  "question": "In the agentic hybrid RAG framework, what application scenarios are defined to characterize the structure of information needs in the muon collider domain?"
+ },
+ {
+  "id": 36,
+  "question": "In MASDR-RAG, what type of query breaks it and Monolithic retrieval?"
+ },
+ {
+  "id": 37,
+  "question": "In INTERACTOR, what is the candidate size allocated during the experiment?"
+ },
+ {
+  "id": 38,
+  "question": "In NASA-EO-Bench, how are the queries generated from the selected publications?"
+ },
+ {
+  "id": 39,
+  "question": "In ParaSet, how are precomputed representations utilized for candidate exploration?"
+ },
+ {
+  "id": 40,
+  "question": "In the GRS, what statistical model was constructed to test whether the LLM category received significantly higher scores compared to the singular aggregation strategies?"
+ },
+ {
+  "id": 41,
+  "question": "In CPAM, how is a graph represented?"
+ },
+ {
+  "id": 42,
+  "question": "In LAIP, what is the purpose of the anti-collapse regularizer?"
+ },
+ {
+  "id": 43,
+  "question": "In RAM, how is the recency-based decay factor applied to incoming citations?"
+ },
+ {
+  "id": 44,
+  "question": "In the encoder-conditioned architecture, what capacity history length and resolution does the PatchTST-style encoder ingest?"
+ },
+ {
+  "id": 45,
+  "question": "In GuRE, what is applied to legal passage retrieval?"
+ },
+ {
+  "id": 46,
+  "question": "In the comparison between the original and reformulated 2DCG, which user action implementations are used respectively?"
+ },
+ {
+  "id": 47,
+  "question": "In OPINION FAIRNESS (Proportional Accuracy), why is giving equal weight to a 10% minority and a 70% majority considered misleading?"
+ },
+ {
+  "id": 48,
+  "question": "In PRR-Stat, how many seeds are used for the auxiliary short-horizon PRR-Stat and Shuffled suites?"
+ },
+ {
+  "id": 49,
+  "question": "In MusicGroundingBench, what do reference answers identify?"
+ },
+ {
+  "id": 50,
+  "question": "In the user and item history encoders, what is consumed rather than pre-aggregated item text?"
+ },
+ {
+  "id": 51,
+  "question": "In Fable 5.1, how often was the target named without a directive?"
+ },
+ {
+  "id": 52,
+  "question": "In traversal-safe, how does the recovery compare to a rebuild on raw quality?"
+ },
+ {
+  "id": 53,
+  "question": "In Test500, how is each frozen candidate pool evaluated?"
+ },
+ {
+  "id": 54,
+  "question": "In ColPali, how is each page represented?"
+ },
+ {
+  "id": 55,
+  "question": "What does the Hits Ratio at K (HR@K) evaluate?"
+ },
+ {
+  "id": 56,
+  "question": "In AdaMem, what is the peak GPU memory at a 64\u00d7 compression rate on TriviaQA?"
+ },
+ {
+  "id": 57,
+  "question": "In Example 1, how did GPT-5.2 perform in a zero-shot setting regarding the use of soy sauce?"
+ },
+ {
+  "id": 58,
+  "question": "In CoSLR, what depends on each document\u2019s licence and on the terms of the underlying model service?"
+ },
+ {
+  "id": 59,
+  "question": "In Algorithmic Phase 1, what does the down-sampler reduce the corpus to?"
+ },
+ {
+  "id": 60,
+  "question": "In AdaMerge, how does the performance compare to tuned PtM without requiring a per-dataset budget search?"
+ },
+ {
+  "id": 61,
+  "question": "In SGLang, how are the three Qwen3.5 backbones deployed for the local entropy analysis?"
+ },
+ {
+  "id": 62,
+  "question": "In UNIQUE, what is the effect of replacing the hierarchical 128\u00d7128 codebook with a single-layer codebook on resource-count variance?"
+ },
+ {
+  "id": 63,
+  "question": "In BT-SR, what is the purpose of the hyperparameter $\\alpha$?"
+ },
+ {
+  "id": 64,
+  "question": "In Prompt Comparisons, how many variants for the extraction prompt were tested?"
+ },
+ {
+  "id": 65,
+  "question": "In the Targeted Feedback Loop, what automated mechanism is triggered by any recommendation receiving a score below 3?"
+ },
+ {
+  "id": 66,
+  "question": "In DACG-agent, how does an entity resolver normalise mentions?"
+ },
+ {
+  "id": 67,
+  "question": "In UK-PRBENCH, what source is used to construct the benchmark?"
+ },
+ {
+  "id": 68,
+  "question": "In the Knowledge-as-Skill Design, what are the three design principles?"
+ },
+ {
+  "id": 69,
+  "question": "In Indistinguishability floor, what is the expected ROC-auc when ranking $o$ against a uniformly random member of $C$?"
+ },
+ {
+  "id": 70,
+  "question": "In the MLDR-it benchmark, how many queries are used?"
+ },
+ {
+  "id": 71,
+  "question": "In Q-REACT, what is the default adapter rank?"
+ },
+ {
+  "id": 72,
+  "question": "In the Query-Implied Optimization (QI-GEO) framework, what three components make up each generated edit specification?"
+ },
+ {
+  "id": 73,
+  "question": "In DHI, what foundational layer is represented by the factual hypergraph HK?"
+ },
+ {
+  "id": 74,
+  "question": "In DSI, what effect does adding the frozen summary to the bypass have on the AUC across every label budget?"
+ },
+ {
+  "id": 75,
+  "question": "In Granite 4.1 3B LoRA SFT, what macro-F1 score is reached when trained on the full 13,194-sample training split for the acceptance-filtered held-out 7-way action-prediction task?"
+ },
+ {
+  "id": 76,
+  "question": "In CMRec, how is the shared semantic codebook learned?"
+ },
+ {
+  "id": 77,
+  "question": "In ASIRF, what is the trade-off regarding its efficiency and LLM calls?"
+ },
+ {
+  "id": 78,
+  "question": "In Asymmetric Dynamic Routing, how are the $k_d$ deep insight edges most relevant to the query retrieved?"
+ },
+ {
+  "id": 79,
+  "question": "In dense_ffn, how many more active parameters are there compared to transformer_dense?"
+ },
+ {
+  "id": 80,
+  "question": "In ToolSandbox, by what percentage do retained paths reduce post-alarm review?"
+ },
+ {
+  "id": 81,
+  "question": "In SEEK, how are routing and execution errors consolidated?"
+ },
+ {
+  "id": 82,
+  "question": "In Stage-3 RL, how does the model's recommendation performance change after reinforcement learning compared to before?"
+ },
+ {
+  "id": 83,
+  "question": "In Component Benchmark (CB), how are submodules and their runtime inputs captured?"
+ },
+ {
+  "id": 84,
+  "question": "In UA-TWM, what connects sequential ranking to target-directed decisions?"
+ }
+]
