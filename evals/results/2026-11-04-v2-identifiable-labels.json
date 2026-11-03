@@ -1,0 +1,681 @@
+{
+  "date": "2026-11-04",
+  "sheet": "evals/results/2026-11-04-v2-questions-to-label.json",
+  "labellers": "two Claude Sonnet subagents (J, K), same rubric, question text only; transcripts show neither opened the other's file",
+  "J": {
+    "1": {
+      "identifiable": false,
+      "reason": "\"Cache-based Baseline-2\" is a numbered baseline label that any paper with cached baselines could use; no method or task is named."
+    },
+    "2": {
+      "identifiable": false,
+      "reason": "\"the proposed rule-based framework\" is generic and \"classify the input sample in the second stage\" names no domain, so many papers fit."
+    },
+    "3": {
+      "identifiable": true,
+      "reason": "\"XGBoost-ug\" is a specific named variant and \"distinguish noisy data\" ties it to one ablation, which few papers would share."
+    },
+    "4": {
+      "identifiable": true,
+      "reason": "\"observed watch time of the next video\" in the \"user tower\" of a \"DNN-based CRM\" is a distinctive video-recommendation combination."
+    },
+    "5": {
+      "identifiable": true,
+      "reason": "\"AffRo\" is a unique method name and the \"window parameter\" range is a detail of that one paper."
+    },
+    "6": {
+      "identifiable": true,
+      "reason": "\"SPLIT-RAG\" is a unique system name, with its \"partition objective\" pointing to a single paper."
+    },
+    "7": {
+      "identifiable": true,
+      "reason": "\"WebArxiv\" is a specific benchmark name for \"scholarly interactions\"."
+    },
+    "8": {
+      "identifiable": true,
+      "reason": "\"ChemVocab\" is a unique tokenizer name, compared against \"bert-base-uncased\" for chemistry text."
+    },
+    "9": {
+      "identifiable": false,
+      "reason": "\"the pairwise preference experiment\" with \"human-judged passages\" is a generic setup used by many ranking papers; no method or dataset is named."
+    },
+    "10": {
+      "identifiable": true,
+      "reason": "\"GTSQA\" is a specific dataset/benchmark name that only one paper would introduce."
+    },
+    "11": {
+      "identifiable": true,
+      "reason": "\"SUBER\" is a named RL environment for recommender systems, specific to one paper."
+    },
+    "12": {
+      "identifiable": true,
+      "reason": "\"IsoScore\" is a named isotropy metric and the \"class imbalance\" detail points to its specific evaluation."
+    },
+    "13": {
+      "identifiable": true,
+      "reason": "\"RBPF\" with a \"highest weight estimator\" is a specific particle-filter method name and detail."
+    },
+    "14": {
+      "identifiable": true,
+      "reason": "\"SPARQL-LLM\" is a specific system name; the question concerns its no-examples ablation."
+    },
+    "15": {
+      "identifiable": true,
+      "reason": "\"KnowTeX\" is a unique name and \"infer mode\" with \"layered rules\" are its own features."
+    },
+    "16": {
+      "identifiable": true,
+      "reason": "\"CRS-Que\" is a unique questionnaire name for conversational recommenders, with \"variance-based reliability coefficients\" as its analysis."
+    },
+    "17": {
+      "identifiable": true,
+      "reason": "\"STATIC\" with a \"sparse transition matrix\" and \"cross-chip communication\" during the \"constraint check\" is a distinctive constrained-decoding hardware design."
+    },
+    "18": {
+      "identifiable": true,
+      "reason": "\"PT-RAG\" is a unique name and \"selected perturbations between cell types for the same query gene\" is a very specific domain."
+    },
+    "19": {
+      "identifiable": true,
+      "reason": "\"Global-View Navigator\" with its \"Selector\" is a specific named component of one system."
+    },
+    "20": {
+      "identifiable": true,
+      "reason": "\"yProv4DV\" is a unique tool name with a stated architecture."
+    },
+    "21": {
+      "identifiable": false,
+      "reason": "\"HippoRAG2\" is an existing method used as baseline or backbone by many papers, and \"primary benchmark pipeline\" does not say which paper's pipeline."
+    },
+    "22": {
+      "identifiable": true,
+      "reason": "\"Opinion-Enriched KB\" is a specific named knowledge base with a human-preference result."
+    },
+    "23": {
+      "identifiable": true,
+      "reason": "\"RRCM\" is a unique method name and \"four special tokens\" in its \"instruction prompt\" is a specific detail."
+    },
+    "24": {
+      "identifiable": true,
+      "reason": "\"LightGCN++\" is a specific named extension of LightGCN."
+    },
+    "25": {
+      "identifiable": false,
+      "reason": "\"Lexical Full-Text RAG\" is a generic baseline description and \"unsuccessful-outcome rate\" could be reported by many RAG papers."
+    },
+    "26": {
+      "identifiable": true,
+      "reason": "\"DeGRe\" with a \"Lookahead Evaluator\" producing \"soft labels\" is a unique named system."
+    },
+    "27": {
+      "identifiable": true,
+      "reason": "\"MOSS system (Winnowing)\" plus a \"fitted power-law\" for \"single-query latency with dataset size\" is a distinctive plagiarism-search scaling study."
+    },
+    "28": {
+      "identifiable": false,
+      "reason": "\"Threshold Sensitivity\" is a generic analysis heading; \"diagnostic thresholds\" names no method or domain."
+    },
+    "29": {
+      "identifiable": true,
+      "reason": "\"GrepSeek\" is a unique name and the \"answer-aware Tutor\" building \"shell commands\" is specific."
+    },
+    "30": {
+      "identifiable": false,
+      "reason": "\"SSR\" is a short generic acronym and the question only asks for \"datasets and baselines\", which does not narrow it to one paper."
+    },
+    "31": {
+      "identifiable": true,
+      "reason": "\"UniPinRec\" is a unique system name with a \"Triton ensemble\" serving pipeline."
+    },
+    "32": {
+      "identifiable": true,
+      "reason": "\"WP-DE\" is a specific named method whose \"comparisons used to produce a full ranking\" is its own cost detail."
+    },
+    "33": {
+      "identifiable": false,
+      "reason": "\"Qwen3-VL-32B-Instruct\" is a public model used by many papers and the \"temperature and context window\" settings vary by paper."
+    },
+    "34": {
+      "identifiable": true,
+      "reason": "\"$\\tau$-Rec\" is a specific benchmark name and \"movie catalog\" narrows its construction."
+    },
+    "35": {
+      "identifiable": true,
+      "reason": "\"muon collider domain\" with an \"agentic hybrid RAG framework\" identifies one physics-specific paper."
+    },
+    "36": {
+      "identifiable": true,
+      "reason": "\"MASDR-RAG\" is a unique method name, compared with \"Monolithic retrieval\"."
+    },
+    "37": {
+      "identifiable": true,
+      "reason": "\"INTERACTOR\" is a unique name; \"candidate size allocated during the experiment\" refers to its own setup."
+    },
+    "38": {
+      "identifiable": true,
+      "reason": "\"NASA-EO-Bench\" is a specific Earth-observation benchmark whose queries come from \"selected publications\"."
+    },
+    "39": {
+      "identifiable": true,
+      "reason": "\"ParaSet\" is a unique name with \"precomputed representations\" for \"candidate exploration\"."
+    },
+    "40": {
+      "identifiable": true,
+      "reason": "\"GRS\" with an \"LLM category\" tested against \"singular aggregation strategies\" is a distinctive group-recommendation study, though the acronym alone is thin."
+    },
+    "41": {
+      "identifiable": true,
+      "reason": "\"CPAM\" is a specific method name whose graph representation is its own design."
+    },
+    "42": {
+      "identifiable": true,
+      "reason": "\"LAIP\" with an \"anti-collapse regularizer\" is a specific named method component."
+    },
+    "43": {
+      "identifiable": true,
+      "reason": "\"RAM\" with a \"recency-based decay factor\" on \"incoming citations\" is a distinctive citation-scoring design."
+    },
+    "44": {
+      "identifiable": true,
+      "reason": "\"PatchTST-style encoder\" ingesting \"capacity history\" is a distinctive forecasting architecture for one paper, despite the generic \"encoder-conditioned architecture\" label."
+    },
+    "45": {
+      "identifiable": true,
+      "reason": "\"GuRE\" is a unique method name used for \"legal passage retrieval\"."
+    },
+    "46": {
+      "identifiable": true,
+      "reason": "\"original and reformulated 2DCG\" refers to a specific two-dimensional cumulative gain metric reformulation with user-action implementations."
+    },
+    "47": {
+      "identifiable": true,
+      "reason": "\"OPINION FAIRNESS (Proportional Accuracy)\" names a specific metric and the \"10% minority and a 70% majority\" example."
+    },
+    "48": {
+      "identifiable": true,
+      "reason": "\"PRR-Stat\" and \"Shuffled suites\" with \"short-horizon\" seeds name a specific benchmark setup."
+    },
+    "49": {
+      "identifiable": true,
+      "reason": "\"MusicGroundingBench\" is a unique benchmark name."
+    },
+    "50": {
+      "identifiable": false,
+      "reason": "\"the user and item history encoders\" is generic; \"pre-aggregated item text\" appears in many recommender papers and no model is named."
+    },
+    "51": {
+      "identifiable": false,
+      "reason": "\"Fable 5.1\" is a model name used as an evaluation subject and \"target named without a directive\" does not say what task or paper."
+    },
+    "52": {
+      "identifiable": false,
+      "reason": "\"traversal-safe\" is a generic adjective-like label and \"recovery compared to a rebuild on raw quality\" names no system or index."
+    },
+    "53": {
+      "identifiable": false,
+      "reason": "\"Test500\" is a generic split name and \"frozen candidate pool\" could occur in many ranking papers."
+    },
+    "54": {
+      "identifiable": false,
+      "reason": "\"ColPali\" is a well-known model many papers describe or use, each giving the same or different page representation answers."
+    },
+    "55": {
+      "identifiable": false,
+      "reason": "\"Hits Ratio at K (HR@K)\" is a standard recommender metric defined in countless papers."
+    },
+    "56": {
+      "identifiable": true,
+      "reason": "\"AdaMem\" with \"64\u00d7 compression rate on TriviaQA\" and \"peak GPU memory\" is a specific method and result."
+    },
+    "57": {
+      "identifiable": true,
+      "reason": "\"GPT-5.2\" zero-shot on \"soy sauce\" in \"Example 1\" is a specific qualitative example, likely in one cooking or substitution paper."
+    },
+    "58": {
+      "identifiable": true,
+      "reason": "\"CoSLR\" is a unique name and \"each document's licence\" with the model service terms is its release discussion."
+    },
+    "59": {
+      "identifiable": false,
+      "reason": "\"Algorithmic Phase 1\" is a generic phase label and \"the down-sampler\" names no system or corpus."
+    },
+    "60": {
+      "identifiable": true,
+      "reason": "\"AdaMerge\" is a unique name compared to \"tuned PtM\" without a \"per-dataset budget search\"."
+    },
+    "61": {
+      "identifiable": false,
+      "reason": "\"SGLang\" is a general serving framework; \"three Qwen3.5 backbones\" and \"local entropy analysis\" do not name the paper's own method."
+    },
+    "62": {
+      "identifiable": true,
+      "reason": "\"UNIQUE\" with a \"hierarchical 128\u00d7128 codebook\" and \"resource-count variance\" is a specific ablation."
+    },
+    "63": {
+      "identifiable": true,
+      "reason": "\"BT-SR\" is a specific method name with its own hyperparameter \"$\\alpha$\"."
+    },
+    "64": {
+      "identifiable": false,
+      "reason": "\"Prompt Comparisons\" is a generic section heading; \"extraction prompt\" variants exist in many LLM papers."
+    },
+    "65": {
+      "identifiable": false,
+      "reason": "\"Targeted Feedback Loop\" is a generic mechanism name and \"score below 3\" gives no domain or system."
+    },
+    "66": {
+      "identifiable": true,
+      "reason": "\"DACG-agent\" is a unique agent name with an \"entity resolver\" for mentions."
+    },
+    "67": {
+      "identifiable": true,
+      "reason": "\"UK-PRBENCH\" is a specific benchmark name."
+    },
+    "68": {
+      "identifiable": true,
+      "reason": "\"Knowledge-as-Skill Design\" with \"three design principles\" is a named design in one paper."
+    },
+    "69": {
+      "identifiable": false,
+      "reason": "\"Indistinguishability floor\" with \"ROC-auc\" against \"a uniformly random member of $C$\" is an abstract math concept with $o$ and $C$ undefined, so no paper is pinned."
+    },
+    "70": {
+      "identifiable": true,
+      "reason": "\"MLDR-it\" is a specific Italian long-document retrieval benchmark."
+    },
+    "71": {
+      "identifiable": true,
+      "reason": "\"Q-REACT\" is a unique method name with an \"adapter rank\" default."
+    },
+    "72": {
+      "identifiable": true,
+      "reason": "\"Query-Implied Optimization (QI-GEO)\" is a specific named framework with \"edit specification\" components."
+    },
+    "73": {
+      "identifiable": true,
+      "reason": "\"DHI\" with \"factual hypergraph HK\" is a specific named construction."
+    },
+    "74": {
+      "identifiable": true,
+      "reason": "\"DSI\" with a \"frozen summary\" \"bypass\" and \"label budget\" AUC is a specific ablation, not the known Differentiable Search Index."
+    },
+    "75": {
+      "identifiable": true,
+      "reason": "\"Granite 4.1 3B LoRA SFT\" with \"13,194-sample\" split and \"7-way action-prediction\" is highly specific."
+    },
+    "76": {
+      "identifiable": true,
+      "reason": "\"CMRec\" is a unique method name with a \"shared semantic codebook\"."
+    },
+    "77": {
+      "identifiable": true,
+      "reason": "\"ASIRF\" is a unique name and its efficiency versus \"LLM calls\" trade-off is its own claim."
+    },
+    "78": {
+      "identifiable": true,
+      "reason": "\"Asymmetric Dynamic Routing\" with \"$k_d$ deep insight edges\" is a specific named mechanism."
+    },
+    "79": {
+      "identifiable": false,
+      "reason": "\"dense_ffn\" vs \"transformer_dense\" are generic code-style configuration names that many architecture papers could use."
+    },
+    "80": {
+      "identifiable": true,
+      "reason": "\"retained paths\" reducing \"post-alarm review\" in \"ToolSandbox\" is a distinctive agent-safety result, though ToolSandbox itself is a known benchmark."
+    },
+    "81": {
+      "identifiable": false,
+      "reason": "\"SEEK\" is a short generic name and \"routing and execution errors\" are consolidated in many agent systems."
+    },
+    "82": {
+      "identifiable": false,
+      "reason": "\"Stage-3 RL\" is a generic training-stage label with no model, task or dataset named."
+    },
+    "83": {
+      "identifiable": false,
+      "reason": "\"Component Benchmark (CB)\" is a generic name and \"submodules and their runtime inputs\" names no system under test."
+    },
+    "84": {
+      "identifiable": true,
+      "reason": "\"UA-TWM\" is a unique acronym linking \"sequential ranking\" to \"target-directed decisions\"."
+    }
+  },
+  "K": {
+    "1": {
+      "identifiable": false,
+      "reason": "\"Cache-based Baseline-2\" is a numbered baseline label any paper could use; no method or dataset is named to say which paper."
+    },
+    "2": {
+      "identifiable": false,
+      "reason": "\"the proposed rule-based framework\" names nothing; many papers propose rule-based frameworks with a second-stage classifier."
+    },
+    "3": {
+      "identifiable": true,
+      "reason": "\"XGBoost-ug\" is a specific variant tag, and \"unable to precisely distinguish noisy data\" ties it to one ablation; XGBoost alone would be generic but the \"-ug\" suffix is distinctive."
+    },
+    "4": {
+      "identifiable": true,
+      "reason": "\"DNN-based CRM\" with \"observed watch time of the next video\" in the \"user tower\" is a distinctive video-recommendation design."
+    },
+    "5": {
+      "identifiable": true,
+      "reason": "\"AffRo\" is a unique method name; the \"window parameter\" is a detail of that one paper."
+    },
+    "6": {
+      "identifiable": true,
+      "reason": "\"SPLIT-RAG\" is a unique system name, and \"partition objective\" points to its design."
+    },
+    "7": {
+      "identifiable": true,
+      "reason": "\"WebArxiv\" is a unique benchmark name for scholarly web interaction."
+    },
+    "8": {
+      "identifiable": true,
+      "reason": "\"ChemVocab\" is a unique tokenizer name, contrasted with \"bert-base-uncased\" for chemistry."
+    },
+    "9": {
+      "identifiable": false,
+      "reason": "\"the pairwise preference experiment\" with \"human-judged passages grouped for each query\" names no method or dataset; many relevance-judgment papers match."
+    },
+    "10": {
+      "identifiable": true,
+      "reason": "\"GTSQA\" is a unique dataset or benchmark acronym."
+    },
+    "11": {
+      "identifiable": true,
+      "reason": "\"SUBER\" is a named RL environment for recommender systems."
+    },
+    "12": {
+      "identifiable": true,
+      "reason": "\"IsoScore\" is a named embedding-isotropy metric; the class-imbalance metric question is tied to that paper."
+    },
+    "13": {
+      "identifiable": true,
+      "reason": "\"RBPF\" with \"highest weight estimator\" is a specific particle-filter method, distinctive among IR papers."
+    },
+    "14": {
+      "identifiable": true,
+      "reason": "\"SPARQL-LLM\" is a unique system name; \"examples not supplied\" is its ablation."
+    },
+    "15": {
+      "identifiable": true,
+      "reason": "\"KnowTeX\" and its \"infer mode\" with \"layered rules\" is a unique system."
+    },
+    "16": {
+      "identifiable": true,
+      "reason": "\"CRS-Que\" is a unique questionnaire name for conversational recommender evaluation."
+    },
+    "17": {
+      "identifiable": true,
+      "reason": "\"STATIC\" plus \"sparse transition matrix\" for constrained decoding with \"cross-chip communication\" is a distinctive system."
+    },
+    "18": {
+      "identifiable": true,
+      "reason": "\"PT-RAG\" with \"perturbations between cell types for the same query gene\" is a unique biology-RAG method."
+    },
+    "19": {
+      "identifiable": true,
+      "reason": "\"Global-View Navigator\" with its \"Selector\" is a named component of one system."
+    },
+    "20": {
+      "identifiable": true,
+      "reason": "\"yProv4DV\" is a unique provenance tool name."
+    },
+    "21": {
+      "identifiable": false,
+      "reason": "\"HippoRAG2\" is a widely used baseline; \"primary benchmark pipeline\" does not say which paper, so many papers could answer differently."
+    },
+    "22": {
+      "identifiable": true,
+      "reason": "\"Opinion-Enriched KB\" with human preference over a baseline is a specific named resource."
+    },
+    "23": {
+      "identifiable": true,
+      "reason": "\"RRCM\" with \"four special tokens\" in its \"instruction prompt\" is a unique model."
+    },
+    "24": {
+      "identifiable": true,
+      "reason": "\"LightGCN++\" is a named extension of LightGCN with a single paper."
+    },
+    "25": {
+      "identifiable": false,
+      "reason": "\"Lexical Full-Text RAG\" is a generic baseline description; \"unsuccessful-outcome rate\" does not say which paper recorded it."
+    },
+    "26": {
+      "identifiable": true,
+      "reason": "\"DeGRe\" with the \"Lookahead Evaluator\" soft labels is a unique method."
+    },
+    "27": {
+      "identifiable": true,
+      "reason": "\"MOSS system (Winnowing)\" with \"power-law\" latency fits points to the one paper evaluating plagiarism-detection scaling."
+    },
+    "28": {
+      "identifiable": false,
+      "reason": "\"Threshold Sensitivity\" is a generic section name; \"diagnostic thresholds\" is not tied to any named method or dataset."
+    },
+    "29": {
+      "identifiable": true,
+      "reason": "\"GrepSeek\" with its \"answer-aware Tutor\" and shell commands is a unique system."
+    },
+    "30": {
+      "identifiable": false,
+      "reason": "\"SSR\" is an ambiguous acronym and \"datasets and baselines\" gives no distinguishing detail."
+    },
+    "31": {
+      "identifiable": true,
+      "reason": "\"UniPinRec\" with \"Triton ensemble nodes\" is a unique production recommender."
+    },
+    "32": {
+      "identifiable": true,
+      "reason": "\"WP-DE\" is an unusual acronym, with \"comparisons ... to produce a full ranking\" as its method detail."
+    },
+    "33": {
+      "identifiable": false,
+      "reason": "\"Qwen3-VL-32B-Instruct\" is a public model many papers serve; \"temperature and context window\" does not pick one paper."
+    },
+    "34": {
+      "identifiable": true,
+      "reason": "\"$\\tau$-Rec\" is a unique benchmark name with a \"movie catalog\"."
+    },
+    "35": {
+      "identifiable": true,
+      "reason": "\"agentic hybrid RAG\" for the \"muon collider domain\" is a distinctive domain-specific paper."
+    },
+    "36": {
+      "identifiable": true,
+      "reason": "\"MASDR-RAG\" is a unique method name."
+    },
+    "37": {
+      "identifiable": true,
+      "reason": "\"INTERACTOR\" is a unique method name; \"candidate size\" is an experiment setting of it."
+    },
+    "38": {
+      "identifiable": true,
+      "reason": "\"NASA-EO-Bench\" is a unique benchmark name for Earth observation publications."
+    },
+    "39": {
+      "identifiable": true,
+      "reason": "\"ParaSet\" with \"precomputed representations\" for \"candidate exploration\" is a unique method."
+    },
+    "40": {
+      "identifiable": false,
+      "reason": "\"the GRS\" is an unexplained acronym; \"LLM category\" versus \"singular aggregation strategies\" could fit many evaluation papers."
+    },
+    "41": {
+      "identifiable": true,
+      "reason": "\"CPAM\" is a unique method name, and its graph representation is a specific detail."
+    },
+    "42": {
+      "identifiable": true,
+      "reason": "\"LAIP\" with an \"anti-collapse regularizer\" is a unique method."
+    },
+    "43": {
+      "identifiable": true,
+      "reason": "\"RAM\" with \"recency-based decay factor applied to incoming citations\" is distinctive for citation-based ranking."
+    },
+    "44": {
+      "identifiable": true,
+      "reason": "\"PatchTST-style encoder\" ingesting \"capacity history\" is a distinctive time-series design unlikely to recur in an IR collection."
+    },
+    "45": {
+      "identifiable": true,
+      "reason": "\"GuRE\" applied to \"legal passage retrieval\" is a unique method."
+    },
+    "46": {
+      "identifiable": true,
+      "reason": "\"original and reformulated 2DCG\" is a specific metric comparison tied to the two-dimensional cumulative gain paper."
+    },
+    "47": {
+      "identifiable": true,
+      "reason": "\"OPINION FAIRNESS (Proportional Accuracy)\" with \"10% minority and a 70% majority\" is a specific metric."
+    },
+    "48": {
+      "identifiable": true,
+      "reason": "\"PRR-Stat\" with \"Shuffled suites\" and \"short-horizon\" is a unique benchmark set."
+    },
+    "49": {
+      "identifiable": true,
+      "reason": "\"MusicGroundingBench\" is a unique benchmark name."
+    },
+    "50": {
+      "identifiable": false,
+      "reason": "\"the user and item history encoders\" is generic; \"pre-aggregated item text\" fits many recommender papers."
+    },
+    "51": {
+      "identifiable": false,
+      "reason": "\"Fable 5.1\" is a model name that could appear in many evaluations; \"target named without a directive\" gives no further anchor."
+    },
+    "52": {
+      "identifiable": true,
+      "reason": "\"traversal-safe\" recovery versus \"a rebuild\" on \"raw quality\" is a specific term for one graph-index paper."
+    },
+    "53": {
+      "identifiable": false,
+      "reason": "\"Test500\" is a generic test-set label; \"frozen candidate pool\" does not say which paper."
+    },
+    "54": {
+      "identifiable": false,
+      "reason": "\"ColPali\" is a well-known model used and discussed in many papers; \"how is each page represented\" has many correct answers."
+    },
+    "55": {
+      "identifiable": false,
+      "reason": "\"Hits Ratio at K (HR@K)\" is a standard metric defined in many recommender papers."
+    },
+    "56": {
+      "identifiable": true,
+      "reason": "\"AdaMem\" with \"64x compression rate on TriviaQA\" and \"peak GPU memory\" is a unique method and setting."
+    },
+    "57": {
+      "identifiable": true,
+      "reason": "\"GPT-5.2 ... zero-shot ... soy sauce\" is a distinctive example from one cooking-related paper, despite the generic \"Example 1\"."
+    },
+    "58": {
+      "identifiable": true,
+      "reason": "\"CoSLR\" with document licence and model-service terms is a unique dataset or resource."
+    },
+    "59": {
+      "identifiable": false,
+      "reason": "\"Algorithmic Phase 1\" and \"the down-sampler\" are generic; no method or dataset is named."
+    },
+    "60": {
+      "identifiable": true,
+      "reason": "\"AdaMerge\" compared to \"tuned PtM\" without \"per-dataset budget search\" is a unique method."
+    },
+    "61": {
+      "identifiable": true,
+      "reason": "\"three Qwen3.5 backbones\" in \"SGLang\" for \"local entropy analysis\" combines details distinctive to one paper."
+    },
+    "62": {
+      "identifiable": true,
+      "reason": "\"UNIQUE\" with \"hierarchical 128x128 codebook\" and \"resource-count variance\" is a unique method."
+    },
+    "63": {
+      "identifiable": true,
+      "reason": "\"BT-SR\" is a named method, and its hyperparameter alpha is tied to it."
+    },
+    "64": {
+      "identifiable": false,
+      "reason": "\"Prompt Comparisons\" with \"extraction prompt\" variants is generic; many LLM-pipeline papers test prompt variants."
+    },
+    "65": {
+      "identifiable": true,
+      "reason": "\"Targeted Feedback Loop\" triggered by \"a score below 3\" is a specific mechanism of one system."
+    },
+    "66": {
+      "identifiable": true,
+      "reason": "\"DACG-agent\" with its \"entity resolver\" is a unique system."
+    },
+    "67": {
+      "identifiable": true,
+      "reason": "\"UK-PRBENCH\" is a unique benchmark name."
+    },
+    "68": {
+      "identifiable": true,
+      "reason": "\"Knowledge-as-Skill Design\" with its design principles is a named design of one paper."
+    },
+    "69": {
+      "identifiable": true,
+      "reason": "\"Indistinguishability floor\" with \"ROC-auc ... random member of C\" is a specific theoretical term."
+    },
+    "70": {
+      "identifiable": true,
+      "reason": "\"MLDR-it\" is an Italian version of a long-document retrieval benchmark, a specific named dataset."
+    },
+    "71": {
+      "identifiable": true,
+      "reason": "\"Q-REACT\" with \"default adapter rank\" is a unique method."
+    },
+    "72": {
+      "identifiable": true,
+      "reason": "\"Query-Implied Optimization (QI-GEO)\" with \"edit specification\" is a unique framework."
+    },
+    "73": {
+      "identifiable": true,
+      "reason": "\"DHI\" with \"factual hypergraph HK\" is a specific named structure."
+    },
+    "74": {
+      "identifiable": true,
+      "reason": "\"DSI\" here with \"frozen summary\" in \"the bypass\" and \"label budget\" AUC is a specific design, not the well-known retrieval index."
+    },
+    "75": {
+      "identifiable": true,
+      "reason": "\"Granite 4.1 3B LoRA SFT\" with \"13,194-sample\" split and \"7-way action-prediction\" is highly specific."
+    },
+    "76": {
+      "identifiable": true,
+      "reason": "\"CMRec\" with a \"shared semantic codebook\" is a unique method."
+    },
+    "77": {
+      "identifiable": true,
+      "reason": "\"ASIRF\" with its \"efficiency and LLM calls\" trade-off is a unique method."
+    },
+    "78": {
+      "identifiable": true,
+      "reason": "\"Asymmetric Dynamic Routing\" with \"deep insight edges\" is a named mechanism of one paper."
+    },
+    "79": {
+      "identifiable": false,
+      "reason": "\"dense_ffn\" and \"transformer_dense\" are generic config identifiers with no paper named."
+    },
+    "80": {
+      "identifiable": true,
+      "reason": "\"ToolSandbox\" with \"retained paths\" reducing \"post-alarm review\" is a specific safety-monitoring claim."
+    },
+    "81": {
+      "identifiable": false,
+      "reason": "\"SEEK\" is a common acronym and \"routing and execution errors consolidated\" gives no distinguishing detail."
+    },
+    "82": {
+      "identifiable": false,
+      "reason": "\"Stage-3 RL\" is a generic training-stage label; no method or dataset is named."
+    },
+    "83": {
+      "identifiable": false,
+      "reason": "\"Component Benchmark (CB)\" is a generic name; \"submodules and runtime inputs\" fits many systems papers."
+    },
+    "84": {
+      "identifiable": true,
+      "reason": "\"UA-TWM\" is a unique model acronym linking sequential ranking to target-directed decisions."
+    }
+  }
+}
