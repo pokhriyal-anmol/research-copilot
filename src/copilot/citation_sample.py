@@ -4,7 +4,10 @@ Run with the database up and only GEMINI_API_KEY set, so the OpenRouter fallback
   env -u OPENROUTER_API_KEY DATABASE_URL=postgresql://copilot:copilot@localhost:5433/copilot \
     uv run python -m copilot.citation_sample
 Answers are saved as they arrive, so a run stopped by the daily cap resumes where it left off.
+To answer with another prompt version into another file, without writing a sheet:
+  ... python -m copilot.citation_sample --prompt v1 --out <answers.jsonl> [--only <questions.json>]
 """
+import argparse
 import csv
 import json
 import random
@@ -17,7 +20,7 @@ from pathlib import Path
 import httpx
 
 from copilot import llm
-from copilot.answer import CITATION, answer
+from copilot.answer import CITATION, PROMPT_VERSION, answer
 from copilot.db import connect
 from copilot.embed import embed_query
 from copilot.evaluate import load_questions
@@ -44,16 +47,18 @@ def sample(items: list, size: int) -> list:
     return random.Random(SEED).sample(items, min(size, len(items)))
 
 
-def answer_all() -> None:
+def answer_all(path: Path = ANSWERS, version: str = "v1", only: set[str] | None = None) -> None:
+    """Answer every reviewed question (or those in `only`) not yet in `path`, with prompt `version`."""
     llm.TIMEOUT_SECONDS = 120.0  # offline run: a slow free tier must not count as a failure; the app keeps 25 s
-    done = {json.loads(line)["question"] for line in ANSWERS.open()} if ANSWERS.exists() else set()
-    rows = [r for r in load_questions(include_drafts=False) if r["question"] not in done]
-    with connect() as conn, httpx.Client() as client, ANSWERS.open("a") as out:
+    done = {json.loads(line)["question"] for line in path.open()} if path.exists() else set()
+    rows = [r for r in load_questions(include_drafts=False)
+            if r["question"] not in done and (only is None or r["question"] in only)]
+    with connect() as conn, httpx.Client() as client, path.open("a") as out:
         for i, r in enumerate(rows, 1):
             passages = search(conn, r["question"], embed_query(r["question"]))
             for attempt in range(TRIES):  # free tiers time out and return 503 under load
                 try:
-                    result = answer(client, r["question"], passages)
+                    result = answer(client, r["question"], passages, version)
                     break
                 except AllProvidersFailed:
                     time.sleep(WAIT_SECONDS)
@@ -61,7 +66,8 @@ def answer_all() -> None:
                 sys.exit(f"stopped after {i - 1} new answers: every provider failed {TRIES} times. Rerun to resume.")
             cited = {n: {"title": p.title, "arxiv_id": p.arxiv_id, "page": p.page, "text": p.text}
                      for n, p in result.citations.items()}
-            out.write(json.dumps({"question": r["question"], "outcome": result.outcome, "text": result.text,
+            out.write(json.dumps({"question": r["question"], "prompt": version, "outcome": result.outcome,
+                                  "text": result.text,
                                   "citations": cited, "provider": result.completion and result.completion.provider})
                       + "\n")
             out.flush()
@@ -84,5 +90,13 @@ def write_sheet() -> None:
 
 
 if __name__ == "__main__":
-    answer_all()
-    write_sheet()
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--prompt", default=PROMPT_VERSION)
+    ap.add_argument("--out", type=Path)
+    ap.add_argument("--only", type=Path, help="JSON list of question texts to answer")
+    args = ap.parse_args()
+    if args.out is None:  # the 2026-11-03 run: v1 answers and the labelling sheet
+        answer_all()
+        write_sheet()
+    else:
+        answer_all(args.out, args.prompt, set(json.loads(args.only.read_text())) if args.only else None)
