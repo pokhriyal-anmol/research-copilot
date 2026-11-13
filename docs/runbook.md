@@ -1,6 +1,6 @@
 # Runbook
 
-Live: https://research-copilot-au2k.onrender.com. App on Render (free, Singapore), database on Neon (free, ap-southeast-1).
+Live: demo page https://research-copilot-black.vercel.app (Vercel, deployed from `web/` with `npx vercel deploy --prod`), API https://research-copilot-au2k.onrender.com (Render free, Singapore), database on Neon (free, ap-southeast-1). The API only accepts browser calls from the origins in `WEB_ORIGINS`.
 
 ```mermaid
 flowchart LR
@@ -27,6 +27,8 @@ A rollback doesn't undo schema changes. Every migration in `schema.sql` must sta
 |---|---|---|
 | Health fails, restarts in Render logs with no traceback | Out of memory | Check `SEARCH_MODE` is `hybrid`, see the last deploy's changes |
 | Answers return 503 "providers are unavailable" | Gemini and OpenRouter both failing or out of quota | Check `provider failed` log lines for the status code |
+| Answers return 429 "asked a lot this hour" | One IP passed `ANSWERS_PER_IP_PER_HOUR` | Expected. The count lives in memory and resets on restart |
+| Demo page shows "request failed" | `WEB_ORIGINS` on Render is missing the Vercel URL | Check the CORS preflight from the page origin |
 | Answers return 503 "quota is used up" | `DAILY_ANSWER_CAP` reached | Expected. Check traces for one heavy user |
 | Many `citation_check_failed` traces | Model or prompt change | Read `model_output` on those traces |
 
