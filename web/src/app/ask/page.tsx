@@ -28,10 +28,10 @@ const SERVER_NOTE: Record<ServerState, string | null> = {
   checking: null,
   waking: "Waking the free server. The first answer can take up to a minute.",
   ready: null,
-  down: "The server is not responding. Please refresh in a minute.",
+  down: "The server is slow to wake. Your question may still work, or try again in a minute.",
 };
 
-function useServerState(): ServerState {
+function useServerState(): [ServerState, (s: ServerState) => void] {
   const [state, setState] = useState<ServerState>("checking");
   useEffect(() => {
     const slow = setTimeout(() => setState("waking"), SLOW_WAKE_MS);
@@ -41,7 +41,7 @@ function useServerState(): ServerState {
     });
     return () => clearTimeout(slow);
   }, []);
-  return state;
+  return [state, setState];
 }
 
 export default function AskPage() {
@@ -49,7 +49,7 @@ export default function AskPage() {
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState<Answer | null>(null);
   const [passage, setPassage] = useState<Citation | null>(null);
-  const server = useServerState();
+  const [server, setServer] = useServerState();
 
   async function send(text = question) {
     const q = text.trim();
@@ -58,6 +58,7 @@ export default function AskPage() {
     try {
       setAnswer(await ask(q));
       setPassage(null);
+      setServer("ready");
     } catch (e) {
       showPolishedToast({
         title: "No answer this time",
@@ -71,8 +72,10 @@ export default function AskPage() {
   }
 
   return (
-    <div className="flex flex-1 items-start gap-6 py-10 pr-4">
+    <div className="flex flex-1 items-start gap-6 py-10 md:pr-4">
       {answer && answer.citations.length > 0 && (
+        // Phones show the passage under its citation instead (AnswerView).
+        <div className="hidden md:block">
         <SidePanel
           panelOpen={passage !== null}
           handlePanelOpen={() => setPassage(passage ? null : answer.citations[0])}
@@ -92,10 +95,11 @@ export default function AskPage() {
             </figure>
           )}
         </SidePanel>
+        </div>
       )}
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 pl-4">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 md:pr-0">
         <header className="flex flex-col gap-3">
-          <h1 className="font-heading text-4xl">Ask the papers</h1>
+          <h1 className="font-heading text-3xl md:text-4xl">Ask the papers</h1>
           <p className="text-muted-foreground">
             Answers come from openly licensed arXiv papers on information retrieval. Each citation links to its
             paper on arXiv, and the code withholds any answer whose citations don&apos;t match the retrieved passages.
@@ -135,7 +139,7 @@ export default function AskPage() {
             ))}
           </div>
         )}
-        {answer && <AnswerView answer={answer} onOpen={setPassage} />}
+        {answer && <AnswerView answer={answer} open={passage} onOpen={setPassage} />}
       </main>
       <PolishedToaster />
     </div>
