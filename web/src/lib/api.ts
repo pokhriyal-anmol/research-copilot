@@ -36,3 +36,15 @@ export async function ask(question: string): Promise<Answer> {
   }
   return body as Answer;
 }
+
+// Render's free plan sleeps after 15 idle minutes and takes up to a minute to wake.
+const WAKE_TIMEOUT_MS = 90_000;
+
+export async function wake(): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(WAKE_TIMEOUT_MS) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

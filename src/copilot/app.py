@@ -1,6 +1,7 @@
 import logging
 import os
 import time
+from collections import defaultdict, deque
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -80,6 +81,26 @@ def over_daily_cap(conn: psycopg.Connection) -> bool:
     return used >= int(os.environ.get("DAILY_ANSWER_CAP", "200"))
 
 
+# shortcut: per-process memory, reset on restart and not shared across instances. Fine for one
+# free instance; count per IP in the traces table if the service ever runs more than one.
+recent_by_ip: dict[str, deque[float]] = defaultdict(deque)
+
+
+def client_ip(request: Request) -> str:
+    # Render sits behind Cloudflare, which overwrites CF-Connecting-IP with the caller's address.
+    return request.headers.get("cf-connecting-ip") or (request.client.host if request.client else "")
+
+
+def over_ip_limit(ip: str) -> bool:
+    now, hits = time.monotonic(), recent_by_ip[ip]
+    while hits and now - hits[0] > 3600:
+        hits.popleft()
+    if len(hits) >= int(os.environ.get("ANSWERS_PER_IP_PER_HOUR", "10")):
+        return True
+    hits.append(now)
+    return False
+
+
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(INDEX)
@@ -92,8 +113,10 @@ def health() -> dict:
 
 
 @app.post("/answer")
-def post_answer(body: Question) -> dict:
+def post_answer(body: Question, request: Request) -> dict:
     started = time.monotonic()
+    if over_ip_limit(client_ip(request)):
+        raise HTTPException(429, "You've asked a lot this hour. Please try again later.")
     with connect() as conn:
         if over_daily_cap(conn):
             raise HTTPException(503, "Today's free model quota is used up. Please try tomorrow.")
