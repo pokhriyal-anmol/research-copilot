@@ -16,3 +16,7 @@ services:
         value: "200"
       - key: SEARCH_MODE
         value: hybrid  # the reranker exceeds the free 512 MB
+      - key: WEB_ORIGINS
+        value: https://research-copilot-black.vercel.app  # the Vercel demo page
+      - key: ANSWERS_PER_IP_PER_HOUR
+        value: "10"

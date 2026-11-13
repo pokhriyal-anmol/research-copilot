@@ -25,6 +25,7 @@ def client(monkeypatch):
             (VECTOR,),
         )
     monkeypatch.setattr(app_module, "embed_query", lambda _: VECTOR)
+    app_module.recent_by_ip.clear()
     with TestClient(app_module.app) as test_client:
         yield test_client
 
@@ -79,6 +80,16 @@ def test_daily_cap_stops_model_calls(client, monkeypatch):
     assert client.post("/answer", json={"question": "what?"}).status_code == 200
     assert client.post("/answer", json={"question": "what?"}).status_code == 503
     assert len(traces()) == 1
+
+
+def test_per_ip_limit_stops_one_caller_but_not_another(client, monkeypatch):
+    monkeypatch.setenv("ANSWERS_PER_IP_PER_HOUR", "1")
+    stub_llm(monkeypatch, "Claim [1].")
+    first, second = ({"cf-connecting-ip": ip} for ip in ("1.1.1.1", "2.2.2.2"))
+    assert client.post("/answer", json={"question": "what?"}, headers=first).status_code == 200
+    assert client.post("/answer", json={"question": "what?"}, headers=first).status_code == 429
+    assert client.post("/answer", json={"question": "what?"}, headers=second).status_code == 200
+    assert len(traces()) == 2
 
 
 def test_oversized_question_is_rejected(client):
