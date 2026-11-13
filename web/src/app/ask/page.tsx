@@ -75,7 +75,8 @@ export default function AskPage() {
     <div className="flex flex-1 items-start gap-6 py-10 md:pr-4">
       {answer && answer.citations.length > 0 && (
         // Phones show the passage under its citation instead (AnswerView).
-        <div className="hidden md:block">
+        // Fixed width: the panel opens to 97% of this box, so a content-sized box would grow with the passage.
+        <div className="hidden md:block md:w-[350px] md:shrink-0">
         <SidePanel
           panelOpen={passage !== null}
           handlePanelOpen={() => setPassage(passage ? null : answer.citations[0])}
