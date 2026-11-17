@@ -1,6 +1,6 @@
 name: Synthetic checks
 # Every 5 minutes: backend health (also keeps Render's free instance awake) and the Vercel page.
-# Hourly: one full answer. A failed run emails the repo owner.
+# Hourly: one full answer, which must also finish within MAX_SECONDS. A failed run emails the repo owner.
 on:
   schedule:
     - cron: "*/5 * * * *"
@@ -11,6 +11,7 @@ permissions:
 env:
   URL: https://research-copilot-au2k.onrender.com
   PAGE: https://research-copilot-black.vercel.app
+  MAX_SECONDS: 40  # normal answers take 8 to 9 s; one provider timing out (25 s) then the fallback is about 35 s
 jobs:
   health:
     if: github.event.schedule != '17 * * * *'
@@ -32,8 +33,12 @@ jobs:
       - name: Ask a question the corpus can answer
         run: |
           # The [synthetic] prefix lets SLO reports separate these from real users.
+          curl -fsS --max-time 120 --retry 2 --retry-all-errors "$URL/health" >/dev/null  # wake first, so a cold start is not counted
+          start=$(date +%s)
           body=$(curl -fsS --max-time 150 -H 'content-type: application/json' \
             -d '{"question":"[synthetic] What retrieval methods do the papers compare?"}' "$URL/answer")
+          elapsed=$(( $(date +%s) - start ))
           outcome=$(echo "$body" | jq -r .outcome)
-          echo "outcome=$outcome"
+          echo "outcome=$outcome seconds=$elapsed (limit $MAX_SECONDS)"
           test "$outcome" = answered
+          test "$elapsed" -le "$MAX_SECONDS"
