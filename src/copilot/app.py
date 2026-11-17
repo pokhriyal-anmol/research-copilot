@@ -9,7 +9,7 @@ import httpx
 import psycopg
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -55,6 +55,12 @@ app = FastAPI(title="Research Copilot", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 app.add_middleware(CORSMiddleware, allow_origins=WEB_ORIGINS, allow_methods=["GET", "POST"],
                    allow_headers=["Content-Type"])
+
+
+@app.exception_handler(psycopg.OperationalError)
+async def database_unavailable(request: Request, exc: psycopg.OperationalError) -> JSONResponse:
+    log.error("database unavailable on %s: %s", request.url.path, type(exc).__name__)
+    return JSONResponse({"detail": "The database is unavailable. Please retry in a minute."}, status_code=503)
 
 
 @app.middleware("http")
