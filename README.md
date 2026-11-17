@@ -81,4 +81,4 @@ HF_HUB_OFFLINE=1 uv run --group bench python bench/rerank/run.py --reranker qwen
 HF_HUB_OFFLINE=1 uv run --group bench python bench/rerank/native.py
 ```
 
-Papers come from arXiv under CC BY 4.0 or CC0, and citations link back to arxiv.org. This project is not endorsed by arXiv. LitSearch states no licence, so it is used for offline benchmarking only.
+The code in this repository is MIT licensed (see [LICENSE](LICENSE)); the papers keep their own licences. Papers come from arXiv under CC BY 4.0 or CC0, and citations link back to arxiv.org. This project is not endorsed by arXiv. LitSearch states no licence, so it is used for offline benchmarking only.
