@@ -19,6 +19,6 @@ services:
       - key: WEB_ORIGINS
         value: https://research-copilot-black.vercel.app  # the Vercel demo page
       - key: CITATION_SUPPORT_CHECK
-        value: "off"  # the NLI model plus the embedder peak near 460 MB, over the free 512 MB; see ledger RC6
+        value: "off"  # off by default: false-positive on whole chunks, and the NLI model plus the embedder peak near 460 MB; see ledger RC1
       - key: ANSWERS_PER_IP_PER_HOUR
         value: "10"
