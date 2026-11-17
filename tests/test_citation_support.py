@@ -25,3 +25,26 @@ def test_sentence_contradicting_its_passage_is_withheld():
 def test_sentence_supported_by_its_passage_is_answered():
     result = check(None, "Dropout of 0.1 reduced overfitting [2].", PASSAGES, check_support=True)
     assert result.outcome == "answered"
+
+
+def _answer_with(monkeypatch, env):
+    import httpx
+
+    from copilot import answer as answer_module
+    from copilot.llm import Completion
+
+    monkeypatch.setattr(answer_module, "complete", lambda *_: Completion("The model needs 80 GB of GPU memory [2].", "g", "m", 1, 1))
+    if env is None:
+        monkeypatch.delenv("CITATION_SUPPORT_CHECK", raising=False)
+    else:
+        monkeypatch.setenv("CITATION_SUPPORT_CHECK", env)
+    with httpx.Client() as client:
+        return answer_module.answer(client, "q", PASSAGES).outcome
+
+
+def test_support_check_is_on_by_default(monkeypatch):
+    assert _answer_with(monkeypatch, None) == "citation_check_failed"
+
+
+def test_support_check_can_be_switched_off_for_small_instances(monkeypatch):
+    assert _answer_with(monkeypatch, "off") == "answered"
