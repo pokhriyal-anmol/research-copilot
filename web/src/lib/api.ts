@@ -38,13 +38,26 @@ export async function ask(question: string): Promise<Answer> {
 }
 
 // Render's free plan sleeps after 15 idle minutes and takes up to a minute to wake.
-const WAKE_TIMEOUT_MS = 90_000;
+// While it boots, /health can time out or return an error, so keep asking until the deadline.
+const WAKE_DEADLINE_MS = 120_000;
+const WAKE_RETRY_MS = 3_000;
 
-export async function wake(): Promise<boolean> {
-  try {
-    const res = await fetch(`${API_URL}/health`, { signal: AbortSignal.timeout(WAKE_TIMEOUT_MS) });
-    return res.ok;
-  } catch {
-    return false;
+type WakeOptions = { fetcher?: typeof fetch; retryMs?: number; deadlineMs?: number };
+
+export async function wake({
+  fetcher = fetch,
+  retryMs = WAKE_RETRY_MS,
+  deadlineMs = WAKE_DEADLINE_MS,
+}: WakeOptions = {}): Promise<boolean> {
+  const deadline = Date.now() + deadlineMs;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetcher(`${API_URL}/health`, { signal: AbortSignal.timeout(deadline - Date.now()) });
+      if (res.ok) return true;
+    } catch {
+      // Timed out or refused while the server boots: try again below.
+    }
+    await new Promise((resolve) => setTimeout(resolve, retryMs));
   }
+  return false;
 }

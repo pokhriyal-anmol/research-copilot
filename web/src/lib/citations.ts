@@ -15,3 +15,17 @@ export function segments(text: string): Segment[] {
   if (last < text.length) out.push({ text: text.slice(last) });
   return out;
 }
+
+// Model answers arrive as light markdown: blank-line paragraphs, "*" or "-" bullets,
+// **bold** and $math$. The page shows plain paragraphs and lists, so the markup is dropped.
+export type Block = { kind: "p" | "li"; text: string };
+
+const BULLET = /^\s*(?:[*-]|\d+\.)\s+/;
+
+export function blocks(text: string): Block[] {
+  return text
+    .split("\n")
+    .map((line) => line.replace(/\*\*(.+?)\*\*/g, "$1").replace(/\$([^$]+)\$/g, "$1").trim())
+    .filter(Boolean)
+    .map((line) => (BULLET.test(line) ? { kind: "li", text: line.replace(BULLET, "") } : { kind: "p", text: line }));
+}
