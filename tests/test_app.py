@@ -182,3 +182,29 @@ def test_unexpected_error_is_a_json_500_with_a_trace_and_no_leak(client, monkeyp
     assert response.status_code == 500
     assert isinstance(response.json()["detail"], str) and "secret" not in response.text
     assert traces() == [("internal_error", None, None)]
+
+
+def test_a_running_app_deletes_old_questions_not_only_at_startup(client, monkeypatch):
+    monkeypatch.setattr(app_module, "PURGE_INTERVAL_SECONDS", 0, raising=False)
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO traces (question, prompt_version, outcome, latency_ms, created_at) "
+            "VALUES ('old private question', 'v1', 'answered', 1, now() - interval '100 days')"
+        )
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
+    assert client.post("/answer", json={"question": "what reduced overfitting?"}).status_code == 200
+    with connect() as conn:
+        kept = [r[0] for r in conn.execute("SELECT question FROM traces ORDER BY id")]
+    assert "old private question" not in kept and len(kept) == 1
+
+
+def test_the_purge_runs_at_most_once_an_hour(client, monkeypatch):
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO traces (question, prompt_version, outcome, latency_ms, created_at) "
+            "VALUES ('old question', 'v1', 'answered', 1, now() - interval '100 days')"
+        )
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
+    assert client.post("/answer", json={"question": "what reduced overfitting?"}).status_code == 200
+    with connect() as conn:
+        assert "old question" in [r[0] for r in conn.execute("SELECT question FROM traces")]
