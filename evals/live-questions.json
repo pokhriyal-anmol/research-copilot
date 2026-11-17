@@ -1,0 +1,14 @@
+{
+ "answerable": [
+  "What method utilizes an Overlap Tree to identify frequent query overlaps and dependencies between cache entries?",
+  "How does the yProv4DV library intercept file operations without changing the user's code?",
+  "Which AI platform is responsible for the highest share of distinct references referenced within environmental search inquiries?",
+  "What is the total number of queries included in the file fidelity domain?",
+  "What is the pooled median of the per-document cut locations across the evaluated datasets?",
+  "What specific guidelines govern how the employer's advocate must utilize evidence when formulating claims?"
+ ],
+ "unanswerable": [
+  "What is the boiling point of tungsten in kelvin?",
+  "What is the best recipe for sourdough bread?"
+ ]
+}
