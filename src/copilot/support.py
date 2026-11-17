@@ -21,7 +21,12 @@ def _load() -> tuple[Tokenizer, ort.InferenceSession]:
     quantised = "model_qint8_arm64.onnx" if platform.machine() in ("arm64", "aarch64") else "model_quint8_avx2.onnx"
     tokenizer = Tokenizer.from_file(hf_hub_download(MODEL_REPO, "tokenizer.json"))
     tokenizer.enable_truncation(512)
-    return tokenizer, ort.InferenceSession(hf_hub_download(MODEL_REPO, f"onnx/{quantised}"))
+    options = ort.SessionOptions()
+    # Graph optimisation roughly doubled the load-time peak (488 vs 270 MB), which does not fit Render's 512 MB.
+    options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_DISABLE_ALL
+    options.enable_cpu_mem_arena = False
+    options.intra_op_num_threads = 1
+    return tokenizer, ort.InferenceSession(hf_hub_download(MODEL_REPO, f"onnx/{quantised}"), options)
 
 
 def entails(premise: str, hypothesis: str) -> bool:

@@ -1,6 +1,6 @@
 # Research Copilot
 
-Answers questions about CC BY and CC0 arXiv papers, with citation numbers and cited-passage relevance checked in code (a local NLI model; it does not catch numeric contradictions).
+Answers questions about CC BY and CC0 arXiv papers, with citation numbers checked in code. An optional local NLI check (`CITATION_SUPPORT_CHECK`, on by default, off on the free Render instance) also withholds sentences whose cited passage is unrelated; it does not catch numeric contradictions.
 
 - Setup: `uv sync`, `docker compose up -d`, copy `.env.example` to `.env`
 - Tests: `TEST_DATABASE_URL=postgresql://copilot:copilot@localhost:5433/copilot_test uv run pytest` (truncates that database)
