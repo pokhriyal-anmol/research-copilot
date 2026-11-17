@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Ask a question the corpus can answer
         run: |
-          # The [synthetic] prefix lets SLO reports separate these from real users.
+          # The [synthetic] prefix lets a traces query separate these from real users.
           curl -fsS --max-time 120 --retry 2 --retry-all-errors "$URL/health" >/dev/null  # wake first, so a cold start is not counted
           start=$(date +%s)
           body=$(curl -fsS --max-time 150 -H 'content-type: application/json' \
