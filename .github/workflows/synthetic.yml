@@ -1,5 +1,5 @@
 name: Synthetic checks
-# Every 5 minutes: health, which also keeps Render's free instance awake.
+# Every 5 minutes: backend health (also keeps Render's free instance awake) and the Vercel page.
 # Hourly: one full answer. A failed run emails the repo owner.
 on:
   schedule:
@@ -10,6 +10,7 @@ permissions:
   contents: read
 env:
   URL: https://research-copilot-au2k.onrender.com
+  PAGE: https://research-copilot-black.vercel.app
 jobs:
   health:
     if: github.event.schedule != '17 * * * *'
@@ -17,6 +18,12 @@ jobs:
     timeout-minutes: 5
     steps:
       - run: curl -fsS --max-time 120 --retry 2 --retry-all-errors "$URL/health"
+  page:
+    if: github.event.schedule != '17 * * * *'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: curl -fsS --max-time 30 --retry 2 --retry-all-errors "$PAGE" | grep -q '<title>Research Copilot</title>'
   answer:
     if: github.event.schedule == '17 * * * *' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
