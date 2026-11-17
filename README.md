@@ -1,6 +1,6 @@
 # Research Copilot
 
-Finds the paper a researcher means and answers questions about it, with every citation checked against its source. Built on open models and free compute (a MacBook and a free Kaggle GPU).
+Finds the paper a researcher means and answers questions about it, with every citation number checked in code against the passages the model was given. Whether a passage supports its sentence is measured offline, not checked at answer time. Built on open models and free compute (a MacBook and a free Kaggle GPU).
 
 **Try it: [research-copilot-black.vercel.app](https://research-copilot-black.vercel.app).** Pick an example question and the answer comes back with each citation linking to its paper on arxiv.org. A question outside the papers gets no answer. The free server sleeps after 15 idle minutes, and the page says so while it wakes (up to a minute). Each visitor gets 10 answers an hour and the service 200 a day, so a shared link can't use up the free model quota. Questions are stored for 30 days, then deleted.
 
