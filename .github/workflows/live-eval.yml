@@ -1,0 +1,17 @@
+name: Live answer eval
+# Daily and on demand: asks the deployed app 6 answerable and 2 unanswerable fixed questions.
+# Needs no secret (the app holds its own model key). Uses 8 of the 10 per-IP answers allowed per hour.
+# A failed run emails the repo owner. It scores the deployed prompt, so it runs after a merge, not on PRs.
+on:
+  schedule:
+    - cron: "43 6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 evals/live_eval.py
