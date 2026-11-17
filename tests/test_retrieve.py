@@ -51,3 +51,29 @@ def test_connection_lets_hnsw_return_all_fusion_candidates(monkeypatch):
     with connect() as conn:
         ef_search = int(conn.execute("SHOW hnsw.ef_search").fetchone()[0])
     assert ef_search >= retrieve.CANDIDATES
+
+
+@pytest.mark.skipif("TEST_DATABASE_URL" not in os.environ, reason="no database")
+def test_hybrid_search_fuses_vector_and_keyword_rankings(monkeypatch):
+    # Render runs SEARCH_MODE=hybrid. By vector alone the order is near, mid, far; only the far chunk
+    # matches the keyword, so fusing both must move it first. A hybrid that drops either list fails.
+    monkeypatch.setenv("DATABASE_URL", os.environ["TEST_DATABASE_URL"])
+    query = np.zeros(384)
+    query[0] = 1
+    mid = np.zeros(384)
+    mid[0] = mid[1] = 2**-0.5
+    far = np.zeros(384)
+    far[1] = 1
+    with connect() as conn:
+        migrate(conn)
+        conn.execute("TRUNCATE papers, chunks, traces CASCADE")
+        conn.execute("INSERT INTO papers VALUES ('1', 'T', 'A', 'cc')")
+        for page, text, embedding in [(1, "alpha", query), (2, "beta", mid), (3, "zebras", far)]:
+            conn.execute(
+                "INSERT INTO chunks (arxiv_id, page, text, embedding) VALUES ('1', %s, %s, %s)",
+                (page, text, embedding),
+            )
+        vector_pages = [h.page for h in search(conn, "zebras", query, mode="vector")]
+        hybrid_pages = [h.page for h in search(conn, "zebras", query, mode="hybrid")]
+    assert vector_pages == [1, 2, 3]
+    assert hybrid_pages == [3, 1, 2]
