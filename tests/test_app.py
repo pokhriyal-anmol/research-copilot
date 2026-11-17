@@ -137,3 +137,17 @@ def test_any_other_origin_is_refused(web_origin_app):
     with TestClient(web_origin_app) as c:
         r = c.options("/answer", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
     assert "access-control-allow-origin" not in r.headers
+
+
+def test_startup_deletes_questions_older_than_the_retention_period(client, monkeypatch):
+    with connect() as conn:
+        conn.execute(
+            "INSERT INTO traces (question, prompt_version, outcome, latency_ms, created_at) "
+            "VALUES ('old private question', 'v1', 'answered', 1, now() - interval '100 days'), "
+            "('recent question', 'v1', 'answered', 1, now() - interval '1 day')"
+        )
+    with TestClient(app_module.app):  # startup runs the lifespan
+        pass
+    with connect() as conn:
+        kept = [r[0] for r in conn.execute("SELECT question FROM traces ORDER BY id")]
+    assert kept == ["recent question"]

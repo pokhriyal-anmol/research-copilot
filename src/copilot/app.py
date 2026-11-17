@@ -46,6 +46,8 @@ class Question(BaseModel):
 async def lifespan(_: FastAPI):
     with connect() as conn:
         migrate(conn)
+        conn.execute("DELETE FROM traces WHERE created_at < now() - make_interval(days => %s)",
+                     (int(os.environ.get("TRACE_RETENTION_DAYS", "30")),))
     yield
 
 
