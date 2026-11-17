@@ -70,13 +70,14 @@ async def security_headers(request: Request, call_next) -> Response:
     return response
 
 
-def write_trace(conn: psycopg.Connection, question: str, result: Answer | None, started: float) -> None:
+def write_trace(conn: psycopg.Connection, question: str, result: Answer | None, started: float,
+                failure: str = "provider_failure") -> None:
     c = result.completion if result else None
     withheld = result is not None and result.outcome == "citation_check_failed"
     conn.execute(
         """INSERT INTO traces (question, prompt_version, outcome, provider, model, input_tokens,
            output_tokens, latency_ms, model_output) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-        (question, PROMPT_VERSION, result.outcome if result else "provider_failure",
+        (question, PROMPT_VERSION, result.outcome if result else failure,
          c and c.provider, c and c.model, c and c.input_tokens, c and c.output_tokens,
          int((time.monotonic() - started) * 1000), c.text if withheld and c else None),
     )
@@ -133,6 +134,12 @@ def post_answer(body: Question, request: Request) -> dict:
         except AllProvidersFailed:
             write_trace(conn, body.question, None, started)
             raise HTTPException(503, "The model providers are unavailable. Please retry.") from None
+        except psycopg.OperationalError:
+            raise  # the database handler answers this one; a trace write would fail too
+        except Exception:
+            log.exception("unexpected error answering a question")  # stack trace stays in the log, not in the reply
+            write_trace(conn, body.question, None, started, failure="internal_error")
+            raise HTTPException(500, "Something went wrong on our side. Please retry.") from None
         write_trace(conn, body.question, result, started)
     return {
         "outcome": result.outcome,

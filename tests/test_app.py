@@ -170,3 +170,15 @@ def test_answer_works_with_the_hybrid_search_mode_render_runs(client, monkeypatc
     stub_llm(monkeypatch, SUPPORTED_ANSWER)
     body = client.post("/answer", json={"question": "what reduced overfitting?"}).json()
     assert body["outcome"] == "answered" and body["citations"][0]["passage"] == PASSAGE
+
+
+def test_unexpected_error_is_a_json_500_with_a_trace_and_no_leak(client, monkeypatch):
+    def boom(_):
+        raise RuntimeError("secret internal detail")
+
+    monkeypatch.setattr(app_module, "embed_query", boom)
+    with TestClient(app_module.app, raise_server_exceptions=False) as quiet:
+        response = quiet.post("/answer", json={"question": "what?"})
+    assert response.status_code == 500
+    assert isinstance(response.json()["detail"], str) and "secret" not in response.text
+    assert traces() == [("internal_error", None, None)]
