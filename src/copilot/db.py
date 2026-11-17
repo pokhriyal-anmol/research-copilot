@@ -6,7 +6,7 @@ from pgvector.psycopg import register_vector
 
 
 def connect() -> psycopg.Connection:
-    conn = psycopg.connect(os.environ["DATABASE_URL"], autocommit=True)
+    conn = psycopg.connect(os.environ["DATABASE_URL"], autocommit=True, connect_timeout=10)
     conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
     register_vector(conn)
     # The default of 40 silently returns at most 40 rows, however high the LIMIT.

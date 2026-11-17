@@ -38,6 +38,8 @@ GitHub runs these about every 3 hours, not every 5 minutes, so an outage can las
 4. Run **Synthetic checks** by hand from the GitHub Actions tab and confirm the answer job passes.
 5. Record the start time, end time and the commit rolled back to in `docs/drills.md`.
 
+If you change `MODEL` in `embed.py` (or upgrade `fastembed`), re-embed every stored chunk first. Query and passage vectors from different models are not comparable, nothing errors, and retrieval just gets worse.
+
 A rollback doesn't undo schema changes. Every migration in `schema.sql` must stay safe for the previous release to run against.
 
 ## When the checks fail

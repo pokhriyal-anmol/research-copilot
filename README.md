@@ -25,7 +25,7 @@ flowchart TB
   end
   subgraph answer["Answering with citations (demo)"]
     direction LR
-    ask[Question] -->|search and rerank| passages[(299 open papers,<br/>16,290 passages)]
+    ask[Question] -->|hybrid search| passages[(299 open papers,<br/>16,290 passages)]
     passages -->|top passages| llm[Language model]
     llm -->|draft with numbered citations| check{Citation check<br/>in code}
     check -->|every citation matches a given passage| reply[Answer with sources]

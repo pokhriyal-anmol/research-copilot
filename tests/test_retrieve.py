@@ -77,3 +77,11 @@ def test_hybrid_search_fuses_vector_and_keyword_rankings(monkeypatch):
         hybrid_pages = [h.page for h in search(conn, "zebras", query, mode="hybrid")]
     assert vector_pages == [1, 2, 3]
     assert hybrid_pages == [3, 1, 2]
+
+
+@pytest.mark.skipif("TEST_DATABASE_URL" not in os.environ, reason="no database")
+def test_connection_gives_up_on_a_hung_database(monkeypatch):
+    # An unroutable host hangs for minutes without a timeout, so /answer never replied (drill, 2026-11-17).
+    monkeypatch.setenv("DATABASE_URL", os.environ["TEST_DATABASE_URL"])
+    with connect() as conn:
+        assert int(conn.info.get_parameters()["connect_timeout"]) <= 10
