@@ -14,7 +14,7 @@ pytestmark = pytest.mark.skipif("TEST_DATABASE_URL" not in os.environ, reason="n
 VECTOR = np.ones(384)
 
 
-# The citation check now reads the text, so the stub answer must be supported by the stored passage.
+# The stub answer cites passage 1, the one stored passage below.
 PASSAGE = "Dropout of 0.1 reduced overfitting on the small training set."
 SUPPORTED_ANSWER = "Dropout reduced overfitting [1]."
 
