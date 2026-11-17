@@ -5,6 +5,7 @@ import httpx
 
 from copilot.llm import Completion, complete
 from copilot.retrieve import Passage
+from copilot.support import unsupported_sentences
 
 PROMPT_VERSION = "v1"
 REFUSAL_TOKEN = "INSUFFICIENT_EVIDENCE"
@@ -44,13 +45,15 @@ def build_messages(question: str, passages: list[Passage], version: str = PROMPT
     return [{"role": "system", "content": SYSTEM_PROMPTS[version]}, {"role": "user", "content": user}]
 
 
-def check(completion: Completion | None, text: str, passages: list[Passage]) -> Answer:
+def check(completion: Completion | None, text: str, passages: list[Passage], check_support: bool = False) -> Answer:
     if REFUSAL_TOKEN in text:
         return Answer("refused", "The indexed papers do not support an answer.", {}, completion)
     numbers = cited_numbers(text)
     if not numbers or not numbers <= set(range(1, len(passages) + 1)):
         message = "The answer failed its citation check, so it was withheld."
         return Answer("citation_check_failed", message, {}, completion)
+    if check_support and unsupported_sentences(text, passages):
+        return Answer("citation_check_failed", "The answer failed its citation check, so it was withheld.", {}, completion)
     return Answer("answered", text, {n: passages[n - 1] for n in sorted(numbers)}, completion)
 
 
@@ -58,4 +61,4 @@ def answer(client: httpx.Client, question: str, passages: list[Passage], version
     if not passages:
         return Answer("refused", "The indexed papers do not support an answer.", {}, None)
     completion = complete(client, build_messages(question, passages, version))
-    return check(completion, completion.text, passages)
+    return check(completion, completion.text, passages, check_support=True)
