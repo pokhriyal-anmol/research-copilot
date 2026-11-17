@@ -13,6 +13,11 @@ pytestmark = pytest.mark.skipif("TEST_DATABASE_URL" not in os.environ, reason="n
 VECTOR = np.ones(384)
 
 
+# The citation check now reads the text, so the stub answer must be supported by the stored passage.
+PASSAGE = "Dropout of 0.1 reduced overfitting on the small training set."
+SUPPORTED_ANSWER = "Dropout reduced overfitting [1]."
+
+
 @pytest.fixture
 def client(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", os.environ["TEST_DATABASE_URL"])
@@ -21,8 +26,8 @@ def client(monkeypatch):
         conn.execute("TRUNCATE papers, chunks, traces CASCADE")
         conn.execute("INSERT INTO papers VALUES ('1', 'T', 'A', 'cc')")
         conn.execute(
-            "INSERT INTO chunks (arxiv_id, page, text, embedding) VALUES ('1', 4, 'x', %s)",
-            (VECTOR,),
+            "INSERT INTO chunks (arxiv_id, page, text, embedding) VALUES ('1', 4, %s, %s)",
+            (PASSAGE, VECTOR),
         )
     monkeypatch.setattr(app_module, "embed_query", lambda _: VECTOR)
     app_module.recent_by_ip.clear()
@@ -46,7 +51,7 @@ def model_outputs():
 
 
 def test_answer_returns_page_citation_and_writes_trace(client, monkeypatch):
-    stub_llm(monkeypatch, "Claim [1].")
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
     body = client.post("/answer", json={"question": "what?"}).json()
     assert (body["citations"][0]["number"], body["citations"][0]["page"]) == (1, 4)
     assert traces() == [("answered", "groq", 5)]
@@ -60,7 +65,7 @@ def test_fabricated_citation_never_reaches_the_user(client, monkeypatch):
 
 
 def test_answered_trace_does_not_keep_model_output(client, monkeypatch):
-    stub_llm(monkeypatch, "Claim [1].")
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
     client.post("/answer", json={"question": "what?"})
     assert model_outputs() == [None]
 
@@ -76,7 +81,7 @@ def test_provider_failure_is_503_and_traced(client, monkeypatch):
 
 def test_daily_cap_stops_model_calls(client, monkeypatch):
     monkeypatch.setenv("DAILY_ANSWER_CAP", "1")
-    stub_llm(monkeypatch, "Claim [1].")
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
     assert client.post("/answer", json={"question": "what?"}).status_code == 200
     assert client.post("/answer", json={"question": "what?"}).status_code == 503
     assert len(traces()) == 1
@@ -84,7 +89,7 @@ def test_daily_cap_stops_model_calls(client, monkeypatch):
 
 def test_per_ip_limit_stops_one_caller_but_not_another(client, monkeypatch):
     monkeypatch.setenv("ANSWERS_PER_IP_PER_HOUR", "1")
-    stub_llm(monkeypatch, "Claim [1].")
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
     first, second = ({"cf-connecting-ip": ip} for ip in ("1.1.1.1", "2.2.2.2"))
     assert client.post("/answer", json={"question": "what?"}, headers=first).status_code == 200
     assert client.post("/answer", json={"question": "what?"}, headers=first).status_code == 429
@@ -106,8 +111,8 @@ def test_page_sends_security_headers_and_loads_its_script(client):
 
 def test_a_citation_carries_its_passage_text(client, monkeypatch):
     # The web app opens each citation on the exact passage it rests on.
-    stub_llm(monkeypatch, "Claim [1].")
-    assert client.post("/answer", json={"question": "what?"}).json()["citations"][0]["passage"] == "x"
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
+    assert client.post("/answer", json={"question": "what?"}).json()["citations"][0]["passage"] == PASSAGE
 
 
 @pytest.fixture
