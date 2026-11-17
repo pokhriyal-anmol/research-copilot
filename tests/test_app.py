@@ -2,6 +2,7 @@
 import os
 
 import numpy as np
+import psycopg
 import pytest
 from fastapi.testclient import TestClient
 
@@ -151,3 +152,14 @@ def test_startup_deletes_questions_older_than_the_retention_period(client, monke
     with connect() as conn:
         kept = [r[0] for r in conn.execute("SELECT question FROM traces ORDER BY id")]
     assert kept == ["recent question"]
+
+
+def test_database_failure_after_startup_is_a_503_not_a_bare_500(client, monkeypatch, caplog):
+    def refuse(*_):
+        raise psycopg.OperationalError("connection refused")
+
+    with TestClient(app_module.app, raise_server_exceptions=False) as quiet:  # started before the database goes away
+        monkeypatch.setattr(app_module, "connect", refuse)
+        response = quiet.post("/answer", json={"question": "what?"})
+    assert response.status_code == 503 and "database" in response.json()["detail"].lower()
+    assert "database" in caplog.text.lower()
