@@ -163,3 +163,10 @@ def test_database_failure_after_startup_is_a_503_not_a_bare_500(client, monkeypa
         response = quiet.post("/answer", json={"question": "what?"})
     assert response.status_code == 503 and "database" in response.json()["detail"].lower()
     assert "database" in caplog.text.lower()
+
+
+def test_answer_works_with_the_hybrid_search_mode_render_runs(client, monkeypatch):
+    monkeypatch.setattr(app_module, "SEARCH_MODE", "hybrid")
+    stub_llm(monkeypatch, SUPPORTED_ANSWER)
+    body = client.post("/answer", json={"question": "what reduced overfitting?"}).json()
+    assert body["outcome"] == "answered" and body["citations"][0]["passage"] == PASSAGE
