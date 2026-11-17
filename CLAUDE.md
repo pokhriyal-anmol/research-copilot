@@ -1,6 +1,6 @@
 # Research Copilot
 
-Answers questions about CC BY and CC0 arXiv papers, with citation numbers checked in code. An experimental local NLI check (`CITATION_SUPPORT_CHECK=on`, off by default) is not ready: on whole passages it withholds nearly every good answer.
+Answers questions about CC BY and CC0 arXiv papers, with citation numbers checked in code. The code does not check that a cited passage supports its sentence (see docs/readiness/ledger.md, RC1).
 
 - Setup: `uv sync`, `docker compose up -d`, copy `.env.example` to `.env`
 - Tests: `TEST_DATABASE_URL=postgresql://copilot:copilot@localhost:5433/copilot_test uv run pytest` (truncates that database)

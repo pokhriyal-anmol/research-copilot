@@ -1,4 +1,3 @@
-import os
 import re
 from dataclasses import dataclass
 
@@ -45,23 +44,13 @@ def build_messages(question: str, passages: list[Passage], version: str = PROMPT
     return [{"role": "system", "content": SYSTEM_PROMPTS[version]}, {"role": "user", "content": user}]
 
 
-def _unsupported(text: str, passages: list[Passage]) -> list[str]:
-    from copilot.support import (
-        unsupported_sentences,  # lazy: importing onnxruntime costs memory even when unused
-    )
-
-    return unsupported_sentences(text, passages)
-
-
-def check(completion: Completion | None, text: str, passages: list[Passage], check_support: bool = False) -> Answer:
+def check(completion: Completion | None, text: str, passages: list[Passage]) -> Answer:
     if REFUSAL_TOKEN in text:
         return Answer("refused", "The indexed papers do not support an answer.", {}, completion)
     numbers = cited_numbers(text)
     if not numbers or not numbers <= set(range(1, len(passages) + 1)):
         message = "The answer failed its citation check, so it was withheld."
         return Answer("citation_check_failed", message, {}, completion)
-    if check_support and _unsupported(text, passages):
-        return Answer("citation_check_failed", "The answer failed its citation check, so it was withheld.", {}, completion)
     return Answer("answered", text, {n: passages[n - 1] for n in sorted(numbers)}, completion)
 
 
@@ -69,4 +58,4 @@ def answer(client: httpx.Client, question: str, passages: list[Passage], version
     if not passages:
         return Answer("refused", "The indexed papers do not support an answer.", {}, None)
     completion = complete(client, build_messages(question, passages, version))
-    return check(completion, completion.text, passages, os.environ.get("CITATION_SUPPORT_CHECK", "off") == "on")
+    return check(completion, completion.text, passages)

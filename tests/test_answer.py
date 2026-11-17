@@ -1,3 +1,5 @@
+import pytest
+
 from copilot.answer import (
     PROMPT_VERSION,
     REFUSAL_TOKEN,
@@ -70,3 +72,9 @@ LIVE_PROMPT_RULES = [
 def test_live_prompt_keeps_every_rule_the_checks_rely_on():
     missing = [rule for rule in LIVE_PROMPT_RULES if rule not in SYSTEM_PROMPTS[PROMPT_VERSION]]
     assert not missing, f"live prompt lost: {missing}. Re-run the eval (evals/) before changing these rules."
+
+
+@pytest.mark.xfail(strict=True, reason="RC1: check() verifies numbers only. NLI and embedding-window checks both failed on real data.")
+def test_sentence_citing_an_unrelated_in_range_passage_is_withheld():
+    passages = [Passage("1", "A", 1, "Dropout of 0.1 reduced overfitting on the small training set.")]
+    assert check(None, "The model needs 80 GB of GPU memory [1].", passages).outcome == "citation_check_failed"
