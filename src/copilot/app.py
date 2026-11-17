@@ -42,12 +42,22 @@ class Question(BaseModel):
     question: str = Field(min_length=3, max_length=500)
 
 
+PURGE_INTERVAL_SECONDS = 3600
+_last_purge: float | None = None  # per-process, like recent_by_ip below
+
+
+def purge_old_traces(conn: psycopg.Connection) -> None:
+    global _last_purge
+    conn.execute("DELETE FROM traces WHERE created_at < now() - make_interval(days => %s)",
+                 (int(os.environ.get("TRACE_RETENTION_DAYS", "30")),))
+    _last_purge = time.monotonic()
+
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     with connect() as conn:
         migrate(conn)
-        conn.execute("DELETE FROM traces WHERE created_at < now() - make_interval(days => %s)",
-                     (int(os.environ.get("TRACE_RETENTION_DAYS", "30")),))
+        purge_old_traces(conn)
     yield
 
 
@@ -127,6 +137,8 @@ def post_answer(body: Question, request: Request) -> dict:
     if over_ip_limit(client_ip(request)):
         raise HTTPException(429, "You've asked a lot this hour. Please try again later.")
     with connect() as conn:
+        if _last_purge is None or time.monotonic() - _last_purge >= PURGE_INTERVAL_SECONDS:
+            purge_old_traces(conn)  # also here, so an instance that stays up for weeks keeps its promise
         if over_daily_cap(conn):
             raise HTTPException(503, "Today's free model quota is used up. Please try tomorrow.")
         try:
