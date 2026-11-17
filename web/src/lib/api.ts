@@ -32,7 +32,8 @@ export async function ask(question: string): Promise<Answer> {
   const body = await res.json().catch(() => null);
   if (!res.ok) {
     // FastAPI sends a string detail for its own errors and a list for validation errors.
-    throw new AskError(typeof body?.detail === "string" ? body.detail : "Please check your question.");
+    if (typeof body?.detail === "string") throw new AskError(body.detail);
+    throw new AskError(res.status === 422 ? "Please check your question." : "Something went wrong. Please retry.");
   }
   return body as Answer;
 }
