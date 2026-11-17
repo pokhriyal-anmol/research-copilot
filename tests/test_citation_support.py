@@ -42,9 +42,10 @@ def _answer_with(monkeypatch, env):
         return answer_module.answer(client, "q", PASSAGES).outcome
 
 
-def test_support_check_is_on_by_default(monkeypatch):
-    assert _answer_with(monkeypatch, None) == "citation_check_failed"
+def test_support_check_is_off_by_default(monkeypatch):
+    # On whole chunks it withheld 92 of 94 good answers (evals/results/2026-11-03-answers.jsonl), so it stays opt-in.
+    assert _answer_with(monkeypatch, None) == "answered"
 
 
-def test_support_check_can_be_switched_off_for_small_instances(monkeypatch):
-    assert _answer_with(monkeypatch, "off") == "answered"
+def test_support_check_can_be_switched_on(monkeypatch):
+    assert _answer_with(monkeypatch, "on") == "citation_check_failed"

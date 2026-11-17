@@ -69,4 +69,4 @@ def answer(client: httpx.Client, question: str, passages: list[Passage], version
     if not passages:
         return Answer("refused", "The indexed papers do not support an answer.", {}, None)
     completion = complete(client, build_messages(question, passages, version))
-    return check(completion, completion.text, passages, os.environ.get("CITATION_SUPPORT_CHECK", "on") != "off")
+    return check(completion, completion.text, passages, os.environ.get("CITATION_SUPPORT_CHECK", "off") == "on")
