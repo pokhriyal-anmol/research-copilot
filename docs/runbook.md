@@ -7,7 +7,7 @@ flowchart LR
   gh[GitHub main] -->|deploy after CI passes| render[Render web app]
   render -->|reads passages, writes traces| neon[(Neon Postgres)]
   render -->|answers| llm[Gemini, then OpenRouter]
-  checks[Scheduled checks, GitHub cron, about every 3 hours in practice] -->|health and one answer| render
+  checks[UptimeRobot every 5 min, GitHub cron about every 3 hours] -->|health and one answer| render
   checks -->|failed run emails| owner[Repo owner]
   classDef ext fill:#fff4e0,stroke:#b8860b
   class llm,checks ext
@@ -29,7 +29,14 @@ gh run list --workflow synthetic.yml --limit 300 --json conclusion,createdAt -q 
 
 If a target is missed, open the failed runs, find the cause in the table below, and write what you found next to the date in `docs/drills.md`.
 
-GitHub runs these about every 3 hours, not every 5 minutes, so an outage can last hours before anyone is told. GitHub also stops scheduled workflows after 60 days without repository activity. If the Actions tab shows no recent runs, push any commit and re-enable the workflow there. An external uptime monitor would remove both limits (ledger RC11).
+## Outside monitoring
+Two UptimeRobot monitors (free account, every 5 minutes, GET requests) email the owner when something fails:
+- `research-copilot API`: HTTP check of `/health` on the Render URL.
+- `research-copilot page`: keyword check that the Vercel page contains `Research Copilot`.
+
+The 5-minute ping also keeps the free Render instance awake. A first check that lands on a sleeping instance can log one DOWN, which clears by itself.
+
+The GitHub synthetic checks still run, but GitHub fires them about every 3 hours and stops scheduled workflows after 60 days without repository activity. If the Actions tab shows no recent runs, push any commit and re-enable the workflow there. The hourly answer check (a real answer within 40 seconds) exists only on the GitHub side, so it is the slower, deeper signal.
 
 ## Roll back a bad deploy (target: under 5 minutes)
 1. Render dashboard, open `research-copilot`, then **Events**.
