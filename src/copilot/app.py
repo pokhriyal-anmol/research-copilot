@@ -125,7 +125,7 @@ def index() -> FileResponse:
     return FileResponse(INDEX)
 
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health() -> dict:
     # No database call: frequent checks would keep Neon awake and spend its free compute.
     return {"status": "ok"}
